@@ -2,7 +2,7 @@ package com.QueueIt.capstone.API.Controllers;
 
 
 import com.QueueIt.capstone.API.Entities.Adviser;
-import com.QueueIt.capstone.API.Entities.Student;
+//import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Miscellaneous.LoginRequest;
 import com.QueueIt.capstone.API.Services.UserService;
@@ -36,11 +36,17 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-//    public ResponseEntity<String> registerUser(@RequestBody User user)
+    @PostMapping("register")
+    public ResponseEntity<String> registerUser(@RequestBody User user){
+        if (userService.registerUser(user)){
+            return ResponseEntity.ok("User successfully created.");
+        }
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("getStudent")
-    public ResponseEntity<Student> getStudentByReferenceID(@RequestParam Long userID){
-        Student student = userService.getStudentByReferenceID(userID);
+    public ResponseEntity<User> getStudentByReferenceID(@RequestParam Long userID){
+        User student = userService.getStudentByReferenceID(userID);
         if (student != null){
             return ResponseEntity.ok(student);
         }
