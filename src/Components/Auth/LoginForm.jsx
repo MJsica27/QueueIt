@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./auth.css";
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -25,13 +26,16 @@ const LoginForm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Login successful:', data);
+                console.log('Login successful:', data); 
+                toast.success('Login successful'); 
                 navigate('/studenthomepage');
             } else {
                 console.log('Login failed');
+                toast.error('Login failed');  
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            console.error('Error during login:', error); 
+            toast.error('Error during login');  
         }
     };
 
@@ -65,7 +69,7 @@ const LoginForm = () => {
                 <div>
                     <label htmlFor="password">Password
                     <span className="visiblePassword" onClick={togglePasswordVisibility}>
-                            {showPassword ? '🙈' : '👁️'} {/* This can be replaced with an icon */}
+                            {showPassword ? '🙈Hide' : '👁️Show'} {/* This can be replaced with an icon */}
                         </span>
                     </label>
                     <input 

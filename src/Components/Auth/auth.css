@@ -124,5 +124,6 @@ span:hover {
 
 .visiblePassword {
     cursor: pointer;
-    margin-left: 400px;
+    margin-left: 360px;
+    color: #666666;
 }

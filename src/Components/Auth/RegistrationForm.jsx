@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 import './auth.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegistrationForm = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);  
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setLoading(true);  
 
         const userData = {
             username: email,
@@ -32,12 +36,17 @@ const RegistrationForm = () => {
 
             if (response.ok) {
                 console.log('Registration successful');
+                toast.success('Registration successful!'); 
                 navigate('/login');
             } else {
                 console.log('Registration failed');
+                toast.error('Registration failed. Please try again.');  
             }
         } catch (error) {
             console.error('Error registering user:', error);
+            toast.error('An error occurred. Please try again later.'); 
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -88,12 +97,10 @@ const RegistrationForm = () => {
                 <div>
                     <label htmlFor="password">Password 
                         <span className="visiblePassword" onClick={togglePasswordVisibility}>
-                            {showPassword ? '🙈' : '👁️'} {/* This can be replaced with an icon */}
+                            {showPassword ? '🙈Hide' : '👁️Show'}
                         </span>
                     </label>
-                    
                     <div className="password-field">
-                        
                         <input
                             type={showPassword ? 'text' : 'password'}  
                             id="password"
@@ -101,7 +108,6 @@ const RegistrationForm = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        
                     </div>
                 </div>
                 <br />
@@ -111,7 +117,9 @@ const RegistrationForm = () => {
                 </div>
                 <br />
                 <div className="submit">
-                    <button type="submit">Register</button>
+                    <button type="submit" disabled={loading}> 
+                        {loading ? 'Registering...' : 'Register'}
+                    </button>
                     <p>
                         Already have an account?{' '}
                         <span onClick={handleLoginRedirect}>Login</span>
