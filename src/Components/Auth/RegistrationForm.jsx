@@ -7,17 +7,18 @@ const RegistrationForm = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
         const userData = {
-            username: email,  // Assuming username is the email
+            username: email,
             password: password,
             firstname: firstName,
             lastname: lastName,
-            photoURL: '' // Assuming it's optional or leave blank
+            photoURL: ''
         };
 
         try {
@@ -42,6 +43,10 @@ const RegistrationForm = () => {
 
     const handleLoginRedirect = () => {
         navigate('/login');
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -81,14 +86,23 @@ const RegistrationForm = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                    <label htmlFor="password">Password 
+                        <span className="visiblePassword" onClick={togglePasswordVisibility}>
+                            {showPassword ? '🙈' : '👁️'} {/* This can be replaced with an icon */}
+                        </span>
+                    </label>
+                    
+                    <div className="password-field">
+                        
+                        <input
+                            type={showPassword ? 'text' : 'password'}  
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        
+                    </div>
                 </div>
                 <br />
                 <div className="align">
@@ -109,4 +123,3 @@ const RegistrationForm = () => {
 };
 
 export default RegistrationForm;
-    

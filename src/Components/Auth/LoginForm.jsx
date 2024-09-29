@@ -5,6 +5,7 @@ import "./auth.css";
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -17,7 +18,7 @@ const LoginForm = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: email,  // Assuming the email is being used as the username
+                    username: email,
                     password: password,
                 }),
             });
@@ -25,8 +26,7 @@ const LoginForm = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Login successful:', data);
-                // Navigate to the next page after successful login
-                navigate('/studenthomepage'); // Adjust the route as necessary
+                navigate('/studenthomepage');
             } else {
                 console.log('Login failed');
             }
@@ -36,12 +36,16 @@ const LoginForm = () => {
     };
 
     const handleSignupRedirect = () => {
-        navigate('/register'); // Adjust the route as necessary
+        navigate('/register');
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
         <div className="login-form">
-            <h2 style={{ textAlign: 'center' }}>Login</h2>
+            <h2 className="loginHeader">Login</h2>
             <div>
                <p>New to QueueIt?{' '}
                     <span onClick={handleSignupRedirect} style={{ cursor: 'pointer', color: '#B9FF66' }}>Sign up for now</span>
@@ -59,7 +63,11 @@ const LoginForm = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">Password
+                    <span className="visiblePassword" onClick={togglePasswordVisibility}>
+                            {showPassword ? '🙈' : '👁️'} {/* This can be replaced with an icon */}
+                        </span>
+                    </label>
                     <input 
                         type="password" 
                         id="password" 

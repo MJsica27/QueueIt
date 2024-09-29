@@ -4,7 +4,7 @@ body {
     justify-content: right;
     align-items: center;
     height: 100vh;
-    margin: 50px;
+    margin: 0 40px 0 0;
 }
  
 .login-form, .registration-form {
@@ -24,12 +24,11 @@ h2 {
     color: #666666; 
 }
 
-.login {
+.loginHeader {
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically if needed */
-             /* Full viewport height for vertical centering */
-    text-align: center;      /* Center text inside the container */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 input[type="text"],
@@ -65,7 +64,6 @@ input[type="password"] {
     align-items: center; 
 }
 
-/* Label Styles */
 label {
     display: flex;
     justify-content: left;
@@ -86,7 +84,7 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 16px; /* Adjust the size as needed */
+    font-size: 16px;
     font-weight: bold; 
 }
 
@@ -103,7 +101,7 @@ button:hover {
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 16px; /* Adjust the size as needed */
+    font-size: 16px;
     font-weight: bold; 
 }
 
@@ -112,7 +110,7 @@ button:hover {
 }
 
 p {
-    margin-left: 0; /* Remove margin between button and paragraph */
+    margin-left: 0;
 }
    
 span {
@@ -122,4 +120,9 @@ span {
 
 span:hover {
     text-decoration: underline;
+}
+
+.visiblePassword {
+    cursor: pointer;
+    margin-left: 400px;
 }
