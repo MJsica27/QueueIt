@@ -29,7 +29,20 @@ const LoginForm = () => {
                 const data = await response.json();
                 console.log('Login successful:', data); 
                 toast.success('Login successful'); 
-                navigate('/studenthomepage');
+                switch (data.role) {
+                    case 0:
+                        navigate('/adminhomepage'); // Route for admin
+                        break;
+                    case 1:
+                        navigate('/adviserhomepage'); // Route for adviser
+                        break;
+                    case 2:
+                        navigate('/studenthomepage'); // Route for student
+                        break;
+                    default:
+                        navigate('/'); // Fallback route
+                        break;
+                }
             } else {
                 console.log('Login failed');
                 toast.error('Login failed');  
@@ -77,7 +90,7 @@ const LoginForm = () => {
                         <div>
                             <label htmlFor="password">Password
                             <span className="visiblePassword" onClick={togglePasswordVisibility}>
-                                    {showPassword ? '🙈Hide' : '👁️Show'} {/* This can be replaced with an icon */}
+                                    {showPassword ? '🙈Hide' : '👁️Show'}  
                                 </span>
                             </label>
                             <input 
