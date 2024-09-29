@@ -42,9 +42,10 @@ body {
     color: #666666;
 }
  
-h2 {
+.registrationHeader {
     display: flex;
     justify-content: left;
+    align-items: left;
     margin-bottom: 20px;
     color: #666666; 
 }

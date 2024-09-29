@@ -68,7 +68,7 @@ const RegistrationForm = () => {
 
             <div className='right'>
                 <div className="registration-form">
-                    <h2>Sign up now</h2>
+                    <h2 className="registrationHeader">Sign up now</h2>
                     <form onSubmit={handleRegister}>
                         <div className="align-name">
                             <div>
