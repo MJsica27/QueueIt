@@ -2,6 +2,8 @@ package com.QueueIt.capstone.API.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Classroom {
     @Id
@@ -9,18 +11,24 @@ public class Classroom {
     private Long classID;
     private String subjectName;
     private String subjectCode;
-    @ManyToOne
-    @JoinColumn(name = "adviser_id")
-    private Adviser adviser;
+    private Long adviserID;
+    @ManyToMany
+    @JoinTable(
+            name = "classroom_user",
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Student> students;
+
+
 
     public Classroom() {
     }
 
-    public Classroom(Long classID, String subjectName, String subjectCode, Adviser adviser) {
-        this.classID = classID;
+    public Classroom(String subjectName, String subjectCode, Long adviserID) {
         this.subjectName = subjectName;
         this.subjectCode = subjectCode;
-        this.adviser = adviser;
+        this.adviserID = adviserID;
     }
 
     public Long getClassID() {
@@ -47,11 +55,19 @@ public class Classroom {
         this.subjectCode = subjectCode;
     }
 
-    public Adviser getAdviser() {
-        return adviser;
+    public Long getAdviserID() {
+        return adviserID;
     }
 
-    public void setAdviser(Adviser adviser) {
-        this.adviser = adviser;
+    public void setAdviserID(Long adviserID) {
+        this.adviserID = adviserID;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }

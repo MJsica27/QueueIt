@@ -19,9 +19,6 @@ public class Adviser{
     private List<String> expertise;
     private Boolean isReady;
 
-    @OneToMany(mappedBy = "adviser")
-    private List<Classroom> classrooms;
-
     public Adviser() {
     }
 

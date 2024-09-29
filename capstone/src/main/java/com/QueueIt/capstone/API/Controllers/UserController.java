@@ -2,25 +2,26 @@ package com.QueueIt.capstone.API.Controllers;
 
 
 import com.QueueIt.capstone.API.Entities.Adviser;
-//import com.QueueIt.capstone.API.Entities.Student;
+import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Miscellaneous.LoginRequest;
+import com.QueueIt.capstone.API.Return.AuthenticatedUser;
 import com.QueueIt.capstone.API.Services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user/")
+@CrossOrigin
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("login")
-    public ResponseEntity<User> loginUser(@RequestBody LoginRequest loginRequest){
-        User user = userService.loginUser(loginRequest);
+    public ResponseEntity<AuthenticatedUser> loginUser(@RequestBody LoginRequest loginRequest){
+        AuthenticatedUser user = userService.loginUser(loginRequest);
         if (user != null){
             return ResponseEntity.ok(user);
         }
@@ -39,14 +40,14 @@ public class UserController {
     @PostMapping("register")
     public ResponseEntity<String> registerUser(@RequestBody User user){
         if (userService.registerUser(user)){
-            return ResponseEntity.ok("User successfully created.");
+            return ResponseEntity.ok("Student registration successful.");
         }
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("getStudent")
-    public ResponseEntity<User> getStudentByReferenceID(@RequestParam Long userID){
-        User student = userService.getStudentByReferenceID(userID);
+    public ResponseEntity<Student> getStudentByReferenceID(@RequestParam Long userID){
+        Student student = userService.getStudentByReferenceID(userID);
         if (student != null){
             return ResponseEntity.ok(student);
         }
