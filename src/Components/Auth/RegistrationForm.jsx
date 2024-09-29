@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './auth.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import image1 from '../Assets/image1.png';
 
 const RegistrationForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -59,74 +60,86 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="registration-form">
-            <h2>Sign up now</h2>
-            <form onSubmit={handleRegister}>
-                <div className="align-name">
-                    <div>
-                        <label htmlFor="firstName">First name</label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="lastName">Last name</label>
-                        <input
-                            type="text"
-                            id="lastName"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
-                        />
-                    </div>
+        <div className="container">
+
+            <div className='left'>
+                <img className="image1" src={image1} alt="A beautiful landscape showcasing nature" />
+            </div>
+
+            <div className='right'>
+                <div className="registration-form">
+                    <h2>Sign up now</h2>
+                    <form onSubmit={handleRegister}>
+                        <div className="align-name">
+                            <div>
+                                <label htmlFor="firstName">First name</label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="lastName">Last name</label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="email">Email address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password 
+                                <span className="visiblePassword" onClick={togglePasswordVisibility}>
+                                    {showPassword ? '🙈Hide' : '👁️Show'}
+                                </span>
+                            </label>
+                            <div className="password-field">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}  
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <br />
+                        <div className="align">
+                            <input type="checkbox" id="terms" required />
+                            <label htmlFor="terms">I agree to the terms and conditions</label>
+                        </div>
+                        <br />
+                        <div className="submit">
+                            <button type="submit" disabled={loading}> 
+                                {loading ? 'Registering...' : 'Register'}
+                            </button>
+                            <p>
+                                Already have an account?{' '}
+                                <span onClick={handleLoginRedirect}>Login</span>
+                            </p>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <label htmlFor="email">Email address</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password 
-                        <span className="visiblePassword" onClick={togglePasswordVisibility}>
-                            {showPassword ? '🙈Hide' : '👁️Show'}
-                        </span>
-                    </label>
-                    <div className="password-field">
-                        <input
-                            type={showPassword ? 'text' : 'password'}  
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="align">
-                    <input type="checkbox" id="terms" required />
-                    <label htmlFor="terms">I agree to the terms and conditions</label>
-                </div>
-                <br />
-                <div className="submit">
-                    <button type="submit" disabled={loading}> 
-                        {loading ? 'Registering...' : 'Register'}
-                    </button>
-                    <p>
-                        Already have an account?{' '}
-                        <span onClick={handleLoginRedirect}>Login</span>
-                    </p>
-                </div>
-            </form>
+            </div>
+
         </div>
+    
+        
     );
 };
 

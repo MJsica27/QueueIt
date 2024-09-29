@@ -1,9 +1,10 @@
 import React from 'react'
+import './style.css';
 
 const HomePage = () => {
   return (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>this is student home page</h2>
+    <div className='studenthomepage'>
+      <h2>this is student home page</h2>
     </div>
   )
 }
