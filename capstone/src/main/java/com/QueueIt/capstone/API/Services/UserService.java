@@ -1,10 +1,12 @@
 package com.QueueIt.capstone.API.Services;
 
+import com.QueueIt.capstone.API.Entities.Admin;
 import com.QueueIt.capstone.API.Entities.Adviser;
 //import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Miscellaneous.LoginRequest;
+import com.QueueIt.capstone.API.Repository.AdminRepository;
 import com.QueueIt.capstone.API.Repository.AdviserRepository;
 //import com.QueueIt.capstone.API.Repository.StudentRepository;
 import com.QueueIt.capstone.API.Repository.StudentRepository;
@@ -26,23 +28,30 @@ public class UserService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
-    public AuthenticatedUser loginUser(LoginRequest loginRequest){
+    public AuthenticatedUser loginUser(LoginRequest loginRequest) {
         User user = userRepository.findByUsername(loginRequest.getUsername());
-        try{
-            if (user.getPassword().equals(loginRequest.getPassword())){
+        try {
+            if (user.getPassword().equals(loginRequest.getPassword())) {
                 Optional<Student> student = studentRepository.findById(user.getUserID());
-                if (student.isPresent()){
-                    return new AuthenticatedUser(user,2);
-                }else{
-                    return new AuthenticatedUser(user, 1);
+                Optional<Adviser> adviser = adviserRepository.findById(user.getUserID()); // Correct repository
+
+                if (student.isPresent()) {
+                    return new AuthenticatedUser(user, 2); // Student role
+                } else if (adviser.isPresent()) {
+                    return new AuthenticatedUser(user, 1); // Adviser role
+                } else {
+                    return new AuthenticatedUser(user, 0); // Admin or other role
                 }
             }
-        } catch(NullPointerException e){
-          return null;
+        } catch (NullPointerException e) {
+            return null;
         }
         return null;
     }
+
 
     public Boolean createAdviserAccount(User user){
         User my_user = userRepository.save(new User(user.getUsername(),user.getPassword(),user.getFirstname(),user.getLastname(),user.getPhotoURL()));
@@ -68,4 +77,6 @@ public class UserService {
     public Adviser getAdviserByReferenceID(Long userID){
         return adviserRepository.getReferenceById(userID);
     }
+
+    public Admin getAdminByReferenceID(Long userID) { return adminRepository.getReferenceById(userID); }
 }

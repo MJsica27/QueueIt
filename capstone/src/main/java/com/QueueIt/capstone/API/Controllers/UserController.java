@@ -1,6 +1,7 @@
 package com.QueueIt.capstone.API.Controllers;
 
 
+import com.QueueIt.capstone.API.Entities.Admin;
 import com.QueueIt.capstone.API.Entities.Adviser;
 import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
@@ -59,6 +60,15 @@ public class UserController {
         Adviser adviser = userService.getAdviserByReferenceID(userID);
         if (adviser != null){
             return ResponseEntity.ok(adviser);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("getAdmin")
+    public ResponseEntity<Admin> getAdminByReferenceID(@RequestParam Long userID){
+        Admin admin = userService.getAdminByReferenceID(userID);
+        if (admin != null){
+            return ResponseEntity.ok(admin);
         }
         return ResponseEntity.notFound().build();
     }
