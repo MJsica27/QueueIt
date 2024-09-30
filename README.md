@@ -47,6 +47,7 @@ git clone -b frontend https://github.com/MJsica27/QueueIt.git
 ```
 
 &nbsp;&nbsp;&nbsp;2.2 Clone the Backend Repository:
+
 &nbsp;&nbsp;&nbsp;&nbsp;Navigate back to the root folder, then into the Backend directory, and clone the backend branch:
 ```bash
 cd ..
