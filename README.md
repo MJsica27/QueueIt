@@ -51,7 +51,7 @@ git clone -b frontend https://github.com/MJsica27/QueueIt.git
 ```bash
 cd ..
 cd Backend
-git clone -b backend https://github.com/MJsica27/QueueIt.gi
+git clone -b backend https://github.com/MJsica27/QueueIt.git
 ```
 #### 3. Backend Setup (IntelliJ IDEA)
 1. Launch IntelliJ IDEA.
