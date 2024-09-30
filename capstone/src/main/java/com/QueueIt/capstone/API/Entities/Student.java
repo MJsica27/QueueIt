@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -14,9 +15,8 @@ public class Student{
     @JoinColumn(name = "fk_user_id")
     @MapsId
     private User user;
-    private Long classCode;
-    private Long groupID;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "group_user",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -24,6 +24,7 @@ public class Student{
     )
     private List<Group> groups;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "classroom_user",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -60,22 +61,6 @@ public class Student{
 
     public void setClassrooms(List<Classroom> classrooms) {
         this.classrooms = classrooms;
-    }
-
-    public Long getGroupID() {
-        return groupID;
-    }
-
-    public void setGroupID(Long groupID) {
-        this.groupID = groupID;
-    }
-
-    public Long getClassCode() {
-        return classCode;
-    }
-
-    public void setClassCode(Long classCode) {
-        this.classCode = classCode;
     }
 
     public Long getStudentID() {

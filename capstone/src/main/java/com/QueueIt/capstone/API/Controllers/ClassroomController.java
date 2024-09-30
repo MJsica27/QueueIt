@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.EmptyStackException;
 import java.util.List;
 
 @RestController
@@ -18,14 +19,21 @@ public class ClassroomController {
     private ClassroomService classroomService;
 
     @PostMapping("/create")
-    public ResponseEntity<Long> createClassroom(@RequestBody Classroom classroom){
-        return ResponseEntity.ok(classroomService.createClassroom(classroom));
-
+    public ResponseEntity<Object> createClassroom(@RequestBody Classroom classroom){
+        Long id = classroomService.createClassroom(classroom);
+        if (id != null){
+            return ResponseEntity.ok(id);
+        }
+        return ResponseEntity.status(406).body("Adviser account or Admin account is necessary for classroom creation.");
     }
 
     @GetMapping("/getClassroom")
     public ResponseEntity<Classroom> getClassroomByReferenceID(@RequestParam Long classID){
-        return ResponseEntity.ok(classroomService.getClassroomByReferenceID(classID));
+        try{
+            return ResponseEntity.ok(classroomService.getClassroomByReferenceID(classID));
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/editClassroom")
@@ -33,7 +41,7 @@ public class ClassroomController {
         if (classroomService.updateClassroomByReferenceID(classroom)){
             return ResponseEntity.ok("Classroom changes saved.");
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/deleteClassroom")
@@ -45,16 +53,20 @@ public class ClassroomController {
     }
 
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollStudent(EnrollStudentRequest enrollStudentRequest){
+    public ResponseEntity<String> enrollStudent(@RequestBody EnrollStudentRequest enrollStudentRequest){
         if (classroomService.enrollStudent(enrollStudentRequest)){
             return ResponseEntity.ok("Student successfully enrolled.");
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(422).body("There was a problem processing this request. Possible causes: Student is already in the classroom or either classroom or student doesn't exist.");
     }
 
-    @GetMapping("/myClassrooms")
+    @GetMapping("/ClassroomsByAdviser")
     public ResponseEntity<List<Classroom>> viewUserClassrooms(@RequestParam Long userID){
-        return ResponseEntity.ok(classroomService.viewUserClassrooms(userID));
+        try{
+            return ResponseEntity.ok(classroomService.viewUserClassrooms(userID));
+        }catch (EmptyStackException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/getStudents")
