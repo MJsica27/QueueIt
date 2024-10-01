@@ -3,11 +3,17 @@ package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.Entities.Admin;
 import com.QueueIt.capstone.API.Entities.Adviser;
+import com.QueueIt.capstone.API.Entities.Classroom;
 import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Miscellaneous.LoginRequest;
+import com.QueueIt.capstone.API.Miscellaneous.ModifyAdviserProfileRequest;
 import com.QueueIt.capstone.API.Return.AuthenticatedUser;
 import com.QueueIt.capstone.API.Services.UserService;
+
+import java.sql.Time;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,4 +78,54 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PutMapping("/modifyProfile")
+    public ResponseEntity<Boolean> modifyUserProfile(
+            @RequestParam Long userID,
+            @RequestBody User userUpdateData) {
+        
+        if (userService.modifyUserProfile(userID, userUpdateData)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
+    @PutMapping("/modifyStudentProfile")
+    public ResponseEntity<Boolean> modifyStudentProfileRequest(
+            @RequestParam Long userID,
+            @RequestBody User userUpdateData) {
+        
+        if (userService.modifyUserProfile(userID, userUpdateData)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
+    @PutMapping("/modifyAdviserProfile")
+    public ResponseEntity<Boolean> modifyAdviserProfile(
+            @RequestParam Long userID,
+            @RequestBody ModifyAdviserProfileRequest modifyAdviserProfileRequest) {
+
+        if (userService.modifyUserProfile(
+                userID,
+                modifyAdviserProfileRequest.getUserUpdateData(),
+                modifyAdviserProfileRequest.getAvailableTime(),
+                modifyAdviserProfileRequest.getExpertise())) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
+    @PostMapping("/modifyStudentAssignedClassroom")
+    public ResponseEntity<Boolean> modifyStudentAssignedClassroom(
+            @RequestParam Long studentID,
+            @RequestParam Long currentClassId,
+            @RequestParam Long newClassId) {
+
+        Boolean result = userService.adminModifyStudentAssignedClassroom(studentID, currentClassId, newClassId);
+        
+        return ResponseEntity.ok(result);
+    }
+
+
 }
