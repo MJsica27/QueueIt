@@ -1,5 +1,3 @@
-Here is the corrected and refined version of your README file for the `QueueIt` project:
-
 ---
 
 # QueueIt
