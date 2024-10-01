@@ -1,5 +1,3 @@
----
-
 # QueueIt
 
 ## Prerequisites
@@ -80,5 +78,3 @@ If your backend services require **XAMPP** (e.g., for database or server managem
 
 1. Launch **XAMPP**.
 2. Start the services (e.g., Apache, MySQL).
-
----
