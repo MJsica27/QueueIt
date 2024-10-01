@@ -9,14 +9,6 @@ Ensure you have the following installed on your machine:
 
 • Node.js
 
-• IntelliJ IDEA
-
-• Visual Studio Code (VSCode)
-
-• Postman
-
-• XAMPP
-
 ## Setup Instructions
 
 #### 1. Project Folder Structure
@@ -24,8 +16,8 @@ Ensure you have the following installed on your machine:
 Create a folder for the project on your desktop or preferred location:
 
 ```bash
-mkdir ~/Desktop/QueueIt
-cd ~/Desktop/QueueIt
+mkdir QueueIt
+cd QueueIt
 ```
 
 &nbsp;&nbsp;&nbsp; 1.1 Create subdirectories:
@@ -61,6 +53,8 @@ git clone -b backend https://github.com/MJsica27/QueueIt.git
    
 3. Choose the root folder containing the backend files.
 
+4. Click run button or Shift+F10
+
 ### 4. Frontend Setup (VSCode)
 1. Launch Visual Studio Code.
 
@@ -75,3 +69,4 @@ npm install
 ```bash
 npm start
 ```
+### 5. Open Xampp
