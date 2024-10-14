@@ -31,16 +31,16 @@ const LoginForm = () => {
                 toast.success('Login successful'); 
                 switch (data.role) {
                     case 0:
-                        navigate('/adminhomepage'); // Route for admin
+                        navigate('/adminhomepage'); 
                         break;
                     case 1:
-                        navigate('/adviserhomepage'); // Route for adviser
+                        navigate('/adviserhomepage');  
                         break;
                     case 2:
-                        navigate('/studenthomepage'); // Route for student
+                        navigate('/studenthomepage');  
                         break;
                     default:
-                        navigate('/'); // Fallback route
+                        navigate('/');  
                         break;
                 }
             } else {

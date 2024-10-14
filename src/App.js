@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginForm from './Components/Auth/LoginForm';
-import RegistrationForm from './Components/Auth/RegistrationForm';
-import AdminHomePage from './Components/Admin/AdminPage'; 
-import AdviserHomePage from './Components/Adviser/AdviserPage'; 
-import StudentHomePage from './Components/Student/StudentPage'; 
+import LoginForm from './Auth/LoginForm';
+import RegistrationForm from './Auth/RegistrationForm';
+import AdminHomePage from './Pages/Admin/AdminPage'; 
+import AdviserHomePage from './Pages/Adviser/AdviserPage'; 
+import StudentHomePage from './Pages/Student/StudentPage'; 
 import { ToastContainer } from 'react-toastify';
 
 function App() {
