@@ -1,10 +1,4 @@
-body {
-    font-family: Arial, sans-serif; 
-    display: flex; /* Flexbox layout */
-    height: 100vh; 
-    margin: 0;  
-}
-
+/*  
 .container {
     display: flex;
     width: 100%; 
@@ -151,4 +145,4 @@ span:hover {
     cursor: pointer;
     margin-left: 360px;
     color: #666666;
-}
+} */

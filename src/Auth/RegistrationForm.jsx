@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import image1 from '../Assets/image1.png';
 
-const RegistrationForm = () => {
+export default function RegistrationForm () {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -141,6 +141,4 @@ const RegistrationForm = () => {
     
         
     );
-};
-
-export default RegistrationForm;
+}; 
