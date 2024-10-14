@@ -127,5 +127,15 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/removeStudentFromClassroom")
+    public ResponseEntity<Boolean> removeStudentFromClassroom(
+            @RequestParam Long studentID,
+            @RequestParam Long currentClassId) {
+
+        Boolean result = userService.removeStudentFromClassroom(studentID, currentClassId);
+        
+        return ResponseEntity.ok(result);
+    }
+
 
 }

@@ -154,5 +154,27 @@ public class UserService {
         classroomRepository.save(newClass);
         return true;
     }
+
+    public Boolean removeStudentFromClassroom(Long studentID, Long currentClassId){
+        Optional<Student> studentOptional = studentRepository.findById(studentID);
+        Optional<Classroom> currentClassOptional = classroomRepository.findById(currentClassId);
+
+        if (!studentOptional.isPresent() || !currentClassOptional.isPresent()) {
+            return false;
+        }
+
+        Student student = studentOptional.get();
+        Classroom currentClass = currentClassOptional.get();
+
+        if (!student.getClassrooms().contains(currentClass)) {
+            return false; 
+        }
+
+        student.getClassrooms().remove(currentClass);
+        studentRepository.save(student);
+        classroomRepository.save(currentClass);
+
+        return true;
+    }
     
 }
