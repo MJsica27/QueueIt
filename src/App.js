@@ -1,4 +1,5 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './Auth/LoginForm';
 import RegistrationForm from './Auth/RegistrationForm';
@@ -6,10 +7,12 @@ import AdminHomePage from './Pages/Admin/AdminPage';
 import AdviserHomePage from './Pages/Adviser/AdviserPage'; 
 import StudentHomePage from './Pages/Student/StudentPage'; 
 import { ToastContainer } from 'react-toastify';
+import AdminNavbar from './Components/Navbar/AdminNavbar';
 
 function App() {
     return ( 
         <Router>
+            <AdminNavbar />
             <ToastContainer />
             <Routes>
                 <Route path="/login" element={<LoginForm />} />
