@@ -1,15 +1,33 @@
-import { Container, Nav, Navbar, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
-import pu from '../../Assets/profile-user.png'
-import lightwo from '../../Assets/logo/light(wo-outline).png';
+import { useState } from 'react';
+import pu from '../../Assets/profile-user.png';
+import darkwo from '../../Assets/logo/dark(wo-outline).png';
 
 export default function AdviserNavbar() {
     const navigate = useNavigate();
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const handleProfile = () => {
         console.log("Navigating to profile...");  
         navigate('/profile');
+    };
+
+    const handleLogout = () => {
+        console.log("User logged out"); 
+        localStorage.removeItem('user');
+        document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname; 
+        window.history.replaceState(null, null, '/login'); 
+        window.location.href = '/login'; 
+    };
+ 
+    const handleMouseEnter = () => {
+        setShowDropdown(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowDropdown(false);
     };
 
     return (
@@ -17,27 +35,39 @@ export default function AdviserNavbar() {
             <Navbar expand="lg" className="mt-0" style={{ background: 'transparent' }}>
                 <Container className="d-flex justify-content-between align-items-center">
                     <Navbar.Brand href="home">
-                        <img src={lightwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
+                        <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <div className="m-4" style={{ background: 'rgba(255, 255, 255, 0.5)', border: '.1em solid #ffffff', borderRadius: '10px', padding: '10px' }}>
+                    <div className="m-4" style={{ background: 'rgba(198, 198, 198, 0.5)', border: '.1em solid #666666', borderRadius: '10px', padding: '10px' }}>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="justify-content-center">
-                                <Nav.Link className="me-3" href="home">Home</Nav.Link>
-                                <Nav.Link className="me-3" href="queue">Queue</Nav.Link>
-                                <Nav.Link className="me-3" href="availability">Availability</Nav.Link>
-                                <Nav.Link href="logs">Logs</Nav.Link>
+                                <Nav.Link className="me-3 nav-link-custom" href="home" style={{ color: '#666666' }}>Home</Nav.Link>
+                                <Nav.Link className="me-3" href="queue" style={{ color: '#666666' }}>Queue</Nav.Link>
+                                <Nav.Link className="me-3" href="availability" style={{ color: '#666666' }}>Availability</Nav.Link>
+                                <Nav.Link href="logs" style={{ color: '#666666' }}>Logs</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
-                    </div>
-
-                    <Nav>
+                    </div> 
+                    {/* Profile */}
+                    <Nav onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">User Profile</Tooltip>}>
-                            <Nav.Link onClick={handleProfile}>
-                                <img src={pu} alt="User Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-                            </Nav.Link>
+                            <Dropdown show={showDropdown}>
+                                <Dropdown.Toggle as={Nav.Link} id="dropdown-profile">
+                                    <img
+                                        src={pu}
+                                        alt="User Profile"
+                                        style={{ width: '35px', height: '35px', borderRadius: '50%' }}
+                                    />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu align="end">
+                                    <Dropdown.Item onClick={handleProfile}>View Profile</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </OverlayTrigger>
                     </Nav>
+
                 </Container>
             </Navbar>
         </div>

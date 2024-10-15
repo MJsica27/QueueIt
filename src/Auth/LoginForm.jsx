@@ -53,8 +53,8 @@ export default function LoginForm () {
             console.error('Error during login:', error);
             toast.error('Error during login');
         }
-    };
-
+    }; 
+    // to be remove   
     // const handleSignupRedirect = () => {
     //     navigate('/register');
     // };
@@ -63,11 +63,11 @@ export default function LoginForm () {
         setShowPassword(!showPassword);
     };
 
-    return (
+        return (
         <Container 
             fluid 
             className="m-0 vh-100"  
-            style={{ background: '#B9FF66', color: '#333333' }}
+            style={{ background: '#ffffff', color: '#333333' }}
         >
             <Row className="h-100">  
                 <Col sm={6} className="d-flex justify-content-center align-items-center">
@@ -83,6 +83,7 @@ export default function LoginForm () {
                         <div className="p-4">
                             <div className="d-flex flex-column align-items-center" style={{ color: '#333333' }}>
                                 <h2 className="loginHeader">Login</h2>
+                                {/* to be remove */}
                                 {/* <p>
                                     New to QueueIt?{' '}
                                     <span 

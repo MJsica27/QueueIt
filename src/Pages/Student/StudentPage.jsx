@@ -11,7 +11,7 @@ export default function AdminPage() {
   return (
     <div className="m-0 vh-100" 
        style={{ 
-        background: '#B9FF66', 
+        background: '#ffffff', 
         color: '#333333',
         backgroundImage: `url(${vector})`,
         backgroundSize: 'cover',
@@ -22,9 +22,7 @@ export default function AdminPage() {
     <div className="container">
         {user ? (
           <div className="mt-5">
-            <h2>Welcome, {user.username}!</h2>
-            <p>Your role: {user.role === 0 ? 'Admin' : user.role === 1 ? 'Adviser' : 'Student'}</p>
-            {/* Display other user details as needed */}
+            <h2>Welcome, {user.username}!</h2>  
           </div>
         ) : (
           <p>No user information available.</p>
