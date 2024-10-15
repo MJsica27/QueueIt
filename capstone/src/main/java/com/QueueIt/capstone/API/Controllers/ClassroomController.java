@@ -12,7 +12,8 @@ import java.util.EmptyStackException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/classroom")
+@RequestMapping("classroom/")
+@CrossOrigin
 public class ClassroomController {
 
     @Autowired
@@ -63,7 +64,8 @@ public class ClassroomController {
     @GetMapping("/ClassroomsByAdviser")
     public ResponseEntity<List<Classroom>> viewUserClassrooms(@RequestParam Long userID){
         try{
-            return ResponseEntity.ok(classroomService.viewUserClassrooms(userID));
+            List<Classroom> classrooms = classroomService.viewUserClassrooms(userID);
+            return ResponseEntity.ok(classrooms);
         }catch (EmptyStackException e){
             return ResponseEntity.notFound().build();
         }
