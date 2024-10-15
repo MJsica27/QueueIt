@@ -37,7 +37,7 @@ public class UserService {
     private StudentRepository studentRepository;
     @Autowired
     private AdminRepository adminRepository;
-    
+
     @Autowired
     private ClassroomRepository classroomRepository;
 
@@ -62,50 +62,60 @@ public class UserService {
         return null;
     }
 
-
-    public Boolean createAdviserAccount(User user){
-        User my_user = userRepository.save(new User(user.getUsername(),user.getPassword(),user.getFirstname(),user.getLastname(),user.getPhotoURL()));
+    public Boolean createAdviserAccount(User user) {
+        User my_user = userRepository.save(new User(user.getUsername(), user.getPassword(), user.getFirstname(),
+                user.getLastname(), user.getPhotoURL()));
         Adviser adviser = adviserRepository.save(new Adviser(my_user));
-        if (adviser != null){
+        if (adviser != null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
 
-    public Boolean registerUser(User user){
+    public Boolean registerUser(User user) {
         Student student = studentRepository.save(new Student(user));
-        if (student != null){
+        if (student != null) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
     }
 
-    public Student getStudentByReferenceID(Long userID){
+    public Student getStudentByReferenceID(Long userID) {
         return studentRepository.getReferenceById(userID);
     }
 
-    public Adviser getAdviserByReferenceID(Long userID){
+    public Adviser getAdviserByReferenceID(Long userID) {
         return adviserRepository.getReferenceById(userID);
     }
 
-    public Admin getAdminByReferenceID(Long userID) { return adminRepository.getReferenceById(userID); }
+    public Admin getAdminByReferenceID(Long userID) {
+        return adminRepository.getReferenceById(userID);
+    }
 
-    public Boolean modifyUserProfile(Long userID, User userUpdateData) {
+    public Boolean modifyUserProfile(Long userID, String passedCurrentPassword, User userUpdateData) {
         Optional<User> existingUserOpt = userRepository.findById(userID);
+
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
-            
+
+            if (passedCurrentPassword != null && !passedCurrentPassword.isEmpty()) {
+                if (!existingUser.getPassword().equals(passedCurrentPassword)) {
+                    throw new IllegalArgumentException("Current password is incorrect.");
+                }
+            }
+
+            String newPassword = userUpdateData.getPassword();
+            if (newPassword != null && !newPassword.isEmpty()) {
+                if (newPassword.length() >= 8) {
+                    existingUser.setPassword(newPassword);
+                } else {
+                    throw new IllegalArgumentException("New password must be at least 8 characters long.");
+                }
+            }
+
             existingUser.setFirstname(userUpdateData.getFirstname());
             existingUser.setLastname(userUpdateData.getLastname());
             existingUser.setPhotoURL(userUpdateData.getPhotoURL());
-            
-            //Opt: Password Requirements
-            String newPassword = userUpdateData.getPassword();
-            if (newPassword != null && newPassword.length() >= 8) {
-                existingUser.setPassword(newPassword);
-            } else if (newPassword != null) {
-                throw new IllegalArgumentException("Password must be at least 8 characters long.");
-            }
 
             userRepository.save(existingUser);
             return true;
@@ -113,17 +123,18 @@ public class UserService {
         return false;
     }
 
-    public Boolean modifyUserProfile(Long userID, User userUpdateData, List<Time> availableTime, List<String> expertise) {
-        if (modifyUserProfile(userID, userUpdateData)) {
+    public Boolean modifyAdviserProfile(Long userID, String currentPassword, User userUpdateData,
+            List<Time> availableTime, List<String> expertise) {
 
+        if (modifyUserProfile(userID, currentPassword, userUpdateData)) {
             Optional<Adviser> adviserOpt = adviserRepository.findById(userID);
             if (adviserOpt.isPresent()) {
                 Adviser adviser = adviserOpt.get();
                 adviser.setAvailableTime(availableTime);
                 adviser.setExpertise(expertise);
                 adviserRepository.save(adviser);
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -155,7 +166,7 @@ public class UserService {
         return true;
     }
 
-    public Boolean removeStudentFromClassroom(Long studentID, Long currentClassId){
+    public Boolean removeStudentFromClassroom(Long studentID, Long currentClassId) {
         Optional<Student> studentOptional = studentRepository.findById(studentID);
         Optional<Classroom> currentClassOptional = classroomRepository.findById(currentClassId);
 
@@ -167,7 +178,7 @@ public class UserService {
         Classroom currentClass = currentClassOptional.get();
 
         if (!student.getClassrooms().contains(currentClass)) {
-            return false; 
+            return false;
         }
 
         student.getClassrooms().remove(currentClass);
@@ -176,5 +187,5 @@ public class UserService {
 
         return true;
     }
-    
+
 }
