@@ -2,7 +2,7 @@ import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';  
-import pu from '../../Assets/profile-user.png'
+import pu from '../../Assets/icons/profile-user.png'
 import darkwo from '../../Assets/logo/dark(wo-outline).png';
 
 export default function StudentNavbar() {
@@ -31,7 +31,7 @@ export default function StudentNavbar() {
   };
   return (
     <div>
-        <Navbar expand="lg" className="mt-0" style={{ background: 'transparent' }}>
+        <Navbar expand="lg" className="m-4" style={{ background: 'transparent' }}>
             <Container className="d-flex justify-content-between align-items-center">
                 <Navbar.Brand href="home">
                     <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
