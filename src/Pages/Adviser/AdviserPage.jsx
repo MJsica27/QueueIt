@@ -7,10 +7,9 @@ import vector from '../../Assets/Vector.png';
 
 export default function AdviserPage() { 
   const navigate = useNavigate();
-  const [classrooms, setClassrooms] = useState([]); // State to hold fetched classrooms
-  const [user, setUser] = useState(null); // State to hold the logged-in user
-
-  // Fetch user from localStorage and check login status
+  const [classrooms, setClassrooms] = useState([]); 
+  const [user, setUser] = useState(null);  
+ 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
@@ -21,8 +20,7 @@ export default function AdviserPage() {
       navigate('/login');
     }
   }, [navigate]);
-
-  // Fetch classrooms using user.userID
+ 
   useEffect(() => {
     const fetchClassrooms = async () => {
       try {
@@ -30,7 +28,7 @@ export default function AdviserPage() {
         if (response.ok) {
           const data = await response.json();
           console.log('Fetched classrooms:', data);
-          setClassrooms(data); // Set fetched classrooms to state
+          setClassrooms(data);  
         } else {
           console.error('Failed to fetch classrooms:', response.statusText);
         }
@@ -38,8 +36,7 @@ export default function AdviserPage() {
         console.error('Error fetching classrooms:', error);
       }
     };
-
-    // Fetch classrooms only if user and userID are available
+ 
     if (user && user.userID) {
       fetchClassrooms();
     }
