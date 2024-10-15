@@ -1,13 +1,50 @@
-import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import ClassroomCard from '../../Components/Card/ClassroomCard';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import vector from '../../Assets/Vector.png';
 
+export default function AdviserPage() { 
+  const navigate = useNavigate();
+  const [classrooms, setClassrooms] = useState([]); // State to hold fetched classrooms
+  const [user, setUser] = useState(null); // State to hold the logged-in user
 
-export default function AdminPage() {
-  const location = useLocation();  
-  const { user } = location.state || {};
+  // Fetch user from localStorage and check login status
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      console.log('User is logged in:', storedUser);
+      setUser(storedUser);
+    } else {
+      console.log('No user is logged in');
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  // Fetch classrooms using user.userID
+  useEffect(() => {
+    const fetchClassrooms = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/classroom/ClassroomsByAdviser?userID=${user.userID}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched classrooms:', data);
+          setClassrooms(data); // Set fetched classrooms to state
+        } else {
+          console.error('Failed to fetch classrooms:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching classrooms:', error);
+      }
+    };
+
+    // Fetch classrooms only if user and userID are available
+    if (user && user.userID) {
+      fetchClassrooms();
+    }
+  }, [user]);
+
   return (
     <div className="m-0 vh-100" 
        style={{ 
@@ -18,9 +55,22 @@ export default function AdminPage() {
         backgroundPosition: 'center',
          }}>
       <AdviserNavbar />
-      <div className="container">
-        <h1>Welcome, {user?.firstname}!</h1>
+      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px'}}> 
+        <h2>Active Classrooms</h2> 
+        {classrooms.length === 0 ? (
+          <p>No active classrooms found.</p>
+        ) : (
+          <div style={{ display: 'flex' }}>
+            {classrooms.map((classroom) => (
+              <ClassroomCard 
+                key={classroom.classId}
+                subjectName={classroom.subjectName} 
+                style={{ margin: '0px' }} 
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -2,6 +2,7 @@ import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import pu from '../../Assets/profile-user.png';
 import darkwo from '../../Assets/logo/dark(wo-outline).png';
 
@@ -15,11 +16,9 @@ export default function AdviserNavbar() {
     };
 
     const handleLogout = () => {
-        console.log("User logged out"); 
         localStorage.removeItem('user');
-        document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname; 
-        window.history.replaceState(null, null, '/login'); 
-        window.location.href = '/login'; 
+        toast.success('Logged out successfully');
+        navigate('/login');  
     };
  
     const handleMouseEnter = () => {
@@ -34,17 +33,17 @@ export default function AdviserNavbar() {
         <div>
             <Navbar expand="lg" className="mt-0" style={{ background: 'transparent' }}>
                 <Container className="d-flex justify-content-between align-items-center">
-                    <Navbar.Brand href="home">
+                    <Navbar.Brand href="adviserhomepage">
                         <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <div className="m-4" style={{ background: 'rgba(198, 198, 198, 0.5)', border: '.1em solid #666666', borderRadius: '10px', padding: '10px' }}>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="justify-content-center">
-                                <Nav.Link className="me-3 nav-link-custom" href="home" style={{ color: '#666666' }}>Home</Nav.Link>
-                                <Nav.Link className="me-3" href="queue" style={{ color: '#666666' }}>Queue</Nav.Link>
-                                <Nav.Link className="me-3" href="availability" style={{ color: '#666666' }}>Availability</Nav.Link>
-                                <Nav.Link href="logs" style={{ color: '#666666' }}>Logs</Nav.Link>
+                                <Nav.Link className="me-3 nav-link-custom" href="adviserhomepage" style={{ color: '#666666' }}>Home</Nav.Link>
+                                <Nav.Link className="me-3" href="adviserqueuepage" style={{ color: '#666666' }}>Queue</Nav.Link>
+                                <Nav.Link className="me-3" href="adviseravailabilitypage" style={{ color: '#666666' }}>Availability</Nav.Link>
+                                <Nav.Link href="adviserlogpage" style={{ color: '#666666' }}>Logs</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                     </div> 

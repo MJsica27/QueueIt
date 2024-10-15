@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import image1 from '../Assets/image1.png';
@@ -11,6 +11,17 @@ export default function LoginForm () {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user) {
+            console.log('User is logged in:', user);
+        } else {
+            console.log('No user is logged in');
+            navigate('/login');
+        }
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -31,15 +42,16 @@ export default function LoginForm () {
                 const data = await response.json();
                 console.log('Login successful:', data);
                 toast.success('Login successful');
+                localStorage.setItem('user', JSON.stringify(data.user));
                 switch (data.role) {
                     case 0:
-                        navigate('/adminhomepage', { state: { user: data.user } }); 
+                        navigate('/adminhomepage');
                         break;
                     case 1:
-                        navigate('/adviserhomepage', { state: { user: data.user } });
+                        navigate('/adviserhomepage');
                         break;
                     case 2:
-                        navigate('/studenthomepage', { state: { user: data.user } });
+                        navigate('/studenthomepage');
                         break;
                     default:
                         navigate('/');
@@ -54,6 +66,7 @@ export default function LoginForm () {
             toast.error('Error during login');
         }
     }; 
+
     // to be remove   
     // const handleSignupRedirect = () => {
     //     navigate('/register');
