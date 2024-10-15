@@ -20,14 +20,8 @@ export default function AdminPage() {
 
     <StudentNavbar />
     <div className="container">
-        {user ? (
-          <div className="mt-5">
-            <h2>Welcome, {user.username}!</h2>  
-          </div>
-        ) : (
-          <p>No user information available.</p>
-        )}
-      </div>
+      <h1>Welcome, {user?.firstname}!</h1>
+    </div>
     </div>
   )
 } 

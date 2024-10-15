@@ -33,13 +33,13 @@ export default function LoginForm () {
                 toast.success('Login successful');
                 switch (data.role) {
                     case 0:
-                        navigate('/adminhomepage', { state: { user: data } }); 
+                        navigate('/adminhomepage', { state: { user: data.user } }); 
                         break;
                     case 1:
-                        navigate('/adviserhomepage', { state: { user: data } });
+                        navigate('/adviserhomepage', { state: { user: data.user } });
                         break;
                     case 2:
-                        navigate('/studenthomepage', { state: { user: data } });
+                        navigate('/studenthomepage', { state: { user: data.user } });
                         break;
                     default:
                         navigate('/');

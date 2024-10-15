@@ -10,26 +10,11 @@ export default function AdminPage() {
   const { user } = location.state || {};
 
   return (
-    <div className="m-0 vh-100" 
-       style={{ 
-        background: '#ffffff', 
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-         }}>
-      <AdminNavbar />
-      <div className="container">
-        {user ? (
-          <div className="mt-5">
-            <h2>Welcome, {user.username}!</h2> 
-            {/* Display other user details as needed */}
-          </div>
-        ) : (
-          <p>No user information available.</p>
-        )}
-      </div>
-      
+    <div className="m-0 vh-100" style={{ background: '#ffffff', color: '#333333' }}>
+    <AdminNavbar />
+    <div className="container">
+      <h1>Welcome, {user?.firstname}!</h1>
     </div>
+  </div>
   )
 } 
