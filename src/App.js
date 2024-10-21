@@ -47,7 +47,7 @@ export default function App() {
 
                         {/* user */}
                         <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/" element={<AdminUserPage />} />
+                        <Route path="/" element={<login />} />
                         <Route path="*" element={<h1>404 Not Found</h1>} />
                 </Routes>
             </Router>
