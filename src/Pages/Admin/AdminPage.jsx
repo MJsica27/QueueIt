@@ -18,8 +18,7 @@ export default function AdminPage() {
       console.log('No user is logged in');
       navigate('/login');
     }
-  }, [navigate]);
-
+  }, [navigate]); 
   return (
     <div className="m-0 vh-100" 
       style={{ 
@@ -31,7 +30,7 @@ export default function AdminPage() {
         }}>
     <AdminNavbar />
     <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px'}}> 
-      <h1>Welcome, {user?.firstname}!</h1>
+    <h1>Welcome, {user?.firstname}!</h1>
     </div>
   </div>
   )
