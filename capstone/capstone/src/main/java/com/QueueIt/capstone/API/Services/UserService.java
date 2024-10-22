@@ -80,13 +80,21 @@ public class UserService {
     }
 
     public ResponseEntity<String> registerUser(StudentRegistrationRequest studentRegistrationRequest) {
+        Role role;
+        try {
+            role = Role.valueOf(studentRegistrationRequest.getRole().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("Invalid role provided.");
+        }
+
+
         User user = new User(
                 studentRegistrationRequest.getUsername(),
                 passwordEncoder.encode(studentRegistrationRequest.getPassword()),
                 studentRegistrationRequest.getFirstname(),
                 studentRegistrationRequest.getLastname(),
                 null,
-                Role.STUDENT
+                role
         );
         try{
             userRepository.save(user);

@@ -6,12 +6,14 @@ public class StudentRegistrationRequest {
     private String firstname;
     private String lastname;
     private String password;
+    private String role;
 
-    public StudentRegistrationRequest(String username, String firstname, String lastname, String password) {
+    public StudentRegistrationRequest(String username, String firstname, String lastname, String password, String role) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.role = role;
     }
 
     public StudentRegistrationRequest() {
@@ -48,4 +50,8 @@ public class StudentRegistrationRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) { this.role = role; }
 }

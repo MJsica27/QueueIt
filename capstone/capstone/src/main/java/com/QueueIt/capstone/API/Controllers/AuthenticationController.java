@@ -6,13 +6,11 @@ import com.QueueIt.capstone.API.Returns.AuthenticationResponse;
 import com.QueueIt.capstone.API.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthenticationController {
 
     @Autowired
@@ -21,7 +19,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody StudentRegistrationRequest studentRegistrationRequest) {
         return userService.registerUser(studentRegistrationRequest);
     }
