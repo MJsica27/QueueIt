@@ -18,8 +18,6 @@ import StudentHomePage from './Pages/Student/StudentPage';
 import ProfilePage from './Pages/ProfilePage';
 import { UserProvider } from './Components/User/UserContext';
 import { ToastContainer } from 'react-toastify';
-//
-// import UserListCard from './Components/Card/UserListCard';
 
 
 export default function App() {
@@ -47,11 +45,11 @@ export default function App() {
 
                         {/* user */}
                         <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/" element={<login />} />
+                        <Route path="/" element={<LoginForm />} />
                         <Route path="*" element={<h1>404 Not Found</h1>} />
                 </Routes>
             </Router>
-            </UserProvider>
+        </UserProvider>
         </div>
         
     );

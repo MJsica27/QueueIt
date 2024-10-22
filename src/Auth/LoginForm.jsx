@@ -14,20 +14,17 @@ export default function LoginForm () {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
-
         if (user) {
-            console.log('User is logged in:', user);
-        } else {
-            console.log('No user is logged in');
-            navigate('/login');
+            navigate('/'); 
         }
     }, [navigate]);
 
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await fetch('http://localhost:8080/user/login', {
+            const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,20 +34,25 @@ export default function LoginForm () {
                     password: password,
                 }),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
                 console.log('Login successful:', data);
                 toast.success('Login successful');
+     
                 localStorage.setItem('user', JSON.stringify(data.user));
-                switch (data.role) {
-                    case 0:
+                localStorage.setItem('token', data.token);   
+     
+                const userRole = data.user.role;
+    
+                switch (userRole) {
+                    case 'ADMIN':
                         navigate('/adminhomepage');
                         break;
-                    case 1:
+                    case 'ADVISER':
                         navigate('/adviserhomepage');
                         break;
-                    case 2:
+                    case 'STUDENT':
                         navigate('/studenthomepage');
                         break;
                     default:
@@ -65,7 +67,8 @@ export default function LoginForm () {
             console.error('Error during login:', error);
             toast.error('Error during login');
         }
-    }; 
+    };
+     
 
     // to be remove   
     // const handleSignupRedirect = () => {
