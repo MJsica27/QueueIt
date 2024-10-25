@@ -79,6 +79,25 @@ public class UserService {
         return Boolean.FALSE;
     }
 
+    //for registration form
+    public ResponseEntity<String> registerStudent(StudentRegistrationRequest studentRegistrationRequest) {
+        User user = new User(
+                studentRegistrationRequest.getUsername(),
+                passwordEncoder.encode(studentRegistrationRequest.getPassword()),
+                studentRegistrationRequest.getFirstname(),
+                studentRegistrationRequest.getLastname(),
+                null,
+                Role.STUDENT
+        );
+        try{
+            userRepository.save(user);
+        }catch (Exception e){
+            return ResponseEntity.status(406).body("Invalid username or password");
+        }
+        return ResponseEntity.ok("Student registration successful.");
+    }
+
+    // for admin crete account
     public ResponseEntity<String> registerUser(StudentRegistrationRequest studentRegistrationRequest) {
         Role role;
         try {

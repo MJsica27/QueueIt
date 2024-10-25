@@ -19,8 +19,15 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
+    // for admin create account
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody StudentRegistrationRequest studentRegistrationRequest) {
         return userService.registerUser(studentRegistrationRequest);
+    }
+
+    //for registrationform.jsx
+    @PostMapping("/registerStudent")
+    public ResponseEntity<String> registerStudent(@RequestBody StudentRegistrationRequest studentRegistrationRequest) {
+        return userService.registerStudent(studentRegistrationRequest);
     }
 }
