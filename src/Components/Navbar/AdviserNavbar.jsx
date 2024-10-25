@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import darkwo from '../../Assets/logo/dark(wo-outline).png';
 
 export default function AdviserNavbar() {
     const navigate = useNavigate();
+    const location = useLocation();  
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleProfile = () => {
@@ -28,6 +29,10 @@ export default function AdviserNavbar() {
     const handleMouseLeave = () => {
         setShowDropdown(false);
     };
+ 
+    const isActiveLink = (path) => {
+        return location.pathname === path;  
+    };
 
     return (
         <div>
@@ -40,10 +45,34 @@ export default function AdviserNavbar() {
                     <div className="m-4" style={{ background: 'rgba(198, 198, 198, 0.5)', border: '.1em solid #666666', borderRadius: '10px', padding: '10px' }}>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="justify-content-center">
-                                <Nav.Link className="me-3 nav-link-custom" href="adviserhomepage" style={{ color: '#666666' }}>Home</Nav.Link>
-                                <Nav.Link className="me-3" href="adviserqueuepage" style={{ color: '#666666' }}>Queue</Nav.Link>
-                                <Nav.Link className="me-3" href="adviseravailabilitypage" style={{ color: '#666666' }}>Availability</Nav.Link>
-                                <Nav.Link href="adviserlogpage" style={{ color: '#666666' }}>Logs</Nav.Link>
+                                <Nav.Link 
+                                    className={`me-3 nav-link-custom ${isActiveLink('/adviserhomepage') ? 'active' : ''}`} 
+                                    href="adviserhomepage" 
+                                    style={{ color: '#666666', fontWeight: isActiveLink('/adviserhomepage') ? 'bold' : 'normal' }}
+                                >
+                                    Home
+                                </Nav.Link>
+                                <Nav.Link 
+                                    className={`me-3 nav-link-custom ${isActiveLink('/adviserqueuepage') ? 'active' : ''}`} 
+                                    href="adviserqueuepage" 
+                                    style={{ color: '#666666', fontWeight: isActiveLink('/adviserqueuepage') ? 'bold' : 'normal' }}
+                                >
+                                    Queue
+                                </Nav.Link>
+                                <Nav.Link 
+                                    className={`me-3 nav-link-custom ${isActiveLink('/adviseravailabilitypage') ? 'active' : ''}`} 
+                                    href="adviseravailabilitypage" 
+                                    style={{ color: '#666666', fontWeight: isActiveLink('/adviseravailabilitypage') ? 'bold' : 'normal' }}
+                                >
+                                    Availability
+                                </Nav.Link>
+                                <Nav.Link 
+                                    className={`nav-link-custom ${isActiveLink('/adviserlogpage') ? 'active' : ''}`} 
+                                    href="adviserlogpage" 
+                                    style={{ color: '#666666', fontWeight: isActiveLink('/adviserlogpage') ? 'bold' : 'normal' }}
+                                >
+                                    Logs
+                                </Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                     </div> 
@@ -66,7 +95,6 @@ export default function AdviserNavbar() {
                             </Dropdown>
                         </OverlayTrigger>
                     </Nav>
-
                 </Container>
             </Navbar>
         </div>
