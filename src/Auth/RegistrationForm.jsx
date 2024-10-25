@@ -30,7 +30,7 @@ export default function RegistrationForm () {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/auth/register', {
+            const response = await fetch('http://localhost:8080/auth/registerStudent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
