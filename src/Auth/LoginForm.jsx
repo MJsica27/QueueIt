@@ -71,9 +71,9 @@ export default function LoginForm () {
      
 
     // to be remove   
-    // const handleSignupRedirect = () => {
-    //     navigate('/register');
-    // };
+    const handleSignupRedirect = () => {
+        navigate('/register');
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -100,7 +100,7 @@ export default function LoginForm () {
                             <div className="d-flex flex-column align-items-center" style={{ color: '#333333' }}>
                                 <h2 className="loginHeader">Login</h2>
                                 {/* to be remove */}
-                                {/* <p>
+                                <p>
                                     New to QueueIt?{' '}
                                     <span 
                                         onClick={handleSignupRedirect} 
@@ -108,7 +108,7 @@ export default function LoginForm () {
                                     >
                                         Sign up for now
                                     </span>
-                                </p> */}
+                                </p>
                             </div>
                             <Form onSubmit={handleLogin}>
                                 <Form.Group className="mb-3" controlId="formBasicEmail">

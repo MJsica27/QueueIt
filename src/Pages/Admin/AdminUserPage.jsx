@@ -8,6 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -158,7 +159,9 @@ export default function AdminUserPage() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">Cancel</Button>
-            <Button onClick={handleSubmit} color="primary">Register</Button>
+            <Button onClick={handleSubmit} color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
+            </Button>
           </DialogActions>
         </Dialog>
         
