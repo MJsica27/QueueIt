@@ -91,7 +91,7 @@ export default function AdminUserPage() {
         <div className='m-0  d-flex align-items-center justify-content-between'>
           <TextField id="outlined-search" label="Search Account" type="search" />
           
-          {/* Register Button */}
+          {/* Create Account Button */}
           <Button onClick={handleClickOpen} style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}>
             Create Account
           </Button> 
