@@ -12,6 +12,8 @@ public class Classroom {
     private String subjectName;
     private String subjectCode;
     private Long adviserID;
+    private String classCode;
+    private String section;
     @ManyToMany
     @JoinTable(
             name = "classroom_user",
@@ -25,10 +27,12 @@ public class Classroom {
     public Classroom() {
     }
 
-    public Classroom(String subjectName, String subjectCode, Long adviserID) {
+    public Classroom(String subjectName, String subjectCode, Long adviserID, String classCode, String section) {
         this.subjectName = subjectName;
         this.subjectCode = subjectCode;
         this.adviserID = adviserID;
+        this.classCode = classCode;
+        this.section = section;
     }
 
     public Long getClassID() {
@@ -70,4 +74,12 @@ public class Classroom {
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+    public String getClassCode() { return classCode; }
+
+    public void setClassCode(String classCode) { this.classCode = classCode; }
+
+    public String getSection() { return section; }
+
+    public void setSection(String section) { this.section = section; }
 }
