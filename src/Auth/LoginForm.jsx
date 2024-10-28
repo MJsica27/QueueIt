@@ -88,6 +88,11 @@ export default function LoginForm () {
     };
      
 
+    // to be remove   
+    const handleSignupRedirect = () => {
+        navigate('/register');
+    };
+
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };

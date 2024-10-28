@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import './auth.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import image1 from '../Assets/image1.png';
+// import openEye from '../Assets/password/eye.png';
+// import closeEye from '../Assets/password/invisible.png';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 export default function RegistrationForm () {
     const [firstName, setFirstName] = useState('');
@@ -27,7 +30,7 @@ export default function RegistrationForm () {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/user/register', {
+            const response = await fetch('http://localhost:8080/auth/registerStudent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -60,85 +63,109 @@ export default function RegistrationForm () {
     };
 
     return (
-        <div className="container">
-
-            <div className='left'>
-                <img className="image1" src={image1} alt="A beautiful landscape showcasing nature" />
-            </div>
-
-            <div className='right'>
-                <div className="registration-form">
-                    <h2 className="registrationHeader">Sign up now</h2>
-                    <form onSubmit={handleRegister}>
-                        <div className="align-name">
-                            <div>
-                                <label htmlFor="firstName">First name</label>
-                                <input
-                                    type="text"
-                                    id="firstName"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    required
-                                />
+        <Container 
+            fluid 
+            className="m-0 vh-100"  
+            style={{ background: '#ffffff', color: '#333333' }}
+        >
+            <Row className="h-100">  
+                <Col sm={6} className="d-flex justify-content-center align-items-center">
+                    <img 
+                        className="img-fluid" 
+                        src={image1} 
+                        alt="A beautiful landscape showcasing nature" 
+                        style={{ width: '650px', height: '650px' }} 
+                    />
+                </Col>
+                <Col sm={6} className="d-flex justify-content-center align-items-center">  
+                    <Card className='m-5 rounded' style={{ background: '#ffffff', width: '560px' }}>
+                        <div className="p-4">
+                            <div className="d-flex flex-column align-items-center" style={{ color: '#333333' }}>
+                                <h2 className="registrationHeader">Sign up now</h2>
                             </div>
-                            <div>
-                                <label htmlFor="lastName">Last name</label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    required
-                                />
-                            </div>
+                            <Form onSubmit={handleRegister}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>First Name</Form.Label>
+                                    <Form.Control 
+                                        type="text"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        required
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Last Name</Form.Label>
+                                    <Form.Control 
+                                        type="text"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        required
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Email Address</Form.Label>
+                                    <Form.Control 
+                                        type="email"
+                                        placeholder='example@email.com' 
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)} 
+                                        required
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="d-flex justify-content-between">
+                                        Password
+                                        <span 
+                                            className="visiblePassword float-end" 
+                                            onClick={togglePasswordVisibility} 
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {showPassword ? (
+                                                <span>Hide</span>
+                                            ) : (
+                                                <span>Show</span>
+                                            )}
+                                        </span>
+                                    </Form.Label>
+                                    <Form.Control 
+                                        type={showPassword ? 'text' : 'password'}  
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)} 
+                                        required
+                                    />
+                                </Form.Group>
+                                <div className="align">
+                                    <Form.Check 
+                                        type="checkbox" 
+                                        id="terms" 
+                                        label="I agree to the terms and conditions" 
+                                        required 
+                                    />
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                    <Button 
+                                        className="m-0" 
+                                        style={{ background: '#B9FF66', margin: 0, border: 'none' }} 
+                                        type="submit"
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Registering...' : 'Register'}
+                                    </Button>
+                                </div>
+                                <p className="text-center">
+                                    Already have an account?{' '}
+                                    <span 
+                                        onClick={handleLoginRedirect} 
+                                        style={{ cursor: 'pointer', color: '#B9FF66' }}
+                                    >
+                                        Login
+                                    </span>
+                                </p>
+                            </Form>
                         </div>
-                        <div>
-                            <label htmlFor="email">Email address</label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password 
-                                <span className="visiblePassword" onClick={togglePasswordVisibility}>
-                                    {showPassword ? '🙈Hide' : '👁️Show'}
-                                </span>
-                            </label>
-                            <div className="password-field">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}  
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <br />
-                        <div className="align">
-                            <input type="checkbox" id="terms" required />
-                            <label htmlFor="terms">I agree to the terms and conditions</label>
-                        </div>
-                        <br />
-                        <div className="submit">
-                            <button type="submit" disabled={loading}> 
-                                {loading ? 'Registering...' : 'Register'}
-                            </button>
-                            <p>
-                                Already have an account?{' '}
-                                <span onClick={handleLoginRedirect}>Login</span>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    
-        
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
-}; 
+}

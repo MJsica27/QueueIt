@@ -8,6 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -90,7 +91,7 @@ export default function AdminUserPage() {
         <div className='m-0  d-flex align-items-center justify-content-between'>
           <TextField id="outlined-search" label="Search Account" type="search" />
           
-          {/* Register Button */}
+          {/* Create Account Button */}
           <Button onClick={handleClickOpen} style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}>
             Create Account
           </Button> 
@@ -158,7 +159,9 @@ export default function AdminUserPage() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">Cancel</Button>
-            <Button onClick={handleSubmit} color="primary">Register</Button>
+            <Button onClick={handleSubmit} color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
+            </Button>
           </DialogActions>
         </Dialog>
         
