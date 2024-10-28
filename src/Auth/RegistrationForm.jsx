@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import './auth.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import image1 from '../Assets/image1.png';
+import image1 from '../Assets/test1.png';
 // import openEye from '../Assets/password/eye.png';
 // import closeEye from '../Assets/password/invisible.png';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import vector from '../Assets/Vector.png'
+import { Typography } from '@mui/material';
 
 export default function RegistrationForm () {
     const [firstName, setFirstName] = useState('');
@@ -43,8 +45,9 @@ export default function RegistrationForm () {
                 toast.success('Registration successful!'); 
                 navigate('/login');
             } else {
-                console.log('Registration failed');
-                toast.error('Registration failed. Please try again.');  
+                response.text().then(bodyMessage =>{
+                    toast.error(bodyMessage)
+                })
             }
         } catch (error) {
             console.error('Error registering user:', error);
@@ -65,47 +68,65 @@ export default function RegistrationForm () {
     return (
         <Container 
             fluid 
-            className="m-0 vh-100"  
-            style={{ background: '#ffffff', color: '#333333' }}
+            className="m-0 d-flex align-items-center"
+            style={{ background: '#b9ff66', color: '#333333', minHeight:'100dvh', height:'100%' }}
         >
             <Row className="h-100">  
-                <Col sm={6} className="d-flex justify-content-center align-items-center">
-                    <img 
-                        className="img-fluid" 
-                        src={image1} 
-                        alt="A beautiful landscape showcasing nature" 
-                        style={{ width: '650px', height: '650px' }} 
-                    />
+                <Col sm={6} className="d-none d-md-flex justify-content-center align-items-center">
+                    <div style={{
+                        backgroundImage:`url(${vector})`,
+                        backgroundPosition:'center',
+                        backgroundSize:'cover',
+                        height:'660px',
+                        width:'80%',
+                        position:'relative'
+                    }}>
+                            <div>
+                                <Typography variant='h2'>Organize Your Workflow</Typography>
+                                <Typography variant='h6'>Simplify project management </Typography>
+                                <Typography variant='h6'>with streamlined tools and resources.</Typography>
+                            </div>
+                            <div style={{position:'absolute'}} className='w-100 d-flex align-items-center justify-content-center'>
+                                <img src={image1} alt="logo" style={{height:'80%', width:'80%'}} />
+                            </div>
+                    </div>
                 </Col>
-                <Col sm={6} className="d-flex justify-content-center align-items-center">  
-                    <Card className='m-5 rounded' style={{ background: '#ffffff', width: '560px' }}>
+                <Col md={6} className="d-flex justify-content-center align-items-center">  
+                    <Card className='m-5 p-5' style={{ background: '#ffffff', width: '560px', border:'none', borderRadius:'30px'}}>
                         <div className="p-4">
                             <div className="d-flex flex-column align-items-center" style={{ color: '#333333' }}>
                                 <h2 className="registrationHeader">Sign up now</h2>
                             </div>
                             <Form onSubmit={handleRegister}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>First Name</Form.Label>
-                                    <Form.Control 
-                                        type="text"
-                                        value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
-                                        required
-                                    />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Last Name</Form.Label>
-                                    <Form.Control 
-                                        type="text"
-                                        value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
-                                        required
-                                    />
-                                </Form.Group>
+                                <Container className='p-0'>
+                                    <Row>
+                                        <Col sm={6}>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label>First Name</Form.Label>
+                                                <Form.Control 
+                                                    type="text"
+                                                    value={firstName}
+                                                    onChange={(e) => setFirstName(e.target.value)}
+                                                    required
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col sm={6}>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label>Last Name</Form.Label>
+                                                <Form.Control 
+                                                    type="text"
+                                                    value={lastName}
+                                                    onChange={(e) => setLastName(e.target.value)}
+                                                    required
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Email Address</Form.Label>
                                     <Form.Control 
-                                        type="email"
                                         placeholder='example@email.com' 
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)} 
@@ -134,7 +155,7 @@ export default function RegistrationForm () {
                                         required
                                     />
                                 </Form.Group>
-                                <div className="align">
+                                <div className="align-self-center">
                                     <Form.Check 
                                         type="checkbox" 
                                         id="terms" 

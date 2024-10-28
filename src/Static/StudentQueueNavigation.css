@@ -1,0 +1,9 @@
+
+
+.TypoSize{
+    font-size: clamp(0.9vw,1vw + 0.3rem,1.5vw);
+}
+
+.TypoSize:hover{
+    color: white;
+}

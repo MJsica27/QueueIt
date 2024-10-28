@@ -104,7 +104,7 @@ export default function LoginForm () {
             style={{ background: '#b9ff66', color: '#333333', minHeight:'100dvh', height:'100%' }}
         >
             <Row className="h-100 w-100">  
-                <Col sm={6} className="d-flex justify-content-center align-items-center">
+                <Col sm={6} className="d-none d-md-flex justify-content-center align-items-center">
                     <div style={{
                         backgroundImage:`url(${vector})`,
                         backgroundPosition:'center',
@@ -123,7 +123,7 @@ export default function LoginForm () {
                             </div>
                     </div>
                 </Col>
-                <Col sm={6} className="d-flex justify-content-center align-items-center">  
+                <Col md={6} className="d-flex justify-content-center align-items-center">  
                     <Card className='m-5 p-3' style={{ background: '#ffffff', width: '80%', border:'none', borderRadius:'30px'}}>
                         <div className="p-4">
                             <div className="d-flex flex-column align-items-center" style={{ color: '#333333' }}>
@@ -131,7 +131,7 @@ export default function LoginForm () {
                                     <h2 className="loginHeader">Log in</h2>
                                     <p>
                                         <span style={{color:'gray'}}>New to QueueIt?</span>{' '}
-                                        <a onClick={handleSignup} href="/register" style={{color:'inherit',fontWeight:'bold'}}>Sign up for now</a>
+                                        <a onClick={()=>{navigate('/register')}} style={{color:'inherit',fontWeight:'bold', cursor:'pointer', textDecoration:'underline'}}>Sign up for now</a>
                                     </p>
                                 </Stack>
                             </div>

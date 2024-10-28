@@ -18,6 +18,7 @@ import StudentHomePage from './Pages/Student/StudentPage';
 import ProfilePage from './Pages/ProfilePage';
 import { UserProvider } from './Components/User/UserContext';
 import { ToastContainer } from 'react-toastify';
+import QueueingPage from './Pages/Student/QueueingPage';
 
 
 export default function App() {
@@ -42,7 +43,7 @@ export default function App() {
 
                         {/* student */}
                         <Route path="/studenthomepage" element={<StudentHomePage />} />
-
+                        <Route path='/queuePage' element={<QueueingPage/>} />
                         {/* user */}
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/" element={<LoginForm />} />
