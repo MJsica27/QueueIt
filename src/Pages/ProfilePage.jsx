@@ -5,10 +5,9 @@ import vector from '../Assets/Vector.png';
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    // Simulate fetching user data from an API
+  useEffect(() => { 
     const fetchUserData = async () => {
-      const response = await fetch('/api/user'); // Replace with your API endpoint
+      const response = await fetch('/api/user');  
       const data = await response.json();
       setUser(data);
     };
@@ -17,7 +16,7 @@ export default function ProfilePage() {
   }, []);
 
   if (!user) {
-    return <div>Loading...</div>; // Loading state while fetching data
+    return <div>Loading...</div>;  
   }
 
   return (

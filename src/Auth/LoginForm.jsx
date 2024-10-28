@@ -89,7 +89,7 @@ export default function LoginForm () {
      
 
     // to be remove   
-    const handleSignupRedirect = () => {
+    const handleSignup = () => {
         navigate('/register');
     };
 
@@ -131,7 +131,7 @@ export default function LoginForm () {
                                     <h2 className="loginHeader">Log in</h2>
                                     <p>
                                         <span style={{color:'gray'}}>New to QueueIt?</span>{' '}
-                                        <a href="" style={{color:'inherit',fontWeight:'bold'}}>Sign up for now</a>
+                                        <a onClick={handleSignup} href="/register" style={{color:'inherit',fontWeight:'bold'}}>Sign up for now</a>
                                     </p>
                                 </Stack>
                             </div>
@@ -183,9 +183,9 @@ export default function LoginForm () {
                                             required
                                         />
                                     </Form.Group>
-                                    <a href="" style={{color:'inherit'}}>
+                                    {/* <a href="" style={{color:'inherit'}}>
                                         <Typography fontWeight={'bold'} variant='subtitle2'>Forgot Password?</Typography>
-                                    </a>
+                                    </a> */}
                                     <div className="d-flex justify-content-center">
                                         <Button
                                             className="m-0" 

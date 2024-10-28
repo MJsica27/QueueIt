@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/ClassroomCard';
+import AdviserCreateClassroomCard from '../../Components/Card/AdviserCreateClassroomCard';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import vector from '../../Assets/Vector.png';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import CircularProgress from '@mui/material/CircularProgress';   
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function AdviserPage() { 
+export default function AdviserPage() {
   const navigate = useNavigate();
-  const [classrooms, setClassrooms] = useState([]); 
-  const [user, setUser] = useState(null);  
- 
+  const [classrooms, setClassrooms] = useState([]);
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [formValues, setFormValues] = useState({
+    subjectName: '',
+    subjectCode: '',
+    section: '', 
+    classCode: ''
+  });
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
@@ -20,44 +38,110 @@ export default function AdviserPage() {
       navigate('/login');
     }
   }, [navigate]);
- 
+
   useEffect(() => {
     const fetchClassrooms = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/classroom/ClassroomsByAdviser?userID=${user.userID}`);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Fetched classrooms:', data);
-          setClassrooms(data);  
-        } else {
-          console.error('Failed to fetch classrooms:', response.statusText);
+      if (user && user.userID) {
+        try {
+          const response = await fetch(`http://localhost:8080/classroom/ClassroomsByAdviser?userID=${user.userID}`);
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched classrooms:', data);
+            setClassrooms(data);
+          } else {
+            console.error('Failed to fetch classrooms:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching classrooms:', error);
         }
-      } catch (error) {
-        console.error('Error fetching classrooms:', error);
       }
     };
- 
-    if (user && user.userID) {
-      fetchClassrooms();
-    }
+    fetchClassrooms();
   }, [user]);
+
+  const handleClickOpen = () => {
+    const newClassCode = generateClassCode();  
+    setFormValues(prevValues => ({
+      ...prevValues,
+      classCode: newClassCode  
+    }));
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setFormValues({ subjectName: '', subjectCode: '', section: '', classCode: '' }); 
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues(prevValues => ({ ...prevValues, [name]: value }));
+  };
+
+  const generateClassCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  };
+
+  const handleCreateClassroom = async () => {
+    setLoading(true);
+    const classroomData = {
+      subjectName: formValues.subjectName,
+      subjectCode: formValues.subjectCode,
+      section: formValues.section,
+      classCode: formValues.classCode,  
+      adviserID: user.userID
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/classroom/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(classroomData),
+      });
+
+      if (response.ok) {
+        toast.success('Classroom created successfully!');
+        setClassrooms(prev => [...prev, classroomData]);  
+        handleClose();
+      } else {
+        toast.error('Failed to create classroom. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating classroom:', error);
+      toast.error('An error occurred. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="m-0 vh-100" 
-       style={{ 
-        background: '#ffffff', 
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+         style={{ 
+            background: '#ffffff', 
+            color: '#333333',
+            backgroundImage: `url(${vector})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
          }}>
       <AdviserNavbar />
       <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px'}}> 
         <h2>Active Classrooms</h2> 
+
+        {user && (
+          <p>User ID: {user.userID}</p>
+        )}
+
         {classrooms.length === 0 ? (
           <p>No active classrooms found.</p>
         ) : (
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             {classrooms.map((classroom) => (
               <ClassroomCard 
                 key={classroom.classId}
@@ -67,7 +151,56 @@ export default function AdviserPage() {
             ))}
           </div>
         )}
-      </div>
+ 
+        <div onClick={handleClickOpen}>
+          <AdviserCreateClassroomCard />
+        </div>
+ 
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Create Classroom</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              name="subjectName"
+              label="Subject Name"
+              fullWidth
+              value={formValues.subjectName}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="subjectCode"
+              label="Subject Code"
+              fullWidth
+              value={formValues.subjectCode}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="section"
+              label="Section"
+              fullWidth
+              value={formValues.section}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="classCode"
+              label="Class Code"
+              fullWidth
+              value={formValues.classCode}
+              InputProps={{ readOnly: true }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="secondary">Cancel</Button>
+            <Button onClick={handleCreateClassroom} color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Create'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div> 
     </div>
   );
 }
