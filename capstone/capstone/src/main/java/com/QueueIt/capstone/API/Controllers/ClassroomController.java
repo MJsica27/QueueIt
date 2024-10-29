@@ -12,7 +12,7 @@ import java.util.EmptyStackException;
 import java.util.List;
 
 @RestController
-@RequestMapping("classroom/")
+@RequestMapping("/classroom")
 @CrossOrigin
 public class ClassroomController {
 
@@ -27,6 +27,11 @@ public class ClassroomController {
         }
         return ResponseEntity.status(406).body("Adviser account or Admin account is necessary for classroom creation.");
     }
+    // admin get all classroom
+    @GetMapping("/all")
+    public List<Classroom> getAllClassrooms() {
+        return classroomService.getAllClassrooms();
+    }
 
     @GetMapping("/getClassroom")
     public ResponseEntity<Classroom> getClassroomByReferenceID(@RequestParam Long classID){
@@ -35,6 +40,14 @@ public class ClassroomController {
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
+    }
+    // admin deletion
+    @PostMapping("/deleteClassroomAsAdmin")
+    public ResponseEntity<String> deleteClassroomAsAdmin(@RequestParam Long classID, @RequestParam Long userID) {
+        if (classroomService.deleteClassroomAsAdmin(classID, userID)) {
+            return ResponseEntity.ok("Classroom successfully deleted by admin.");
+        }
+        return ResponseEntity.status(403).body("Deletion failed. Ensure that the user is an admin or the classroom does not exist.");
     }
 
     @PostMapping("/editClassroom")

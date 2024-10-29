@@ -37,6 +37,26 @@ public class ClassroomService {
         return null;
     }
 
+    public List<Classroom> getAllClassrooms() {
+        return classroomRepository.findAll();
+    }
+
+    public Boolean deleteClassroomAsAdmin(Long classID, Long userID) {
+        try {
+            if (adminRepository.findById(userID).isPresent()) {
+                Classroom classroom = classroomRepository.getReferenceById(classID);
+                if (classroom != null) {
+                    classroomRepository.deleteById(classID);
+                    return Boolean.TRUE;
+                }
+            }
+            return Boolean.FALSE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+    }
+
+
     public Classroom getClassroomByReferenceID(Long classID){
         return classroomRepository.findById(classID).orElseThrow();
     }
