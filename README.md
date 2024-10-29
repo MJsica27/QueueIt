@@ -46,7 +46,7 @@ Navigate back to the root folder, then into the `Backend` directory, and clone t
 ```bash
 cd ..
 cd Backend
-git clone -b backend https://github.com/MJsica27/QueueIt.git
+git clone -b Backend-JWT https://github.com/MJsica27/QueueIt.git
 ```
 
 ### 3. Backend Setup (IntelliJ IDEA)
