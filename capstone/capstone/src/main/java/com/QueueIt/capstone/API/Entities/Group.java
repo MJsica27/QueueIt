@@ -11,6 +11,7 @@ public class Group {
     @GeneratedValue
     private Long groupID;
     private Long classID;
+    private Long mentorID;
     private String groupName;
     @ManyToMany
     @JoinTable(

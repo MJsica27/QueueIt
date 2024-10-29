@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**","/w/**").permitAll()
+                        .requestMatchers("/auth/**","/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
