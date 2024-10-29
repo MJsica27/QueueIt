@@ -20,7 +20,7 @@ export default function AdviserPage() {
   const [classrooms, setClassrooms] = useState([]);
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
-  const [formValues, setFormValues] = useState({
+  const [formData, setFormData] = useState({
     subjectName: '',
     subjectCode: '',
     section: '', 
@@ -38,6 +38,14 @@ export default function AdviserPage() {
       navigate('/login');
     }
   }, [navigate]);
+
+  const userData = {
+    subjectName: formData.subjectName,
+    subjectCode: formData.subjectCode,
+    section: formData.section,
+    adviserID: formData.adviserID,
+    classCode: formData.classCode
+  };
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -61,7 +69,7 @@ export default function AdviserPage() {
 
   const handleClickOpen = () => {
     const newClassCode = generateClassCode();  
-    setFormValues(prevValues => ({
+    setFormData(prevValues => ({
       ...prevValues,
       classCode: newClassCode  
     }));
@@ -70,12 +78,12 @@ export default function AdviserPage() {
 
   const handleClose = () => {
     setOpen(false);
-    setFormValues({ subjectName: '', subjectCode: '', section: '', classCode: '' }); 
+    setFormData({ subjectName: '', subjectCode: '', section: '', classCode: '' }); 
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues(prevValues => ({ ...prevValues, [name]: value }));
+    setFormData(prevValues => ({ ...prevValues, [name]: value }));
   };
 
   const generateClassCode = () => {
@@ -90,10 +98,10 @@ export default function AdviserPage() {
   const handleCreateClassroom = async () => {
     setLoading(true);
     const classroomData = {
-      subjectName: formValues.subjectName,
-      subjectCode: formValues.subjectCode,
-      section: formValues.section,
-      classCode: formValues.classCode,  
+      subjectName: formData.subjectName,
+      subjectCode: formData.subjectCode,
+      section: formData.section,
+      classCode: formData.classCode,  
       adviserID: user.userID
     };
 
@@ -103,7 +111,7 @@ export default function AdviserPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(classroomData),
+        body: JSON.stringify(userData),
       });
 
       if (response.ok) {
@@ -165,7 +173,7 @@ export default function AdviserPage() {
               name="subjectName"
               label="Subject Name"
               fullWidth
-              value={formValues.subjectName}
+              value={formData.subjectName}
               onChange={handleInputChange}
             />
             <TextField
@@ -173,7 +181,7 @@ export default function AdviserPage() {
               name="subjectCode"
               label="Subject Code"
               fullWidth
-              value={formValues.subjectCode}
+              value={formData.subjectCode}
               onChange={handleInputChange}
             />
             <TextField
@@ -181,7 +189,7 @@ export default function AdviserPage() {
               name="section"
               label="Section"
               fullWidth
-              value={formValues.section}
+              value={formData.section}
               onChange={handleInputChange}
             />
             <TextField
@@ -189,7 +197,7 @@ export default function AdviserPage() {
               name="classCode"
               label="Class Code"
               fullWidth
-              value={formValues.classCode}
+              value={formData.classCode}
               InputProps={{ readOnly: true }}
             />
           </DialogContent>

@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 
-export default function EnrollClassroomCard() {
+export default function StudentEnrollClassroomCard() {
   return (
     <div className="m-0">
       <div className="card" 

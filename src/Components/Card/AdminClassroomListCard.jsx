@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card } from 'react-bootstrap'; 
+import { Card } from 'react-bootstrap';
 import bin from '../../Assets/icons/bin.png';
 import edit from '../../Assets/icons/edit.png';
 import groupUser from '../../Assets/icons/group-users.png';
 
-export default function ClassroomListCard({ classCode, subjectName, subjectCode, adviserID, section }) {
+export default function AdminClassroomListCard({ classID, classCode, subjectName, subjectCode, adviserID, section, onDelete }) {
 
   return (
     <Card className="mt-3" style={{ width: 'auto' }}>
@@ -19,7 +19,7 @@ export default function ClassroomListCard({ classCode, subjectName, subjectCode,
 
         {/* Edit and Bin */}
         <div className="ml-auto">
-        <img
+          <img
             src={groupUser}
             alt="Group User"
             style={{ width: '25px', height: '25px', marginRight: '100px' }}
@@ -32,7 +32,8 @@ export default function ClassroomListCard({ classCode, subjectName, subjectCode,
           <img
             src={bin}
             alt="Delete Icon"
-            style={{ width: '25px', height: '25px' }}
+            style={{ width: '25px', height: '25px', cursor: 'pointer' }}
+            onClick={() => onDelete(classID)}   
           />
         </div>
       </Card.Body>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/ClassroomCard';
-import EnrollClassroomCard from '../../Components/Card/EnrollClassroomCard';
+import StudentEnrollClassroomCard from '../../Components/Card/StudentEnrollClassroomCard';
 import vector from '../../Assets/Vector.png';
 import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';
@@ -125,7 +125,7 @@ export default function StudentPage() {
           )}
  
           <div onClick={handleClickOpen}>
-            <EnrollClassroomCard />
+            <StudentEnrollClassroomCard />
           </div>
  
           <Dialog open={open} onClose={handleClose}>
