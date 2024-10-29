@@ -106,7 +106,6 @@ public class UserService {
             return ResponseEntity.status(400).body("Invalid role provided.");
         }
 
-
         User user = new User(
                 studentRegistrationRequest.getUsername(),
                 passwordEncoder.encode(studentRegistrationRequest.getPassword()),

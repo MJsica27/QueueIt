@@ -28,8 +28,10 @@ public class SecurityConfig {
         http
                 .csrf()
                 .disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**","/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
