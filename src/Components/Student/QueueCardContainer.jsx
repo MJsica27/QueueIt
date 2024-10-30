@@ -10,7 +10,7 @@ const QueueCardContainer = () => {
     const [stompClient, setStompClient] = useState(null);
     const [adviser, setAdviser] = useState({
         "user": {
-            "userID": 1,
+            "userID": 4,
             "username": "iceman",
             "firstname": "ice",
             "lastname": "man",
@@ -25,7 +25,7 @@ const QueueCardContainer = () => {
     useEffect(() => {
         const socket = new SockJS('http:/localhost:8080/ws');
         const client = Stomp.over(socket);
-
+        client.debug = ()=>{};
         client.connect({},()=>{
             client.subscribe(`/topic/queueStatus/adviser/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);

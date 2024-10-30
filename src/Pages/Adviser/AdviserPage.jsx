@@ -43,7 +43,7 @@ export default function AdviserPage() {
     subjectName: formData.subjectName,
     subjectCode: formData.subjectCode,
     section: formData.section,
-    adviserID: formData.adviserID,
+    adviserID: user?user.userID:undefined,
     classCode: formData.classCode
   };
 
@@ -102,13 +102,14 @@ export default function AdviserPage() {
       subjectCode: formData.subjectCode,
       section: formData.section,
       classCode: formData.classCode,  
-      adviserID: user.userID
+      adviserID: user?user.userID:undefined
     };
 
     try {
       const response = await fetch('http://localhost:8080/classroom/create', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
@@ -143,7 +144,7 @@ export default function AdviserPage() {
         <h2>Active Classrooms</h2> 
 
         {user && (
-          <p>User ID: {user.userID}</p>
+          <p>User ID: {user?user.userID:<></>}</p>
         )}
 
         {classrooms.length === 0 ? (
