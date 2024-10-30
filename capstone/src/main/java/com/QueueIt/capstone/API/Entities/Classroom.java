@@ -14,7 +14,7 @@ public class Classroom {
     private Long adviserID;
     private String classCode;
     private String section;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "classroom_user",
             joinColumns = @JoinColumn(name = "class_id"),

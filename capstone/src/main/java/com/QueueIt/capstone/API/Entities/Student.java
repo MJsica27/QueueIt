@@ -15,7 +15,7 @@ public class Student{
     @JoinColumn(name = "fk_user_id")
     @MapsId
     private User user;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinTable(
             name = "group_user",
@@ -23,7 +23,7 @@ public class Student{
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
     private List<Group> groups;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinTable(
             name = "classroom_user",

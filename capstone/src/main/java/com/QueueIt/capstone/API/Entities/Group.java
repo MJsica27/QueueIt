@@ -13,7 +13,7 @@ public class Group {
     private Long classID;
     private Long mentorID;
     private String groupName;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "group_user",
             joinColumns = @JoinColumn(name = "group_id"),
