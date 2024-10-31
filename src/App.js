@@ -43,7 +43,7 @@ export default function App() {
 
                         {/* student */}
                         <Route path="/studenthomepage" element={<StudentHomePage />} />
-                        <Route path='/queuePage' element={<QueueingPage/>} />
+                        <Route path='/queuePage/:id' element={<QueueingPage/>} />
                         {/* user */}
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/" element={<LoginForm />} />

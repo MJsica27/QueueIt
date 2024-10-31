@@ -31,29 +31,29 @@ export default function StudentNavbar() {
   };
   return (
     <div>
-        <Navbar expand="lg" className="m-4" style={{ background: 'transparent' }}>
+        <Navbar expand="lg" style={{ background: 'transparent' }}>
             <Container className="d-flex justify-content-between align-items-center">
-                <Navbar.Brand href="home">
+                <Navbar.Brand href="/">
                     <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                 </Navbar.Brand>
                 {/* Profile */}
                 <Nav onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">User Profile</Tooltip>}>
+                    {/* <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">User Profile</Tooltip>}> */}
                         <Dropdown show={showDropdown}>
-                            <Dropdown.Toggle as={Nav.Link} id="dropdown-profile">
+                            <Dropdown.Toggle as={Nav.Link} id="dropdown-profile" >
                                 <img
                                     src={pu}
                                     alt="User Profile"
-                                    style={{ width: '35px', height: '35px', borderRadius: '50%' }}
+                                    style={{ width: '35px', height: '35px', borderRadius: '50%'}}
                                 />
                             </Dropdown.Toggle>
 
-                            <Dropdown.Menu align="end">
+                            <Dropdown.Menu align="end" style={{position:'absolute'}}>
                                 <Dropdown.Item onClick={handleProfile}>View Profile</Dropdown.Item>
                                 <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
-                    </OverlayTrigger>
+                    {/* </OverlayTrigger> */}
                 </Nav>
             </Container>
         </Navbar>
