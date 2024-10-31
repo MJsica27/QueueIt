@@ -67,11 +67,8 @@ public class ClassroomController {
     }
 
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollStudent(@RequestBody EnrollStudentRequest enrollStudentRequest){
-        if (classroomService.enrollStudent(enrollStudentRequest)){
-            return ResponseEntity.ok("Student successfully enrolled.");
-        }
-        return ResponseEntity.status(422).body("There was a problem processing this request. Possible causes: Student is already in the classroom or either classroom or student doesn't exist.");
+    public ResponseEntity<Object> enrollStudent(@RequestBody EnrollStudentRequest enrollStudentRequest){
+        return classroomService.enrollStudent(enrollStudentRequest);
     }
 
     @GetMapping("/ClassroomsByAdviser")
@@ -87,6 +84,11 @@ public class ClassroomController {
     @GetMapping("/getStudents")
     public ResponseEntity<List<Student>> getStudentsGivenClassroom(@RequestParam Long classID){
         return ResponseEntity.ok(classroomService.getStudentsGivenClassroom(classID));
+    }
+
+    @GetMapping("/getClassroomsOfStudent")
+    public ResponseEntity<Object> getClassroomGivenStudent(@RequestParam Long studentID){
+        return classroomService.getClassroomGivenStudent(studentID);
     }
 
 }

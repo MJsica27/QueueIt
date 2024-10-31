@@ -1,23 +1,15 @@
 package com.QueueIt.capstone.API.Requests;
 
 public class EnrollStudentRequest {
-    private Long classID;
     private Long userID;
+    private String classCode;
 
     public EnrollStudentRequest() {
     }
 
-    public EnrollStudentRequest(Long classID, Long userID) {
-        this.classID = classID;
+    public EnrollStudentRequest(Long userID, String classCode) {
         this.userID = userID;
-    }
-
-    public Long getClassID() {
-        return classID;
-    }
-
-    public void setClassID(Long classID) {
-        this.classID = classID;
+        this.classCode = classCode;
     }
 
     public Long getUserID() {
@@ -26,5 +18,13 @@ public class EnrollStudentRequest {
 
     public void setUserID(Long userID) {
         this.userID = userID;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 }

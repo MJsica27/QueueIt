@@ -16,8 +16,8 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(userService.loginUser(loginRequest));
+    public ResponseEntity<Object> loginUser(@RequestBody LoginRequest loginRequest) {
+        return userService.loginUser(loginRequest);
     }
     // for admin create account
     @PostMapping("/register")

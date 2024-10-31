@@ -4,6 +4,7 @@ import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Requests.EnrollStudentRequest;
 import com.QueueIt.capstone.API.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.EmptyStackException;
@@ -37,9 +38,7 @@ public class ClassroomService {
         return null;
     }
 
-    public List<Classroom> getAllClassrooms() {
-        return classroomRepository.findAll();
-    }
+
 
     public Boolean deleteClassroomAsAdmin(Long classID, Long userID) {
         try {
@@ -95,19 +94,19 @@ public class ClassroomService {
         }
     }
 
-    public Boolean enrollStudent(EnrollStudentRequest enrollStudentRequest){
+    public ResponseEntity<Object> enrollStudent(EnrollStudentRequest enrollStudentRequest){
         try{
-            Classroom classroom = classroomRepository.findById(enrollStudentRequest.getClassID()).get();
-            Student student = studentRepository.getReferenceById(enrollStudentRequest.getUserID());
-            if (!classroom.getStudents().contains(student)){
-                classroom.getStudents().add(student);
-                classroomRepository.save(classroom);
-                return Boolean.TRUE;
+            Classroom classroom = classroomRepository.findByClassCode(enrollStudentRequest.getClassCode());
+            Student student = studentRepository.findById(enrollStudentRequest.getUserID()).orElseThrow();
+            //if student is already part of the classroom
+            if (classroom.getStudents().contains(student)){
+                return ResponseEntity.badRequest().body("You're already part of this classroom.");
             }
-            return Boolean.FALSE;
+            classroom.getStudents().add(student);
+            classroomRepository.save(classroom);
+            return ResponseEntity.ok(classroom);
         } catch (Exception e){
-            System.out.println(e);
-            return Boolean.FALSE;
+            return ResponseEntity.status(404).body("Classroom does not exist.");
         }
     }
 
@@ -122,5 +121,18 @@ public class ClassroomService {
     public List<Student> getStudentsGivenClassroom(Long classID){
         Classroom classroom = classroomRepository.getReferenceById(classID);
         return classroom.getStudents();
+    }
+
+    public ResponseEntity<Object> getClassroomGivenStudent(Long studentID){
+        try{
+            Student student = studentRepository.findById(studentID).orElseThrow();
+            return ResponseEntity.ok(classroomRepository.findByStudentsContaining(student));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body(e.toString());
+        }
+    }
+
+    public List<Classroom> getAllClassrooms() {
+        return classroomRepository.findAll();
     }
 }

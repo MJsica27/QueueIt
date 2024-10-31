@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Student{
     @Id
     private Long studentID;
@@ -23,7 +23,7 @@ public class Student{
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
     private List<Group> groups;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JsonIgnore
     @JoinTable(
             name = "classroom_user",

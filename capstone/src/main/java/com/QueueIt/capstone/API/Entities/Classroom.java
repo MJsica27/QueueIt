@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public class Classroom {
     private Long adviserID;
     private String classCode;
     private String section;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinTable(
             name = "classroom_user",
             joinColumns = @JoinColumn(name = "class_id"),

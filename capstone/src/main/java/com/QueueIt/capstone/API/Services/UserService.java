@@ -53,20 +53,19 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse loginUser(LoginRequest loginRequest) {
-        Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
-        if (user.isPresent()){
+    public ResponseEntity<Object> loginUser(LoginRequest loginRequest) {
+        try{
+            User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
                             loginRequest.getPassword()
                     )
             );
-            return new AuthenticationResponse(user.get(), jwtService.generateToken(user.get()));
-        }else {
-            ResponseEntity.status(404).body("Invalid username or password.");
+            return ResponseEntity.ok(new AuthenticationResponse(user, jwtService.generateToken(user)));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Invalid username or password.");
         }
-        return null;
     }
 
     public Boolean createAdviserAccount(User user) {
@@ -89,8 +88,9 @@ public class UserService {
                 null,
                 Role.STUDENT
         );
+        Student student = new Student(user);
         try{
-            userRepository.save(user);
+            studentRepository.save(student);
         }catch (Exception e){
             return ResponseEntity.status(406).body("Invalid username or password");
         }
@@ -114,8 +114,9 @@ public class UserService {
                 null,
                 role
         );
+        Student student = new Student(user);
         try{
-            userRepository.save(user);
+            studentRepository.save(student);
         }catch (Exception e){
             return ResponseEntity.status(406).body("Invalid username or password");
         }
