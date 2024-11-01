@@ -6,7 +6,7 @@ export default function AdviserAvailabilityPage() {
   return (
     <div  className="m-0 vh-100" 
         style={{ 
-        background: '#ffffff', 
+        background: '#b9ff66', 
         color: '#333333',
         backgroundImage: `url(${vector})`,
         backgroundSize: 'cover',

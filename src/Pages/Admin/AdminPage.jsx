@@ -79,13 +79,13 @@ export default function AdminPage() {
         console.error('Error deleting classroom:', error);
         toast.error('Error deleting classroom');
       }
-      setOpenDeleteDialog(false); // Close the delete dialog
+      setOpenDeleteDialog(false);  
     }
   };
   
   const handleOpenDeleteDialog = (classID) => {
     setDeleteClassID(classID);
-    setOpenDeleteDialog(true); // Open delete dialog
+    setOpenDeleteDialog(true);  
   };
 
   const handleCloseDeleteDialog = () => {
@@ -101,7 +101,7 @@ export default function AdminPage() {
       adviserID: '',
       classCode: generateClassCode(),
     });
-    setOpenCreateDialog(true); // Open create dialog
+    setOpenCreateDialog(true);  
   };
 
   const handleCloseCreateDialog = () => {
@@ -163,7 +163,7 @@ export default function AdminPage() {
   return (
     <div className="m-0"
       style={{
-        background: '#ffffff',
+        background: '#b9ff66',
         color: '#333333',
         backgroundImage: `url(${vector})`,
         backgroundSize: 'cover',
