@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';  
 import { toast } from 'react-toastify';
 import pu from '../../Assets/icons/profile-user.png'; 
-import darkwo from '../../Assets/logo/dark(wo-outline).png';
+import darkwo from '../../Assets/logo/light(w-outline).png';
 
 export default function AdminNavbar() {
     const navigate = useNavigate();

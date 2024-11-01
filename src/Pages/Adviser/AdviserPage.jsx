@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/ClassroomCard';
-import AdviserCreateClassroomCard from '../../Components/Card/AdviserCreateClassroomCard';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import vector from '../../Assets/Vector.png';
 import TextField from '@mui/material/TextField';
@@ -140,30 +139,33 @@ export default function AdviserPage() {
             backgroundPosition: 'center',
          }}>
       <AdviserNavbar />
-      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px'}}> 
-        <h2>Active Classrooms</h2> 
-
-        {user && (
-          <p>User ID: {user?user.userID:<></>}</p>
-        )}
+      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px 50px 25px 50px'}}> 
+        <div className='mb-10 d-flex align-items-center justify-content-between'>
+          <h2>Active Classrooms</h2>
+          <Button
+            onClick={handleClickOpen}  
+            variant="contained"
+            style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}
+          >
+            Create Classroom
+          </Button>
+        </div>  
 
         {classrooms.length === 0 ? (
           <p>No active classrooms found.</p>
         ) : (
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {classrooms.map((classroom) => (
-              <ClassroomCard 
-                key={classroom.classId}
-                subjectName={classroom.subjectName} 
-                style={{ margin: '0px' }} 
-              />
+            {classrooms.map((classroom, index) => (
+              classroom && classroom.classId ? (
+                <ClassroomCard 
+                  key={classroom.classId || index} // Use index as fallback if classId is unavailable
+                  subjectName={classroom.subjectName} 
+                  style={{ margin: '0px' }} 
+                />
+              ) : null // Render nothing if classroom or classId is missing
             ))}
           </div>
         )}
- 
-        <div onClick={handleClickOpen}>
-          <AdviserCreateClassroomCard />
-        </div>
  
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Create Classroom</DialogTitle>

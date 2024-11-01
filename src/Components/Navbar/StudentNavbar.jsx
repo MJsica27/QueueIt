@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';  
 import pu from '../../Assets/icons/profile-user.png'
-import darkwo from '../../Assets/logo/dark(wo-outline).png';
+import darkwo from '../../Assets/logo/light(w-outline).png';
 
 export default function StudentNavbar() {
   const navigate = useNavigate();
