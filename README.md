@@ -19,11 +19,10 @@ Copy code
 git clone -b Backend-JWT https://github.com/MJsica27/QueueIt.git Backend
 2. Backend Setup
 Open the Backend folder in IntelliJ IDEA.
-Once the project is loaded, run the backend using:
-Run Button or Shift+F10.
+Run the backend using the Run button or press Shift+F10.
 3. Frontend Setup
 Open the Frontend folder in Visual Studio Code.
-Install project dependencies by running:
+Install project dependencies:
 bash
 Copy code
 npm install
