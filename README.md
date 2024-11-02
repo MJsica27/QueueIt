@@ -22,9 +22,9 @@ git clone -b Backend-JWT https://github.com/MJsica27/QueueIt.git Backend
 ### 2. Backend Setup
 1. Open the Backend folder in **IntelliJ IDEA**.
 2. Ensure that Lombok is configured in your project:
- - Add the Lombok dependency to your pom.xml (for Maven) or build.gradle (for Gradle).
- - Install the Lombok plugin in IntelliJ IDEA from File > Settings > Plugins.
- - Enable annotation processing in IntelliJ IDEA from File > Settings > Build, Execution, Deployment > Compiler > Annotation Processors.
+  - Add the Lombok dependency to your pom.xml (for Maven) or build.gradle (for Gradle).
+  - Install the Lombok plugin in IntelliJ IDEA from File > Settings > Plugins.
+  - Enable annotation processing in IntelliJ IDEA from File > Settings > Build, Execution, Deployment > Compiler > Annotation Processors.
 3. Run the backend using the **Run** button or press **Shift+F10**.
 
 ### 3. Frontend Setup
