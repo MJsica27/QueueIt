@@ -132,6 +132,9 @@ export default function ProfilePage() {
         setSuccessfulSave(true);
         setEditable(false);
         setShowChangePassword(false);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
       } catch (error) {
         console.error('Error:', error);
         setSaveResult(<>An error occurred while saving changes.<br />Inputted current password is incorrect.</>);

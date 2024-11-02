@@ -31,7 +31,7 @@ export default function StudentNavbar() {
   };
   return (
     <div>
-        <Navbar expand="lg" className="m-4" style={{ background: 'transparent' }}>
+        <Navbar expand="lg" className="m-0" style={{ background: 'transparent' }}>
             <Container className="d-flex justify-content-between align-items-center">
                 <Navbar.Brand href="/">
                     <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
