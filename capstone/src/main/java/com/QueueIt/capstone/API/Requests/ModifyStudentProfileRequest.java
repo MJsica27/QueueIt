@@ -3,16 +3,16 @@ package com.QueueIt.capstone.API.Requests;
 import com.QueueIt.capstone.API.Entities.User;
 
 public class ModifyStudentProfileRequest {
-    private String currentPassword;
+    private String passedCurrentPassword;
     private User userUpdateData;
 
     // Getters and Setters
-    public String getCurrentPassword() {
-        return currentPassword;
+    public String getPassedCurrentPassword() {
+        return passedCurrentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
+    public void setPassedCurrentPassword(String currentPassword) {
+        this.passedCurrentPassword = currentPassword;
     }
 
     public User getUserUpdateData() {

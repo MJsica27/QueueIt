@@ -12,6 +12,7 @@ import com.QueueIt.capstone.API.Returns.AuthenticationResponse;
 import com.QueueIt.capstone.API.Services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,46 +59,24 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    // @PutMapping("/modifyProfile")
-    // public ResponseEntity<Boolean> modifyUserProfile(
-    // @RequestParam Long userID,
-    // @RequestBody User userUpdateData) {
 
-    // if (userService.modifyUserProfile(userID, userUpdateData)) {
-    // return ResponseEntity.ok(true);
-    // }
-    // return ResponseEntity.ok(false);
-    // }
-
-    @PutMapping("/modifyStudentProfile")
-    public ResponseEntity<Boolean> modifyStudentProfileRequest(
+    @PutMapping("/modifyProfile")
+    public ResponseEntity<Boolean> modifyUserProfile(
             @RequestParam Long userID,
             @RequestBody ModifyStudentProfileRequest userUpdateRequest) {
 
-        String passedCurrentPassword = userUpdateRequest.getCurrentPassword();
+        String passedCurrentPassword = userUpdateRequest.getPassedCurrentPassword();
         User userUpdateData = userUpdateRequest.getUserUpdateData();
-
-        if (userService.modifyUserProfile(userID, passedCurrentPassword, userUpdateData)) {
+        
+        boolean isUpdated = userService.modifyUserProfile(userID, passedCurrentPassword, userUpdateData);
+    
+        if (isUpdated) {
             return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false); // or any appropriate status
         }
-        return ResponseEntity.ok(false);
     }
 
-    @PutMapping("/modifyAdviserProfile")
-    public ResponseEntity<Boolean> modifyAdviserProfile(
-            @RequestParam Long userID,
-            @RequestBody ModifyAdviserProfileRequest modifyAdviserProfileRequest) {
-
-        String currentPassword = modifyAdviserProfileRequest.getCurrentPassword();
-        User userUpdateData = modifyAdviserProfileRequest.getUserUpdateData();
-
-        if (userService.modifyAdviserProfile(userID, currentPassword, userUpdateData,
-                modifyAdviserProfileRequest.getAvailableTime(),
-                modifyAdviserProfileRequest.getExpertise())) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.ok(false);
-    }
 
     @PostMapping("/modifyStudentAssignedClassroom")
     public ResponseEntity<Boolean> modifyStudentAssignedClassroom(

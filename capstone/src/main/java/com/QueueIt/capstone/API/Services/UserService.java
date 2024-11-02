@@ -27,6 +27,9 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
 
@@ -52,6 +55,10 @@ public class UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    //private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public ResponseEntity<Object> loginUser(LoginRequest loginRequest) {
         try{
@@ -97,7 +104,7 @@ public class UserService {
         return ResponseEntity.ok("Student registration successful.");
     }
 
-    // for admin crete account
+    // for admin create account
     public ResponseEntity<String> registerUser(StudentRegistrationRequest studentRegistrationRequest) {
         Role role;
         try {
@@ -137,23 +144,34 @@ public class UserService {
 
     public Boolean modifyUserProfile(Long userID, String passedCurrentPassword, User userUpdateData) {
         Optional<User> existingUserOpt = userRepository.findById(userID);
+        logger.info("Received password update request with passedCurrentPassword: " + passedCurrentPassword);
 
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
-
-            if (passedCurrentPassword != null && !passedCurrentPassword.isEmpty()) {
-                if (!existingUser.getPassword().equals(passedCurrentPassword)) {
-                    throw new IllegalArgumentException("Current password is incorrect.");
-                }
-            }
-
+            logger.info("User found with ID: {}", userID);
+            try {
+            // User wants to update password
             String newPassword = userUpdateData.getPassword();
             if (newPassword != null && !newPassword.isEmpty()) {
-                if (newPassword.length() >= 8) {
-                    existingUser.setPassword(newPassword);
-                } else {
-                    throw new IllegalArgumentException("New password must be at least 8 characters long.");
+                logger.info("New password provided, checking current password...");
+
+                if (passedCurrentPassword == null || passedCurrentPassword.isEmpty()) {
+                    logger.warn("No current password provided for password update.");
+                    //return false; 
                 }
+                if (!passwordEncoder.matches(passedCurrentPassword, existingUser.getPassword())) {
+                    logger.warn("Inputted password does not match with database.");
+                    return false; 
+                }
+                // Password length requirements
+                if (newPassword.length() < 8) {
+                    return false; 
+                }
+                existingUser.setPassword(passwordEncoder.encode(newPassword));
+            }
+            } catch (Exception e) {
+                logger.error("Error updating user profile", e);
+                return false;
             }
 
             existingUser.setFirstname(userUpdateData.getFirstname());
@@ -162,22 +180,6 @@ public class UserService {
 
             userRepository.save(existingUser);
             return true;
-        }
-        return false;
-    }
-
-    public Boolean modifyAdviserProfile(Long userID, String currentPassword, User userUpdateData,
-            List<Time> availableTime, List<String> expertise) {
-
-        if (modifyUserProfile(userID, currentPassword, userUpdateData)) {
-            Optional<Adviser> adviserOpt = adviserRepository.findById(userID);
-            if (adviserOpt.isPresent()) {
-                Adviser adviser = adviserOpt.get();
-                adviser.setAvailableTime(availableTime);
-                adviser.setExpertise(expertise);
-                adviserRepository.save(adviser);
-                return true;
-            }
         }
         return false;
     }
