@@ -4,6 +4,7 @@ import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import StudentQueueNavigation from '../../Components/Navbar/StudentQueueNavigation';
 import { Typography } from '@mui/material';
 import QueueCardContainer from '../../Components/Student/QueueCardContainer';
+import { useLocation } from 'react-router-dom';
 // import { useLocation, useParams } from 'react-router-dom';
 
 const QueueingPage = () => {
