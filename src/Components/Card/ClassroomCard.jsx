@@ -1,22 +1,24 @@
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import React from 'react';
-import { Col, Container, NavLink, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import HistoryIcon from '@mui/icons-material/History';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import '../../Static/ClassroomCard.css';
+import { NavLink } from 'react-router-dom';
 
 export default function ClassroomCard({ classroom }) {
   return (
-    <Container
-      className='mt-4 p-3 shadow-sm navlinkcustom' 
-      
+    <div
+      className='navlinkcustom'
     >
       <Row className='h-75' style={{paddingLeft:'20px'}}>
         <Col xs={9}>
          <NavLink
-            href={`/queuePage/${classroom.classID}`}
+            to={`/queuePage`}
+            state={classroom}
+            style={{textDecoration:'none'}}
          >
           <Row>
               {/* image */}
@@ -24,7 +26,7 @@ export default function ClassroomCard({ classroom }) {
 
             </Col>
             <Col xs={8} className='d-flex align-items-center justify-content-left' style={{overflow:'hidden'}}>
-              <Typography variant='caption' style={{fontWeight:'bold',fontSize:'15px', color:'black'}}>{classroom.subjectName}</Typography>
+              <Typography variant='caption' style={{fontWeight:'bold',fontSize:'15px', color:'black'}}>{classroom?classroom.subjectName:<></>}</Typography>
             </Col>
             </Row>
          </NavLink>
@@ -52,6 +54,6 @@ export default function ClassroomCard({ classroom }) {
           </IconButton>
         </Tooltip>
       </div>
-    </Container>
+    </div>
   );
 }

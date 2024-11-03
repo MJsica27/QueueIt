@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/ClassroomCard';
-// import StudentEnrollClassroomCard from '../../Components/Card/StudentEnrollClassroomCard';
 import vector from '../../Assets/Vector.png'
 import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';
@@ -14,8 +13,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import { Container } from '@mui/material';
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ export default function StudentPage() {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
-      console.log('User is logged in:', storedUser);
       setUser(storedUser);
     } else {
       console.log('No user is logged in');
@@ -40,7 +39,6 @@ export default function StudentPage() {
     const fetchClassrooms = async () => {
       if (user && user.userID) {
         try {
-          console.log(user.userID)
           const response = await fetch(`http://localhost:8080/classroom/getClassroomsOfStudent?studentID=${user.userID}`,{
             method:'GET',
             // headers:{
@@ -49,7 +47,6 @@ export default function StudentPage() {
           } );
           if (response.ok) {
             const data = await response.json();
-            console.log('Fetched classrooms:', data);
             setClassrooms(data);
           } else {
             console.error('Failed to fetch classrooms:', response.statusText);
@@ -115,38 +112,29 @@ export default function StudentPage() {
               backgroundSize:'cover',
               backgroundColor:'#b9ff66',
               minHeight:'100dvh',
-              padding:'15px'
            }}> 
 
-           <Container className='fluid'>
+           <div>
             <StudentNavbar />
-              <div className="mx-5" style={{ height: '100%', borderRadius: '20px', padding: '10px', overflow:'auto', backgroundColor:'white', color:'gray', minWidth:'300px'}}> 
-                <Container className='fluid d-flex justify-content-between'>
+              <div className="mx-4" style={{ height: '100%', borderRadius: '20px', padding: '10px', overflow:'auto', backgroundColor:'white', color:'gray',}}> 
+                <div style={{display:'flex', justifyContent:'space-between', padding:'10px'}}>
                   <h2>Active Classes</h2> 
                   <Button className='shadow-sm' onClick={handleClickOpen} size='medium' variant='outlined' style={{color:'black',border:'solid 1px rgba(0,0,0,0.09)'}} startIcon={<MeetingRoomIcon/>}>Enroll</Button>
-                </Container>
-
-                {/* {user && (
-                  <p>User ID: {user.userID}</p>
-                )} */}
+                </div>
 
                 {classrooms.length === 0 ? (
                   <p>No active classrooms found.</p>
                 ) : (
                   
-                    <Container>
-                      <Row>
+                    <div style={{display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
                       {classrooms.map((classroom) => (
-                        <Col sm={12} md={6} lg={4}>
                           <ClassroomCard 
                             key={classroom.classId}
                             classroom={classroom}
                             style={{ margin: '0px' }} 
                             />
-                        </Col>
                       ))}
-                      </Row>
-                    </Container>
+                    </div>
                   
                 )}
       
@@ -172,7 +160,7 @@ export default function StudentPage() {
                 </Dialog>
 
               </div> 
-           </Container>
+           </div>
       </div>
     </>
   );

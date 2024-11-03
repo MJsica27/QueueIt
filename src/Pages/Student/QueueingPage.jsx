@@ -7,8 +7,10 @@ import QueueCardContainer from '../../Components/Student/QueueCardContainer';
 // import { useLocation, useParams } from 'react-router-dom';
 
 const QueueingPage = () => {
-    // const params = useParams();
-    // const location = useLocation();
+    const location = useLocation();
+    const classroom = location.state;
+    
+
     return (
         // The background
         <div
@@ -38,8 +40,8 @@ const QueueingPage = () => {
                 >
                     <Stack direction='column' style={{display:'flex', alignItems:'center'}} gap={3} className='mt-3'>
                         <StudentQueueNavigation/>
-                        <Typography>Capstone</Typography>
-                        <QueueCardContainer/>
+                            <Typography variant='caption' style={{fontWeight:'bold', fontSize:'20px'}}>{classroom.subjectName} - {classroom.section}</Typography> 
+                        <QueueCardContainer adviserID={classroom.adviserID}/>
                     </Stack>
                 </Row>
             </Container>

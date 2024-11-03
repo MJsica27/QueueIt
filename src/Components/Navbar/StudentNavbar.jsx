@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';  
@@ -31,8 +31,8 @@ export default function StudentNavbar() {
   };
   return (
     <div>
-        <Navbar expand="lg" className="m-0" style={{ background: 'transparent' }}>
-            <Container className="d-flex justify-content-between align-items-center">
+        <Navbar expand="lg" style={{ background: 'transparent' }}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100dvw', padding:'10px', paddingLeft:'3dvw', paddingRight:'3dvw'}}>
                 <Navbar.Brand href="/">
                     <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                 </Navbar.Brand>
@@ -55,7 +55,7 @@ export default function StudentNavbar() {
                         </Dropdown>
                     {/* </OverlayTrigger> */}
                 </Nav>
-            </Container>
+            </div>
         </Navbar>
     </div>
   )
