@@ -121,14 +121,31 @@ public class UserService {
                 null,
                 role
         );
-        Student student = new Student(user);
-        try{
-            studentRepository.save(student);
-        }catch (Exception e){
-            return ResponseEntity.status(406).body("Invalid username or password");
+
+        try {
+            switch (role) {
+                case STUDENT:
+                    Student student = new Student(user);
+                    studentRepository.save(student);
+                    break;
+                case ADVISER:
+                    Adviser adviser = new Adviser(user);
+                    adviserRepository.save(adviser);
+                    break;
+                case ADMIN:
+                    Admin admin = new Admin(user);
+                    adminRepository.save(admin);
+                    break;
+                default:
+                    return ResponseEntity.status(400).body("Invalid role provided.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(406).body("An error occurred during registration.");
         }
-        return ResponseEntity.ok("Student registration successful.");
+
+        return ResponseEntity.ok(role.name() + " registration successful.");
     }
+
 
     public Student getStudentByReferenceID(Long userID) {
         return studentRepository.getReferenceById(userID);
