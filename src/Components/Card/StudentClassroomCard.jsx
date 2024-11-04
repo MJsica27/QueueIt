@@ -8,7 +8,7 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import '../../Static/ClassroomCard.css';
 import { NavLink } from 'react-router-dom';
 
-export default function ClassroomCard({ classroom }) {
+export default function StudentClassroomCard({ classroom }) {
   return (
     <div
       className='navlinkcustom'

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/ClassroomCard';
+import ClassroomCard from '../../Components/Card/AdviserClassroomCard';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import vector from '../../Assets/Vector.png';
 import TextField from '@mui/material/TextField';
@@ -137,9 +137,22 @@ export default function AdviserPage() {
             backgroundImage: `url(${vector})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            height: '95vh'
          }}>
       <AdviserNavbar />
-      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px 50px 25px 50px'}}> 
+      <div 
+                className="mx-5" 
+                style={{ 
+                    background: 'rgba(238, 238, 238, 0.9)', 
+                    color: '#333333', 
+                    // background: '#ff0000',
+                    height: '570px', 
+                    borderRadius: '20px 20px 0 0',
+                    padding: '25px', 
+                    overflow: 'hidden', 
+                    position: 'relative' 
+                }}
+            > 
         <div className='mb-10 d-flex align-items-center justify-content-between'>
           <h2>Active Classrooms</h2>
           <Button

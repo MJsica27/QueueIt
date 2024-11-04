@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/ClassroomCard';
+import ClassroomCard from '../../Components/Card/StudentClassroomCard';
 import vector from '../../Assets/Vector.png'
 import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';

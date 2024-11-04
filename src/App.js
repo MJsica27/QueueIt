@@ -12,6 +12,7 @@ import AdviserHomePage from './Pages/Adviser/AdviserPage';
 import AdviserQueuePage from './Pages/Adviser/AdviserQueuePage'; 
 import AdviserAvailabilityPage from './Pages/Adviser/AdviserAvailabilityPage';
 import AdviserLogPage from './Pages/Adviser/AdviserLogPage';
+import AdviserClassroomPage from './Pages/Adviser/AdviserClassroomPage';
 //student
 import StudentHomePage from './Pages/Student/StudentPage'; 
 //users
@@ -40,7 +41,7 @@ export default function App() {
                         <Route path="/adviserqueuepage" element={<AdviserQueuePage />} />
                         <Route path="/adviseravailabilitypage" element={<AdviserAvailabilityPage />} />
                         <Route path="/adviserlogpage" element={<AdviserLogPage />} />
-
+                        <Route path="/adviserclassroompage" element={<AdviserClassroomPage />} />
                         {/* student */}
                         <Route path="/studenthomepage" element={<StudentHomePage />} />
                         <Route path='/queuePage' element={<QueueingPage/>} />
