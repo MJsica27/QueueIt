@@ -152,18 +152,17 @@ export default function AdviserPage() {
         </div>  
 
         {classrooms.length === 0 ? (
-          <p>No active classrooms found.</p>
-        ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {classrooms.map((classroom, index) => (
-              classroom && classroom.classId ? (
-                <ClassroomCard 
-                  key={classroom.classId || index} // Use index as fallback if classId is unavailable
-                  subjectName={classroom.subjectName} 
-                  style={{ margin: '0px' }} 
-                />
-              ) : null // Render nothing if classroom or classId is missing
-            ))}
+                  <p>No active classrooms found.</p>
+                ) : (
+                  
+                    <div style={{display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
+                      {classrooms.map((classroom) => (
+                          <ClassroomCard 
+                            key={classroom.classId}
+                            classroom={classroom}
+                            style={{ margin: '0px' }} 
+                            />
+                      ))}
           </div>
         )}
  
