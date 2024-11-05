@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import bin from '../../Assets/icons/bin.png';
-import edit from '../../Assets/icons/edit.png';
-import groupUser from '../../Assets/icons/group-users.png';
+import bin from '../../../Assets/icons/bin.png';
+import edit from '../../../Assets/icons/edit.png';
+import groupUser from '../../../Assets/icons/group-users.png';
 
 export default function AdminClassroomListCard({ classID, classCode, subjectName, subjectCode, adviserID, section, onDelete }) {
 

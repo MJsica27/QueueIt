@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/StudentClassroomCard';
+import ClassroomCard from '../../Components/Card/Student/StudentClassroomCard';
 import vector from '../../Assets/Vector.png'
 import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';
@@ -12,10 +12,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Col, Row } from 'react-bootstrap';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import { Container } from '@mui/material';
+import 'react-toastify/dist/ReactToastify.css'; 
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'; 
 
 export default function StudentPage() {
   const navigate = useNavigate();

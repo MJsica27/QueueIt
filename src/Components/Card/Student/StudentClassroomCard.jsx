@@ -1,11 +1,11 @@
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import HistoryIcon from '@mui/icons-material/History';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import '../../Static/ClassroomCard.css';
+import '../../../Static/ClassroomCard.css'; 
 import { NavLink } from 'react-router-dom';
 
 export default function StudentClassroomCard({ classroom }) {

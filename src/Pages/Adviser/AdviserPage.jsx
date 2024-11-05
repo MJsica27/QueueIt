@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/AdviserClassroomCard';
+import ClassroomCard from '../../Components/Card/Adviser/AdviserClassroomCard';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import vector from '../../Assets/Vector.png';
 import TextField from '@mui/material/TextField';
@@ -42,7 +42,7 @@ export default function AdviserPage() {
     subjectName: formData.subjectName,
     subjectCode: formData.subjectCode,
     section: formData.section,
-    adviserID: user?user.userID:undefined,
+    adviserID: user ? user.userID : undefined,
     classCode: formData.classCode
   };
 
@@ -101,7 +101,7 @@ export default function AdviserPage() {
       subjectCode: formData.subjectCode,
       section: formData.section,
       classCode: formData.classCode,  
-      adviserID: user?user.userID:undefined
+      adviserID: user ? user.userID : undefined
     };
 
     try {
@@ -141,41 +141,48 @@ export default function AdviserPage() {
          }}>
       <AdviserNavbar />
       <div 
-                className="mx-5" 
-                style={{ 
-                    background: 'rgba(238, 238, 238, 0.9)', 
-                    color: '#333333', 
-                    // background: '#ff0000',
-                    height: '570px', 
-                    borderRadius: '20px 20px 0 0',
-                    padding: '25px', 
-                    overflow: 'hidden', 
-                    position: 'relative' 
-                }}
-            > 
-        <div className='mb-10 d-flex align-items-center justify-content-between'>
-          <h2>Active Classrooms</h2>
-          <Button
-            onClick={handleClickOpen}  
-            variant="contained"
-            style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}
-          >
-            Create Classroom
-          </Button>
-        </div>  
+        className="container d-flex align-items-center justify-content-center"> 
+          <div 
+            className="shadow-lg "
+            style={{ 
+                background: 'rgba(255, 255, 255, 0.95)', 
+                color: '#333', 
+                maxWidth: '2000px', 
+                overflow: 'hidden',
+                height: '82vh', 
+                borderRadius: '20px'
+            }}
+          > 
+        <div className='d-flex align-items-center justify-content-between'
+          style={{
+            fontWeight: 'bold',
+            backgroundColor: '#6ab04c',
+            height: '50px',
+            fontSize: '22px',
+            padding: '0 20px',
+            borderBottom: '1px solid #ddd',
+            color: '#fff'
+          }}>
+        <h4 className="m-0">Active Classrooms</h4>
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          style={{ background: '#fff', color: '#111' }}
+        >
+          Create Classroom
+        </Button>
+      </div> 
 
         {classrooms.length === 0 ? (
-                  <p>No active classrooms found.</p>
-                ) : (
-                  
-                    <div style={{display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
-                      {classrooms.map((classroom) => (
-                          <ClassroomCard 
-                            key={classroom.classId}
-                            classroom={classroom}
-                            style={{ margin: '0px' }} 
-                            />
-                      ))}
+          <p className="text-center mt-4">No active classrooms found.</p>
+        ) : (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '20px' }}>
+            {classrooms.map((classroom) => (
+              <ClassroomCard 
+                key={classroom.classId}
+                classroom={classroom}
+              />
+            ))}
           </div>
         )}
  
@@ -224,6 +231,7 @@ export default function AdviserPage() {
           </DialogActions>
         </Dialog>
       </div> 
+      </div>
     </div>
   );
 }

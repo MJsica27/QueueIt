@@ -1,0 +1,56 @@
+import { Typography } from '@mui/material';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+import '../../../Static/ClassroomCard.css';
+import { NavLink } from 'react-router-dom';
+
+export default function AdviserClassroomCard({ classroom }) {
+  return ( 
+    <>
+      <Row className="h-100" style={{ padding: '10px 20px', height: '100%' }}>
+        <Col xs={9} className="d-flex align-items-center">  
+          <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none', width: '100%' }}>
+            <div className="navlinkcustom" style={{
+              padding: '20px', 
+              backgroundColor: '#ffffff',
+              borderRadius: '10px',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+              transition: 'transform 0.2s',
+              height: '100%' 
+            }}>
+            
+            <Row className="align-items-center" style={{ width: '100%' }}>  
+              {/* Image placeholder */}
+              <Col xs={4} style={{
+                backgroundColor: '#6ab04c',
+                borderRadius: '8px',
+                height: '85px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Typography variant="h6" style={{ color: '#fff', fontWeight: 'bold' }}>IMG</Typography>
+              </Col>
+              {/* Classroom info */}
+              <Col xs={8} className="d-flex align-items-center" style={{ overflow: 'hidden', paddingLeft: '10px' }}>
+                <Typography variant="subtitle1" style={{
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  color: '#333',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {classroom ? classroom.subjectName : 'Classroom Name'}
+                </Typography>
+              </Col>
+            </Row>
+            </div>
+          </NavLink>
+        </Col>
+      </Row>
+    </>
+      
+ 
+  );
+}

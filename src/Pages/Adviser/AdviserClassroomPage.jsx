@@ -3,9 +3,10 @@ import vector from '../../Assets/Vector.png';
 import { Stack } from 'react-bootstrap';
 import AdviserClassroomNavigation from '../../Components/Navbar/AdviserClassroomNavigation';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
-import AdviserGroupCard from '../../Components/Card/AdviserGroupCard';
+import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';
-import data from './data.json';  
+import data from './data.json';   
+import backIcon from '../../Assets/icons/arrow.png';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -29,46 +30,42 @@ const AdviserClassroomPage = () => {
             }}
         >
             <AdviserNavbar />
+            <div 
+                className="container d-flex align-items-center justify-content-center"> 
             <div
-                className="mx-5"
-                style={{
-                    background: 'rgba(238, 238, 238, 0.9)',
-                    color: '#333333',
-                    height: '570px',
-                    borderRadius: '20px 20px 0 0',
-                    padding: '25px',
+                className="shadow-lg"
+                style={{ 
+                    background: 'rgba(255, 255, 255, 0.95)', 
+                    color: '#333', 
+                    maxWidth: '2000px', 
+                    width: '2500px', 
                     overflow: 'hidden',
-                    position: 'relative'
+                    height: '82vh', 
+                    borderRadius: '20px 20px 0 0',  
                 }}
-            >
-                <div
-                    className="mx-5"
-                    style={{
-                        background: 'rgba(238, 238, 238, 0.9)',
-                        color: '#333333',
-                        height: '570px',
-                        width: 'auto',
-                        border: '1px solid black',
-                        overflowY: 'auto',
-                        borderRadius: '20px 20px 0 0'
-                    }}
-                >
-                    <div
+            >  
+                    <div className='d-flex align-items-center'
                         style={{
                             fontWeight: 'bold',
-                            backgroundColor: '#b9ff66',
-                            height: '45px',
+                            backgroundColor: '#6ab04c',
+                            color: '#fff',
+                            height: '50px',
                             width: '100%',
                             fontSize: '20px',
-                            padding: '0px 15px',
-                            borderBottom: '1px solid black',
+                            padding: '0 20px',
                             borderRadius: '20px 20px 0 0',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between'
                         }}
-                    >
-                        <span>{classroom.subjectName} - {classroom.section}</span>
+                    > 
+                        <span>
+                            <img
+                            src={backIcon}
+                            alt="back"
+                            style={{ width: '25px', height: '25px', marginRight: '10px' }}
+                            />
+                            {classroom.subjectName} - {classroom.section}</span>
                         <span>
                             <span style={{ fontWeight: 'normal' }}>Classcode:</span> {classroom.classCode}
                         </span>
@@ -99,8 +96,8 @@ const AdviserClassroomPage = () => {
                         )}
                     </Stack>
                 </div>
+            </div> 
             </div>
-        </div>
     );
 }
 

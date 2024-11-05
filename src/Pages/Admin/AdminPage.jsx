@@ -10,12 +10,12 @@ import TextField from '@mui/material/TextField';
 import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 import vector from '../../Assets/Vector.png';
 import { toast } from 'react-toastify';
-import AdminClassroomListCard from '../../Components/Card/AdminClassroomListCard';
+import AdminClassroomListCard from '../../Components/Card/Admin/AdminClassroomListCard';
 
 export default function AdminPage() {
   const [filteredClassrooms, setFilteredClassrooms] = useState([]);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false); // For Create Classroom dialog
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // For Delete Classroom dialog
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);  
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); 
   const [loading, setLoading] = useState(true); 
   const [deleteClassID, setDeleteClassID] = useState(null);  
   const [userID, setUserID] = useState(null); 
