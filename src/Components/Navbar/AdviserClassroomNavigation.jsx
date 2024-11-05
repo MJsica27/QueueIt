@@ -3,7 +3,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import '../../Static/StudentQueueNavigation.css';
 
-const StudentQueueNavigation = () => {
+export default function AdviserClassroomNavigation() {
     return (
         <Container className='fluid w-50 p-3' style={{
             backgroundColor:'#b9ff66',
@@ -22,7 +22,7 @@ const StudentQueueNavigation = () => {
                         variant='subtitle'
                         className='TypoSize'
                     >
-                        Team
+                        Groups
                     </Typography>
                 </Col>
                 <Col
@@ -37,27 +37,11 @@ const StudentQueueNavigation = () => {
                         variant='subtitle'
                         className='TypoSize'
                     >
-                        Queue
+                        All Students
                     </Typography>
-                </Col>
-                <Col
-                    style={{
-                        textAlign:'center',
-                        fontWeight:'bold',
-                        cursor:'pointer'
-                    }}
-                    className='nav-custom'
-                >
-                    <Typography
-                        variant='subtitle'
-                        className='TypoSize'
-                    >
-                        History
-                    </Typography>
-                </Col>
+                </Col> 
             </Row>
         </Container>
     );
 }
-
-export default StudentQueueNavigation;
+ 

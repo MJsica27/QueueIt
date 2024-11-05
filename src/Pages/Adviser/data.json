@@ -1,0 +1,63 @@
+[
+    {
+      "groupID": 1,
+      "classID": 152,
+      "mentorID": 10,
+      "groupName": "Alpha Group",
+      "students": [
+        { "userID": 1, "userName": "student1" },
+        { "userID": 2, "userName": "student2" }
+      ]
+    },
+    {
+      "groupID": 2,
+      "classID": 152,
+      "mentorID": 10,
+      "groupName": "Beta Group",
+      "students": [
+        { "userID": 3, "userName": "student3" },
+        { "userID": 4, "userName": "student4" }
+      ]
+    },
+    {
+      "groupID": 2,
+      "classID": 153,
+      "mentorID": 10,
+      "groupName": "Beta Group",
+      "students": [
+        { "userID": 3, "userName": "student3" },
+        { "userID": 4, "userName": "student4" }
+      ]
+    },
+    {
+      "groupID": 2,
+      "classID": 202,
+      "mentorID": 10,
+      "groupName": "Beta Group",
+      "students": [
+        { "userID": 3, "userName": "student3" },
+        { "userID": 4, "userName": "student4" }
+      ]
+    },
+    {
+      "groupID": 2,
+      "classID": 203,
+      "mentorID": 10,
+      "groupName": "Beta Group",
+      "students": [
+        { "userID": 3, "userName": "student3" },
+        { "userID": 4, "userName": "student4" }
+      ]
+    },
+    {
+      "groupID": 4,
+      "classID": 203,
+      "mentorID": 10,
+      "groupName": "Beta Group",
+      "students": [
+        { "userID": 3, "userName": "student3" },
+        { "userID": 4, "userName": "student4" }
+      ]
+    }
+  ]
+  
