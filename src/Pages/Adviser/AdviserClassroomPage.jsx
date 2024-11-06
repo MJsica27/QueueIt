@@ -9,6 +9,7 @@ import backIcon from '../../Assets/icons/arrow.png';
 import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
 import { toast } from 'react-toastify';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -163,7 +164,11 @@ const AdviserClassroomPage = () => {
                         <span style={{ display: 'inline-flex', alignItems: 'center', }} >
                             <img src={backIcon} alt="back" style={{ width: '25px', height: '25px', marginRight: '10px' }} />
                             {classroomDetails.subjectName} - {classroomDetails.section}
-                            <OptionsMenu onAction={handleAction} color="white" />  
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
+                            <div>
+                            <OptionsMenu onAction={handleAction} color="white" /> 
+                            </div> 
+                            </OverlayTrigger>
                         </span>
 
                         <span style={{ fontWeight: 'normal' }}>Classcode: {classroom.classCode}</span>
