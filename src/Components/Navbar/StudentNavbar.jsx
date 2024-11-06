@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';  
 import pu from '../../Assets/icons/profile-user.png'
-import darkwo from '../../Assets/logo/light(w-outline).png';
+import darkwo from '../../Assets/logo/dark(w-outline).png';
 
 export default function StudentNavbar() {
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ export default function StudentNavbar() {
   };
   return (
     <div>
-        <Navbar expand="lg" style={{ background: 'transparent' }}>
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100dvw', padding:'10px', paddingLeft:'3dvw', paddingRight:'3dvw'}}>
+        <Navbar expand="lg"  className="mt-0"  style={{ background: 'transparent' }}>
+            <div style={{display:'flex', justifyContent:'space-between', width:'100%', padding:'10px', padding: '2dvw 8dvw 2dvw 7.5dvw'}}>
                 <Navbar.Brand href="/">
                     <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                 </Navbar.Brand>

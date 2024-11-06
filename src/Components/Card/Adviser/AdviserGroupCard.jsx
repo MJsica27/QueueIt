@@ -13,7 +13,7 @@ export default function AdviserGroupCard({ group }) {
                         fontSize: '15px',
                         color: 'black'
                     }}
-                >not final color
+                > 
                     <div
                         style={{   
                             padding: '15px',

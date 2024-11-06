@@ -2,8 +2,7 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import '../../../Static/ClassroomCard.css'; 
-import { NavLink } from 'react-router-dom'; 
-import OptionsMenu from './OptionsMenu'; 
+import { NavLink } from 'react-router-dom';  
 
 export default function AdviserClassroomCard({ classroom }) {
  
@@ -15,7 +14,7 @@ export default function AdviserClassroomCard({ classroom }) {
     <>
       <Row className="h-100" style={{ padding: '10px 10px 0px 10px', height: '100%' }}>
         <Col xs={9} className="d-flex align-items-center">  
-          <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none', width: '100%' }}>
+          <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
             <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
             
             <Row className="align-items-center" style={{ width: '100%' }}>  
@@ -32,9 +31,7 @@ export default function AdviserClassroomCard({ classroom }) {
             </Row>
             </div>
           </NavLink>
-          <Col xs={0} className='d-flex align-items-center justify-content-center'>
-          <OptionsMenu onAction={handleAction}  color="#707070"/>
-        </Col>
+           
         </Col>
       </Row>
     </>

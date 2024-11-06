@@ -42,7 +42,7 @@ export default function AdviserNavbar() {
                         <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <div className="m-4" style={{ background: 'rgba(198, 198, 198, 0.5)', border: '.1em solid #666666', borderRadius: '10px', padding: '10px' }}>
+                    <div className="m-4" style={{ background: '#f3ffd1', border: '.1em solid #000', borderRadius: '10px', padding: '10px' }}>
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="justify-content-center">
                                 <Nav.Link 

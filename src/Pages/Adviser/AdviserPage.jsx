@@ -147,18 +147,18 @@ export default function AdviserPage() {
           <div 
             className="shadow-lg "
             style={{ 
-                background: 'rgba(255, 255, 255, 0.95)', 
+                background: 'rgba(255, 255, 255, 0.95)',  
                 color: '#333', 
                 width: '2000px', 
                 overflow: 'hidden',
                 height: '82vh', 
-                borderRadius: '20px'
+                borderRadius: '20px 20px 0 0',
             }}
           > 
         <div className='d-flex align-items-center justify-content-between'
           style={{
             fontWeight: 'bold',
-            backgroundColor: '#b9ff66',
+            backgroundColor: '#abf500',
             height: '50px',
             fontSize: '22px',
             padding: '0 20px',
@@ -178,12 +178,12 @@ export default function AdviserPage() {
             /> 
           </OverlayTrigger>
         </Button>
-      </div> 
-        <div style={{ gap: '20px', marginTop: '0px', overflowY: 'auto', maxHeight: '70vh'}}>
-        {classrooms.length === 0 ? (
-          <p className="text-center mt-4">No active classrooms found.</p>
+      </div > 
+        <div style={{ overflowY: 'auto', maxHeight: '80vh'}}>
+          {classrooms.length === 0 ? (
+            <p className="text-center mt-4">No active classrooms found.</p>
           ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '20px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
               {classrooms.map((classroom) => (
                 <ClassroomCard 
                   key={classroom.classId}

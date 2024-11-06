@@ -38,10 +38,7 @@ export default function StudentPage() {
       if (user && user.userID) {
         try {
           const response = await fetch(`http://localhost:8080/classroom/getClassroomsOfStudent?studentID=${user.userID}`,{
-            method:'GET',
-            // headers:{
-            //   "Authorization":`Bearer ${localStorage.getItem("token")}`
-            // }
+            method:'GET', 
           } );
           if (response.ok) {
             const data = await response.json();
@@ -101,22 +98,41 @@ export default function StudentPage() {
     }
   };
 
-  return (
-    <>
-      <div
+  return ( 
+      <div className="m-0 vh-100" 
            style={{ 
               backgroundImage:`url(${vector})`,
               backgroundPosition:'center',
               backgroundSize:'cover',
-              backgroundColor:'#b9ff66',
-              minHeight:'100dvh',
+              backgroundColor:'#fff',
+              height:'95vh',
            }}> 
 
            <div>
             <StudentNavbar />
-              <div className="mx-4" style={{ height: '100%', borderRadius: '20px', padding: '10px', overflow:'auto', backgroundColor:'white', color:'gray',}}> 
-                <div style={{display:'flex', justifyContent:'space-between', padding:'10px'}}>
-                  <h2>Active Classes</h2> 
+            <div 
+              className="container d-flex align-items-center justify-content-center"> 
+              <div 
+                className="shadow-lg "
+                style={{ 
+                    background: 'rgba(255, 255, 255, 0.95)',  
+                    color: '#333', 
+                    width: '2000px', 
+                    overflow: 'hidden',
+                    height: '82vh', 
+                    borderRadius: '20px 20px 0 0',
+                }}> 
+                <div div className='d-flex align-items-center justify-content-between'
+                  style={{
+                    fontWeight: 'bold',
+                    backgroundColor: '#abf500',
+                    height: '50px',
+                    fontSize: '22px',
+                    padding: '0 20px',
+                    borderBottom: '1px solid #ddd',
+                    color: '#fff'
+                  }}>
+                  <h4 className="m-0">Active Classes</h4> 
                   <Button className='shadow-sm' onClick={handleClickOpen} size='medium' variant='outlined' style={{color:'black',border:'solid 1px rgba(0,0,0,0.09)'}} startIcon={<MeetingRoomIcon/>}>Enroll</Button>
                 </div>
 
@@ -160,6 +176,6 @@ export default function StudentPage() {
               </div> 
            </div>
       </div>
-    </>
+      </div> 
   );
 }
