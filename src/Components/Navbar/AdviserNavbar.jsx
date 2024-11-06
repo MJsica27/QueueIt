@@ -1,10 +1,10 @@
-import { Container, Nav, Navbar, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Nav, Navbar, Dropdown} from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import pu from '../../Assets/icons/profile-user.png';
-import darkwo from '../../Assets/logo/light(w-outline).png';
+import darkwo from '../../Assets/logo/dark(w-outline).png';
 
 export default function AdviserNavbar() {
     const navigate = useNavigate();
@@ -77,8 +77,7 @@ export default function AdviserNavbar() {
                         </Navbar.Collapse>
                     </div> 
                     {/* Profile */}
-                    <Nav onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                        <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">User Profile</Tooltip>}>
+                    <Nav onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}> 
                             <Dropdown show={showDropdown}>
                                 <Dropdown.Toggle as={Nav.Link} id="dropdown-profile">
                                     <img
@@ -92,8 +91,7 @@ export default function AdviserNavbar() {
                                     <Dropdown.Item onClick={handleProfile}>View Profile</Dropdown.Item>
                                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
-                        </OverlayTrigger>
+                            </Dropdown> 
                     </Nav>
                 </Container>
             </Navbar>

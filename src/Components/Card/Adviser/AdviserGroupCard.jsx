@@ -13,19 +13,21 @@ export default function AdviserGroupCard({ group }) {
                         fontSize: '15px',
                         color: 'black'
                     }}
-                >
+                >not final color
                     <div
-                        style={{
-                            backgroundColor: 'white',  // Set to light green as requested
+                        style={{   
                             padding: '15px',
                             borderRadius: '5px',
                             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                             marginBottom: '10px',
-                            width: '200px',  // Fixed width
-                            height: '85px',  // Fixed height
-                            display: 'flex',  // Center content vertically and horizontally
+                            width: '200px',   
+                            height: '85px',   
+                            display: 'flex',   
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            margin: '10px',
+                            backgroundColor: '#eee',
+                            border: '1px solid #2e2e2e'
                         }}
                     >
                         {group.groupName || "Unnamed Group"}

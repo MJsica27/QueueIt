@@ -1,6 +1,7 @@
 import vector from '../../Assets/Vector.png';  
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import { useLocation } from 'react-router-dom';
+import backIcon from '../../Assets/icons/arrow.png';
 
 export default function AdviserGroupPage() {
 
@@ -14,7 +15,7 @@ export default function AdviserGroupPage() {
                 backgroundImage: `url(${vector})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                backgroundColor: '#b9ff66',
+                backgroundColor: '#fff',
                 height: '95vh'
             }}
         >
@@ -37,7 +38,7 @@ export default function AdviserGroupPage() {
                     <div 
                         style={{
                             fontWeight: 'bold',
-                            backgroundColor: '#6ab04c', 
+                            backgroundColor: '#b9ff66', 
                             height: '50px',
                             fontSize: '22px', 
                             padding: '0 20px', 
@@ -47,7 +48,15 @@ export default function AdviserGroupPage() {
                             alignItems: 'center'
                         }}
                     >
-                        {group.groupName}
+                        <span>
+                            <img
+                            src={backIcon}
+                            alt="back"
+                            style={{ width: '25px', height: '25px', marginRight: '10px' }}
+                            />
+                            {group.groupName}
+                        </span>
+                        
                     </div>
   
                     <div 

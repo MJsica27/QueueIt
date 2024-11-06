@@ -163,7 +163,7 @@ export default function AdminPage() {
   return (
     <div className="m-0"
       style={{
-        background: '#b9ff66',
+        background: '#fff',
         color: '#333333',
         backgroundImage: `url(${vector})`,
         backgroundSize: 'cover',

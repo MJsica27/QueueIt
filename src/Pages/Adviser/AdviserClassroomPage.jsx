@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import vector from '../../Assets/Vector.png';
 import { Stack } from 'react-bootstrap';
-import AdviserClassroomNavigation from '../../Components/Navbar/AdviserClassroomNavigation';
+// import AdviserClassroomNavigation from '../../Components/Navbar/AdviserClassroomNavigation';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';
@@ -25,7 +25,7 @@ const AdviserClassroomPage = () => {
                 backgroundImage: `url(${vector})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                backgroundColor: '#b9ff66',
+                backgroundColor: '#fff',
                 height: '95vh'
             }}
         >
@@ -47,7 +47,7 @@ const AdviserClassroomPage = () => {
                     <div className='d-flex align-items-center'
                         style={{
                             fontWeight: 'bold',
-                            backgroundColor: '#6ab04c',
+                            backgroundColor: '#b9ff66',
                             color: '#fff',
                             height: '50px',
                             width: '100%',
@@ -75,12 +75,12 @@ const AdviserClassroomPage = () => {
                         direction="column"
                         style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            marginTop: '15px'
+                            alignItems: 'flex-start',
+                            margin: '35px'
                         }}
                         gap={3}
                     >
-                        <AdviserClassroomNavigation />
+                        {/* <AdviserClassroomNavigation /> */}
 
                         {groups.length === 0 ? (
                             <p>No active groups found.</p>
