@@ -2,6 +2,8 @@ import vector from '../../Assets/Vector.png';
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import { useLocation } from 'react-router-dom';
 import backIcon from '../../Assets/icons/arrow.png';
+import { IconButton, } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function AdviserGroupPage() {
 
@@ -55,6 +57,9 @@ export default function AdviserGroupPage() {
                             style={{ width: '25px', height: '25px', marginRight: '10px' }}
                             />
                             {group.groupName}
+                            <IconButton  style={{ color: 'white'}}>
+                                <MoreHorizIcon/>
+                            </IconButton>
                         </span>
                         
                     </div>

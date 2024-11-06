@@ -168,7 +168,7 @@ export default function AdviserPage() {
         <h4 className="m-0">Active Classrooms</h4>
         <Button
           onClick={handleClickOpen} 
-          style={{ background: 'none', color: '#111' }}
+          style={{ background: 'none', color: '#111' , borderRadius: '40%'}}
         >
           <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">Create Classrooms</Tooltip>}>
             <img

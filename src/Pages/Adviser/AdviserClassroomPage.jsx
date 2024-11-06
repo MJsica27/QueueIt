@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import vector from '../../Assets/Vector.png';
-import { Stack } from 'react-bootstrap';
-// import AdviserClassroomNavigation from '../../Components/Navbar/AdviserClassroomNavigation';
+import { Stack } from 'react-bootstrap'; 
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';
 import data from './data.json';   
-import backIcon from '../../Assets/icons/arrow.png';
+import backIcon from '../../Assets/icons/arrow.png'; 
+import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
     const classroom = location.state;
     const [groups, setGroups] = useState([]);
- 
+
     useEffect(() => {
         const classroomGroups = data.filter(group => group.classID === classroom.classID);
         setGroups(classroomGroups);
     }, [classroom.classID]);
+ 
+    const handleAction = (action) => {
+        console.log(action); 
+    };
 
     return (
         <div
@@ -30,20 +34,19 @@ const AdviserClassroomPage = () => {
             }}
         >
             <AdviserNavbar />
-            <div 
-                className="container d-flex align-items-center justify-content-center"> 
-            <div
-                className="shadow-lg"
-                style={{ 
-                    background: 'rgba(255, 255, 255, 0.95)', 
-                    color: '#333', 
-                    maxWidth: '2000px', 
-                    width: '2500px', 
-                    overflow: 'hidden',
-                    height: '82vh', 
-                    borderRadius: '20px 20px 0 0',  
-                }}
-            >  
+            <div className="container d-flex align-items-center justify-content-center"> 
+                <div
+                    className="shadow-lg"
+                    style={{ 
+                        background: 'rgba(255, 255, 255, 0.95)', 
+                        color: '#333', 
+                        maxWidth: '2000px', 
+                        width: '2500px', 
+                        overflow: 'hidden',
+                        height: '82vh', 
+                        borderRadius: '20px 20px 0 0',  
+                    }}
+                >  
                     <div className='d-flex align-items-center'
                         style={{
                             fontWeight: 'bold',
@@ -59,16 +62,13 @@ const AdviserClassroomPage = () => {
                             justifyContent: 'space-between'
                         }}
                     > 
-                        <span>
-                            <img
-                            src={backIcon}
-                            alt="back"
-                            style={{ width: '25px', height: '25px', marginRight: '10px' }}
-                            />
-                            {classroom.subjectName} - {classroom.section}</span>
-                        <span>
-                            <span style={{ fontWeight: 'normal' }}>Classcode:</span> {classroom.classCode}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', }} >
+                            <img src={backIcon} alt="back" style={{ width: '25px', height: '25px', marginRight: '10px' }} />
+                            {classroom.subjectName} - {classroom.section}
+                            <OptionsMenu onAction={handleAction} color="white" />  
                         </span>
+
+                        <span style={{ fontWeight: 'normal' }}>Classcode: {classroom.classCode}</span>
                     </div>
 
                     <Stack
@@ -79,9 +79,7 @@ const AdviserClassroomPage = () => {
                             margin: '35px'
                         }}
                         gap={3}
-                    >
-                        {/* <AdviserClassroomNavigation /> */}
-
+                    >  
                         {groups.length === 0 ? (
                             <p>No active groups found.</p>
                         ) : (
@@ -97,7 +95,7 @@ const AdviserClassroomPage = () => {
                     </Stack>
                 </div>
             </div> 
-            </div>
+        </div>
     );
 }
 
