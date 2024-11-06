@@ -68,6 +68,7 @@ public class ClassroomService {
                 if (classroom.getAdviserID() == myclassroom.getAdviserID()){
                     myclassroom.setSubjectCode(classroom.getSubjectCode());
                     myclassroom.setSubjectName(classroom.getSubjectName());
+                    myclassroom.setSection(classroom.getSection());
                     classroomRepository.save(myclassroom);
                     return Boolean.TRUE;
                 }
