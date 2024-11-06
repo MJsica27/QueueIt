@@ -147,16 +147,28 @@ public class UserService {
     }
 
 
-    public Student getStudentByReferenceID(Long userID) {
-        return studentRepository.getReferenceById(userID);
+    public ResponseEntity<Object> getStudentByReferenceID(Long userID) {
+        try{
+            return ResponseEntity.ok(studentRepository.getReferenceById(userID));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Student does not exist");
+        }
     }
 
-    public Adviser getAdviserByReferenceID(Long userID) {
-        return adviserRepository.getReferenceById(userID);
+    public ResponseEntity<Object> getAdviserByReferenceID(Long userID) {
+        try{
+            return ResponseEntity.ok(adviserRepository.getReferenceById(userID));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Adviser does not exist.");
+        }
     }
 
-    public Admin getAdminByReferenceID(Long userID) {
-        return adminRepository.getReferenceById(userID);
+    public ResponseEntity<Object> getAdminByReferenceID(Long userID) {
+        try{
+            return ResponseEntity.ok(adminRepository.getReferenceById(userID));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Invalid admin credentials.");
+        }
     }
 
     public Boolean modifyUserProfile(Long userID, String passedCurrentPassword, User userUpdateData) {
@@ -174,15 +186,15 @@ public class UserService {
 
                 if (passedCurrentPassword == null || passedCurrentPassword.isEmpty()) {
                     logger.warn("No current password provided for password update.");
-                    //return false; 
+                    //return false;
                 }
                 if (!passwordEncoder.matches(passedCurrentPassword, existingUser.getPassword())) {
                     logger.warn("Inputted password does not match with database.");
-                    return false; 
+                    return false;
                 }
                 // Password length requirements
                 if (newPassword.length() < 8) {
-                    return false; 
+                    return false;
                 }
                 existingUser.setPassword(passwordEncoder.encode(newPassword));
             }
@@ -197,6 +209,22 @@ public class UserService {
 
             userRepository.save(existingUser);
             return true;
+        }
+        return false;
+    }
+
+    public Boolean modifyAdviserProfile(Long userID, String currentPassword, User userUpdateData,
+            List<Time> availableTime, List<String> expertise) {
+
+        if (modifyUserProfile(userID, currentPassword, userUpdateData)) {
+            Optional<Adviser> adviserOpt = adviserRepository.findById(userID);
+            if (adviserOpt.isPresent()) {
+                Adviser adviser = adviserOpt.get();
+                adviser.setAvailableTime(availableTime);
+                adviser.setExpertise(expertise);
+                adviserRepository.save(adviser);
+                return true;
+            }
         }
         return false;
     }

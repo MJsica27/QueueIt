@@ -4,10 +4,8 @@ import com.QueueIt.capstone.API.Entities.Admin;
 import com.QueueIt.capstone.API.Entities.Adviser;
 import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Entities.User;
-import com.QueueIt.capstone.API.Requests.LoginRequest;
-import com.QueueIt.capstone.API.Requests.ModifyAdviserProfileRequest;
-import com.QueueIt.capstone.API.Requests.ModifyStudentProfileRequest;
-import com.QueueIt.capstone.API.Requests.StudentRegistrationRequest;
+import com.QueueIt.capstone.API.Misc.FileManager;
+import com.QueueIt.capstone.API.Requests.*;
 import com.QueueIt.capstone.API.Returns.AuthenticationResponse;
 import com.QueueIt.capstone.API.Services.UserService;
 
@@ -15,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FileManager fileManager;
 
     @PostMapping("/createAdviserAccount")
     public ResponseEntity<String> createAdviser(@RequestBody User user) {
@@ -33,30 +37,18 @@ public class UserController {
     }
 
     @GetMapping("/getStudent")
-    public ResponseEntity<Student> getStudentByReferenceID(@RequestParam Long userID) {
-        Student student = userService.getStudentByReferenceID(userID);
-        if (student != null) {
-            return ResponseEntity.ok(student);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> getStudentByReferenceID(@RequestParam Long userID) {
+        return userService.getStudentByReferenceID(userID);
     }
 
     @GetMapping("/getAdviser")
-    public ResponseEntity<Adviser> getAdviserByReferenceID(@RequestParam Long userID) {
-        Adviser adviser = userService.getAdviserByReferenceID(userID);
-        if (adviser != null) {
-            return ResponseEntity.ok(adviser);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> getAdviserByReferenceID(@RequestParam Long userID) {
+        return userService.getAdviserByReferenceID(userID);
     }
 
     @GetMapping("/getAdmin")
-    public ResponseEntity<Admin> getAdminByReferenceID(@RequestParam Long userID) {
-        Admin admin = userService.getAdminByReferenceID(userID);
-        if (admin != null) {
-            return ResponseEntity.ok(admin);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> getAdminByReferenceID(@RequestParam Long userID) {
+        return userService.getAdminByReferenceID(userID);
     }
 
 
@@ -97,6 +89,26 @@ public class UserController {
         Boolean result = userService.removeStudentFromClassroom(studentID, currentClassId);
 
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/testUpload")
+    public ResponseEntity<Object> testUploadImage(@RequestBody MultipartFile multipartFile){
+        try{
+            fileManager.saveProfilePhoto(multipartFile);
+            return ResponseEntity.ok("Profile image uploaded.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/testDeleteUpload")
+    public ResponseEntity<Object> testDeleteImage(@RequestBody DeleteImageRequest url){
+        try{
+            fileManager.deleteProfilePhoto(url.getUrl());
+            return ResponseEntity.ok("Profile image deleted.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
