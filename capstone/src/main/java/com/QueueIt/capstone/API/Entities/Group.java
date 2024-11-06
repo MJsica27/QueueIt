@@ -21,9 +21,11 @@ public class Group {
     )
     private List<User> students;
 
+    public Group() {
+    }
+
     public Group(Long classID, Long mentorID, String groupName) {
         this.classID = classID;
-        this.mentorID = mentorID;
         this.groupName = groupName;
     }
 
