@@ -1,7 +1,6 @@
-import vector from '../../Assets/Vector.png';  
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
-import { useLocation } from 'react-router-dom';
-import backIcon from '../../Assets/icons/arrow.png';
+import { useLocation } from 'react-router-dom'; 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton, } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
@@ -11,16 +10,16 @@ export default function AdviserGroupPage() {
     const group = location.state;
 
     return ( 
-        <div className="m-0 vh-100" style={{ backgroundImage: `url(${vector})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundColor: '#fff', height: '95vh' }} >
+        <div className="m-0 vh-100" style={{  backgroundPosition: 'center', backgroundSize: 'cover', backgroundColor: '#fff', height: '95vh' }} >
             <AdviserNavbar /> 
 
-            <div  className="container d-flex align-items-center justify-content-center"> 
-                <div className="shadow-lg"  style={{ background: 'rgba(255, 255, 255, 0.95)', color: '#333',  width: '2500px', overflow: 'hidden', height: '82vh', borderRadius: '20px 20px 0 0'}} >  
-                    <div  style={{ fontWeight: 'bold', backgroundColor: '#abf500', height: '50px', fontSize: '22px', padding: '0 20px', color: '#fff', display: 'flex', alignItems: 'center'}} >
+            <div  className=" d-flex align-items-center justify-content-center"> 
+                <div  style={{ background: '#fafafa', color: '#333',  width: '1400px', overflow: 'hidden', height: '82vh', margin: '20px 0 0 20px',  }} >  
+                    <div  style={{ fontWeight: 'bold', backgroundColor: '#fafafa', height: '50px', fontSize: '22px', padding: '0 20px', color: '#000', display: 'flex', alignItems: 'center'}} >
                         <span>
-                            <img src={backIcon} alt="back"  style={{ width: '25px', height: '25px', marginRight: '10px' }} />
+                        <ArrowBackIcon />
                                 {group.groupName}
-                            <IconButton  style={{ color: 'white'}}>
+                            <IconButton  style={{ color: 'black'}}>
                                 <MoreHorizIcon/>
                             </IconButton>
                         </span>

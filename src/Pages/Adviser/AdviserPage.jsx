@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/Adviser/AdviserClassroomCard';
-import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
-import vector from '../../Assets/Vector.png';
+import AdviserNavbar from '../../Components/Navbar/AdviserNavbar'; 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -12,9 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import addbtn from '../../Assets/icons/plus.png'; 
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import 'react-toastify/dist/ReactToastify.css';  
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -132,67 +129,68 @@ export default function AdviserPage() {
   };
 
   return (
-    <div className="m-0 vh-100" 
-         style={{ 
+    <div className="m-0 vh-100" style={{ background: '#fff', color: '#333333', height: '95vh' }}>
+      <AdviserNavbar /> 
+        <div  
+          style={{    
             background: '#fff', 
-            color: '#333333',
-            backgroundImage: `url(${vector})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            height: '95vh'
-         }}>
-      <AdviserNavbar />
-      <div 
-        className="container d-flex align-items-center justify-content-center"> 
-          <div 
-            className="shadow-lg "
+            color: '#333', 
+            width: 'auto', 
+            overflow: 'hidden',
+            height: '90vh',  
+          }}
+        > 
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }} >
+          <div
+            className="d-flex align-items-center justify-content-between"
             style={{ 
-                background: 'rgba(255, 255, 255, 0.95)',  
-                color: '#333', 
-                width: '2000px', 
-                overflow: 'hidden',
-                height: '82vh', 
-                borderRadius: '20px 20px 0 0',
-            }}
-          > 
-        <div className='d-flex align-items-center justify-content-between'
-          style={{
-            fontWeight: 'bold',
-            backgroundColor: '#abf500',
-            height: '50px',
-            fontSize: '22px',
-            padding: '0 20px',
-            borderBottom: '1px solid #ddd',
-            color: '#fff'
-          }}>
-        <h4 className="m-0">Active Classrooms</h4>
-        <Button
-          onClick={handleClickOpen} 
-          style={{ background: 'none', color: '#111' , borderRadius: '40%'}}
-        >
-          <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">Create Classrooms</Tooltip>}>
-            <img
-              src={addbtn}
-              alt="Create Classrooms"
-              style={{ width: '35px', height: '35px', borderRadius: '50%' }}
-            /> 
-          </OverlayTrigger>
-        </Button>
-      </div > 
-        <div style={{ overflowY: 'auto', maxHeight: '80vh'}}>
-          {classrooms.length === 0 ? (
-            <p className="text-center mt-4">No active classrooms found.</p>
-          ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
-              {classrooms.map((classroom) => (
-                <ClassroomCard 
-                  key={classroom.classId}
-                  classroom={classroom}
-                />
-              ))}
-            </div>
-        )}
+              margin: '20px 20px 10px 20px',
+              background: '#fafafa',
+              fontWeight: 'bold',
+              height: '80px',
+              fontSize: '22px',
+              padding: '0 20px',
+              width: '1400px', 
+            }} >
+            <input type="text" placeholder="Search Classrooms" style={{ width: '70%', padding: '8px', fontSize: '16px',   border: '1px solid #ccc', borderRadius: '4px', boxShadow: '0px 0px 10px  rgba(182, 255, 102, 1)' }} />
+
+            <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
+              Create
+            </Button>
+          </div>
         </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            className="d-flex justify-content-between"
+            style={{
+              margin: '20px 20px 10px 20px',
+              background: '#fafafa',
+              fontWeight: 'bold',
+              fontSize: '22px', 
+              height: '500px',
+              padding: '0 20px',
+              width: '1400px',
+            }}
+          >
+            
+            <div style={{ overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px ' }}> <h2>Advisory</h2>
+              {classrooms.length === 0 ? (
+                <p className="text-center mt-4">No active classrooms found.</p>
+              ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
+                  {classrooms.map((classroom) => (
+                    <ClassroomCard 
+                      key={classroom.classId}
+                      classroom={classroom}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Create Classroom</DialogTitle>
           <DialogContent>
@@ -238,7 +236,6 @@ export default function AdviserPage() {
           </DialogActions>
         </Dialog>
       </div> 
-      </div>
-    </div>
+      </div> 
   );
 }

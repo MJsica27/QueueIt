@@ -3,23 +3,21 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import '../../../Static/ClassroomCard.css'; 
 import { NavLink } from 'react-router-dom';  
+import GroupIcon from '@mui/icons-material/Group';
 
 export default function AdviserClassroomCard({ classroom }) {
- 
-  const handleAction = (action) => {
-    console.log(action);  
-};
+  
 
   return ( 
     <>
       <Row className="h-100" style={{ padding: '10px 10px 0px 10px', height: '100%' }}>
         <Col xs={9} className="d-flex align-items-center">  
           <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
-            <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
+            <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '5px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
             
             <Row className="align-items-center" style={{ width: '100%' }}>  
               {/* Image placeholder */}
-              <Col xs={4} style={{ backgroundColor: '#b9ff66', borderRadius: '8px', height: '85px', display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
+              <Col xs={4} style={{ backgroundColor: '#b9ff66', borderRadius: '5px', height: '85px', display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
                 <Typography variant="h6" style={{ color: '#fff', fontWeight: 'bold' }}>IMG</Typography>
               </Col>
               {/* Classroom info */}
@@ -28,12 +26,15 @@ export default function AdviserClassroomCard({ classroom }) {
                   {classroom ? classroom.subjectName : 'Classroom Name'}
                 </Typography>
               </Col>
+              <div>
+                <GroupIcon style={{color:'black'}}/>
+                {/* show how many student enrolled this classroom */}
+              </div>
             </Row>
             </div>
-          </NavLink>
-           
+          </NavLink> 
         </Col>
-      </Row>
+      </Row> 
     </>
       
  

@@ -4,16 +4,10 @@ import vector from '../../Assets/Vector.png';
 
 export default function AdviserAvailabilityPage() {
   return (
-    <div  className="m-0 vh-100" 
-        style={{ 
-        background: '#b9ff66', 
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}>
-    <AdviserNavbar />
-        <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '25px'}}> 
+    <div className="m-0 vh-100" style={{ background: '#b9ff66', color: '#333333'  }}>
+      <AdviserNavbar />
+        <div style={{ background: '#fff', color: '#333333', height: '100vh',  padding: '25px'}}> 
+          {/* content here  */}
         </div>
     </div>
   )

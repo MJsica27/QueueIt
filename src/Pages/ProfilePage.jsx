@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import vector from '../Assets/Vector.png';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import AdminNavbar from '../Components/Navbar/AdminNavbar';
 import AdviserNavbar from '../Components/Navbar/AdviserNavbar';
 import StudentNavbar from '../Components/Navbar/StudentNavbar';
@@ -177,10 +176,7 @@ export default function ProfilePage() {
       style={{
         minHeight: '100vh',
         background: '#FCFFF8',
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        color: '#333333', 
       }}>
       {renderNavbar()}
 
@@ -192,6 +188,7 @@ export default function ProfilePage() {
           width: '85%',
           position: 'relative',
           marginBottom: '50px',
+          marginTop: '50px',
           padding: '20px 40px'
         }}>
         <h2>Personal Information</h2>

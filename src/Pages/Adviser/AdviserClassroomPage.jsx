@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import vector from '../../Assets/Vector.png';
+import React, { useEffect, useState } from 'react'; 
 import { Stack, Modal, Button, Form } from 'react-bootstrap'; 
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';  
-import { useNavigate } from 'react-router-dom';
-import backIcon from '../../Assets/icons/arrow.png'; 
+import { useNavigate } from 'react-router-dom'; 
 import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
 import { toast } from 'react-toastify';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -43,7 +42,7 @@ const AdviserClassroomPage = () => {
             }
         };
         fetchGroups();
-    }, [classroom.classID]);
+    }, [classroom]);
 
     const handleAction = async (action) => {
         if (action === 'View Enrolled Students') {
@@ -52,7 +51,7 @@ const AdviserClassroomPage = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setStudents(data);
-                    setShowStudentsModal(true);  // Show modal when students are loaded
+                    setShowStudentsModal(true);     
                 } else {
                     console.error('Failed to fetch students:', response.statusText);
                 }
@@ -60,9 +59,9 @@ const AdviserClassroomPage = () => {
                 console.error('Error fetching students:', error);
             }
         } else if (action === 'Edit Classroom') {
-            setShowEditModal(true);  // Show the edit modal
+            setShowEditModal(true);   
         } else if (action === 'Delete Classroom') {
-            setShowDeleteModal(true);  // Show delete confirmation modal
+            setShowDeleteModal(true);   
         }
     };
 
@@ -86,7 +85,7 @@ const AdviserClassroomPage = () => {
                 })
             });
     
-            console.log("Response status:", response.status); // Log status code
+            console.log("Response status:", response.status);  
     
             if (response.ok) {
                 setClassroomDetails(prev => ({ ...prev, ...classroomDetails }));
@@ -122,51 +121,38 @@ const AdviserClassroomPage = () => {
     };
 
     return (
-        <div
-            className="m-0 vh-100"
-            style={{
-                backgroundImage: `url(${vector})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundColor: '#fff',
-                height: '95vh'
-            }}
-        >
+        <div className="m-0 vh-100" style={{ backgroundColor: '#fff', height: '95vh' }} >
             <AdviserNavbar />
-            <div className="container d-flex align-items-center justify-content-center"> 
-                <div
-                    className="shadow-lg"
-                    style={{ 
-                        background: 'rgba(255, 255, 255, 0.95)', 
-                        color: '#333', 
-                        maxWidth: '2000px', 
-                        width: '2500px', 
+            <div className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                <div 
+                    style={{  
+                        margin: '20px 0 0 0',
+                        background: '#fafafa', 
+                        color: '#000',  
+                        width: '1410px', 
                         overflow: 'hidden',
-                        height: '82vh', 
-                        borderRadius: '20px 20px 0 0',  
+                        height: '616px',  
                     }}
                 >  
-                    <div className='d-flex align-items-center'
+                    <div 
                         style={{
                             fontWeight: 'bold',
-                            backgroundColor: '#abf500',
-                            color: '#fff',
-                            height: '50px',
-                            width: '100%',
+                            backgroundColor: '#fafafa',
+                            color: '#000',
+                            height: '50px', 
                             fontSize: '20px',
-                            padding: '0 20px',
-                            borderRadius: '20px 20px 0 0',
+                            padding: '0 20px', 
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between'
                         }}
                     > 
                         <span style={{ display: 'inline-flex', alignItems: 'center', }} >
-                            <img src={backIcon} alt="back" style={{ width: '25px', height: '25px', marginRight: '10px' }} />
+                            <ArrowBackIcon />
                             {classroomDetails.subjectName} - {classroomDetails.section}
                             <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
                             <div>
-                            <OptionsMenu onAction={handleAction} color="white" /> 
+                            <OptionsMenu onAction={handleAction} color="black" /> 
                             </div> 
                             </OverlayTrigger>
                         </span>
@@ -174,7 +160,7 @@ const AdviserClassroomPage = () => {
                         <span style={{ fontWeight: 'normal' }}>Classcode: {classroom.classCode}</span>
                     </div>
 
-                    <Stack direction="column" style={{ display: 'flex', alignItems: 'flex-start', margin: '35px' }} gap={3} >  
+                    <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px '  }} gap={3} >  
                         {groups.length === 0 ? (
                             <p>No active groups found.</p>
                         ) : (
