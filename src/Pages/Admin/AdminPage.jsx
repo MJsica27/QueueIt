@@ -2,15 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button'; 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions'; 
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle'; 
-import TextField from '@mui/material/TextField'; 
 import AdminNavbar from '../../Components/Navbar/AdminNavbar'; 
 import { toast } from 'react-toastify';
 import AdminClassroomListCard from '../../Components/Card/Admin/AdminClassroomListCard';
-import SearchIcon from '@mui/icons-material/Search'; 
+import SearchIcon from '@mui/icons-material/Search';  
+import CreateClassroomDialog from '../../Components/Dialogs/Admin/CreateClassroomDialog';
+import DeleteClassroomDialog from '../../Components/Dialogs/Admin//DeleteClassroomDialog';
 
 export default function AdminPage() {
   const [filteredClassrooms, setFilteredClassrooms] = useState([]);
@@ -168,7 +165,7 @@ export default function AdminPage() {
         height: 'auto'
       }}>
       <AdminNavbar />
-      <div style={{ background: '#fff', color: '#333333', height: '100vh', padding: '50px 50px 0px 50px' }}>
+      <div style={{ background: '#fff', color: '#333333', height: '100vh', padding: '30px 50px 0px 50px' }}>
         <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
         <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>
       <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
@@ -224,78 +221,22 @@ export default function AdminPage() {
 
         </div>
         
+        {/* Use CreateClassroomDialog */}
+        <CreateClassroomDialog
+          open={openCreateDialog}
+          onClose={handleCloseCreateDialog}
+          onCreate={handleCreateClassroom}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          generateClassCode={generateClassCode}
+        />
 
-        {/* Create Classroom Dialog */}
-        <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
-          <DialogTitle>Create Classroom</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="subjectName"
-              label="Subject Name"
-              fullWidth
-              value={formData.subjectName}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="subjectCode"
-              label="Subject Code"
-              fullWidth
-              value={formData.subjectCode}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="section"
-              label="Section"
-              fullWidth
-              value={formData.section}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="adviserID"
-              label="Assigned Adviser"
-              fullWidth
-              value={formData.adviserID}
-              onChange={handleInputChange}
-            />  
-            <TextField
-              margin="dense"
-              name="classCode"
-              label="Class Code"
-              fullWidth
-              value={formData.classCode}
-              InputProps={{ readOnly: true }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseCreateDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleCreateClassroom} color="primary">
-              Create
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        {/* Confirmation Dialog for Deleting Classroom */}
-        <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <p>Are you sure you want to delete this classroom?</p>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDeleteDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleDeleteClassroom} color="primary">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {/* Use DeleteClassroomDialog */}
+        <DeleteClassroomDialog
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
+          onDelete={handleDeleteClassroom}
+        />
       </div>
     </div>
   );

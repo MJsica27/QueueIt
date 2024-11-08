@@ -80,7 +80,7 @@ export default function AdminUserPage() {
     <div
       className="m-0 vh-100" style={{ background: '#b9ff66', color: '#333333' }} >
       <AdminNavbar />
-      <div style={{background: '#fff', color: '#333333', height: '100vh', padding: '50px 50px 0px 50px'}} >
+      <div style={{background: '#fff', color: '#333333', height: '100vh', padding: '30px 50px 0px 50px'}} >
       <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
         <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>
           <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
@@ -98,17 +98,18 @@ export default function AdminUserPage() {
             Create Account
           </Button>
         </div> 
-        <div className="mt-3 d-flex align-items-center justify-content-between" style={{ background: 'rgba(185, 255, 102, 0.78)', color: '#333333', width: 'auto', borderRadius: '5px', padding: '10px' }}>
-          <strong className="mx-2" style={{ marginLeft: '25px' }}> Name </strong>
-          <strong className='ml-auto' style={{ marginRight: '25px' }}> Action </strong>
-        </div>
-          <div className='d-flex justify-content-center align-items-center' style={{ height: 'auto' }}>
-            {/* User list will go here */}
+        <div className='mt-4'> 
+          <h2>Users</h2>  
+        </div> 
+          <div className="mt-3 d-flex align-items-center justify-content-between" style={{ background: 'rgba(185, 255, 102, 0.78)', color: '#333333', width: 'auto', borderRadius: '5px', padding: '10px' }}>
+            <strong className="mx-2" style={{ marginLeft: '25px' }}> Name </strong>
+            <strong className='ml-auto' style={{ marginRight: '25px' }}> Action </strong>
           </div>
+            <div className='d-flex justify-content-center align-items-center' style={{ height: 'auto' }}>
+              {/* User list will go here */}
+            </div>
       </div> 
-
-      
-        
+ 
         {/* Form */}
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Create Account</DialogTitle>
