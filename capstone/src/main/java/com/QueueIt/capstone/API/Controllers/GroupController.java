@@ -34,4 +34,14 @@ public class GroupController {
         return groupService.getGroupGivenClassroomStudent(classID,userID);
     }
 
+    @PostMapping("/addStudentToGroup")
+    public ResponseEntity<Object> addStudentToGroup(@RequestParam Long studentID, @RequestParam Long groupID){
+        return groupService.addStudentToGroup(studentID,groupID);
+    }
+
+    @PostMapping("/assignMentor")
+    public ResponseEntity<Object> assignMentor(@RequestParam Long groupID, @RequestParam Long adviserID){
+        return groupService.assignMentor(groupID, adviserID);
+    }
+
 }

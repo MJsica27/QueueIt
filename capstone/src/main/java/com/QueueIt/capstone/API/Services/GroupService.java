@@ -79,4 +79,27 @@ public class GroupService {
             return ResponseEntity.status(500).body("Something went wrong.");
         }
     }
+
+    public ResponseEntity<Object> addStudentToGroup(Long studentID, Long groupID) {
+        try{
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            User student = userRepository.findById(studentID).orElseThrow();
+            group.getStudents().add(student);
+            groupRepository.save(group);
+            return ResponseEntity.ok("Student added to group.");
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(404).body("Group or student does not exist.");
+        }
+    }
+
+    public ResponseEntity<Object> assignMentor(Long groupID, Long adviserID) {
+        try{
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            group.setMentorID(adviserID);
+            groupRepository.save(group);
+            return ResponseEntity.ok("Mentor assigned.");
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(404).body("Group does not exist.");
+        }
+    }
 }
