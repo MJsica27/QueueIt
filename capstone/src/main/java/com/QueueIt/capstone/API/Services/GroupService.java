@@ -3,14 +3,19 @@ package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.Entities.Classroom;
 import com.QueueIt.capstone.API.Entities.Group;
+import com.QueueIt.capstone.API.Entities.Student;
+import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Repository.ClassroomRepository;
 import com.QueueIt.capstone.API.Repository.GroupRepository;
+import com.QueueIt.capstone.API.Repository.StudentRepository;
+import com.QueueIt.capstone.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class GroupService {
@@ -20,6 +25,9 @@ public class GroupService {
 
     @Autowired
     private ClassroomRepository classroomRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public ResponseEntity<Object> getGroupsGivenClassroom(Long classroomID) {
         try{
@@ -48,6 +56,27 @@ public class GroupService {
             return ResponseEntity.ok("Group Deleted.");
         }catch (NoSuchElementException e){
             return ResponseEntity.status(404).body("Group does not exist.");
+        }
+    }
+
+    public ResponseEntity<Object> getGroupGivenClassroomStudent(Long classID, Long userID) {
+        try{
+            List<Group> groups = groupRepository.findByClassID(classID);
+            User student = userRepository.findById(userID).orElseThrow();
+            if (groups.isEmpty()){
+                return ResponseEntity.notFound().build();
+            }else{
+                for (Group group: groups){
+                    if (group.getStudents().contains(student)){
+                        return ResponseEntity.ok(group);
+                    }
+                }
+                return ResponseEntity.status(404).body("No group found for student.");
+            }
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(406).body("Either classroom or student does not exist.");
+        }catch (Exception e){
+            return ResponseEntity.status(500).body("Something went wrong.");
         }
     }
 }

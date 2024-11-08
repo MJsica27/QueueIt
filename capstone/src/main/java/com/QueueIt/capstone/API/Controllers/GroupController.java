@@ -29,4 +29,9 @@ public class GroupController {
         return groupService.deleteGroup(groupID);
     }
 
+    @GetMapping("/getGroupGivenStudent")
+    public ResponseEntity<Object> getGroupGivenClassroomStudent(@RequestParam Long classID, Long userID){
+        return groupService.getGroupGivenClassroomStudent(classID,userID);
+    }
+
 }

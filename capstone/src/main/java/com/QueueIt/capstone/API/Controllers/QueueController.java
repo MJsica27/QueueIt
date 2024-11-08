@@ -25,10 +25,12 @@ public class QueueController {
         return queueService.adviserCloseQueue(adviserOpenCloseQueueRequest);
     }
 
+    //request body is Meeting because if you check its constructor, it only needs classID, groupID and start date/time.
     @PostMapping("/adviser/admit")
     public ResponseEntity<Object> adviserAdmitQueueingTeam(@RequestBody Meeting meeting){
         return queueService.adviserAdmitQueueingTeam(meeting);
     }
+
 
     @PostMapping("/adviser/conclude")
     public ResponseEntity<Object> adviserConcludeMeeting(@RequestBody Long meetingID, HttpServletRequest request){
