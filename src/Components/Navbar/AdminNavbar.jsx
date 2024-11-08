@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';  
 import { toast } from 'react-toastify';
 import pu from '../../Assets/icons/profile-user.png'; 
-import darkwo from '../../Assets/logo/dark(w-outline).png';
+import darkwo from '../../Assets/logo/logo.png';
 
 export default function AdminNavbar() {
     const navigate = useNavigate();
@@ -36,13 +36,13 @@ export default function AdminNavbar() {
 
     return (
         <div>
-            <Navbar expand="lg" className="mt-0" style={{ background: 'transparent' }}>
+            <Navbar className="mt-0" style={{ background: '#b9ff66' }}>
                 <Container className="d-flex justify-content-between align-items-center">
                     <Navbar.Brand href="adminhomepage">
-                        <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
+                        <img src={darkwo} alt="System Logo" style={{ width: 'auto', height: '35px' }} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <div className="m-4" style={{background: 'rgba(198, 198, 198, 0.5)', border: '.1em solid #666666', borderRadius: '10px', padding: '10px' }}>
+                    <div className="m-0" >
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="justify-content-center">
                                 <Nav.Link 

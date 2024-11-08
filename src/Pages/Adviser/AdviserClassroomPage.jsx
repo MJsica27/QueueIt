@@ -160,7 +160,7 @@ const AdviserClassroomPage = () => {
                         <span style={{ fontWeight: 'normal' }}>Classcode: {classroom.classCode}</span>
                     </div>
 
-                    <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px '  }} gap={3} >  
+                    <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 70px '  }} gap={3} >  
                         {groups.length === 0 ? (
                             <p>No active groups found.</p>
                         ) : (

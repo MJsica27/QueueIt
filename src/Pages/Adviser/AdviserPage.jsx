@@ -11,7 +11,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';  
+import 'react-toastify/dist/ReactToastify.css'; 
+import SearchIcon from '@mui/icons-material/Search'; 
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -152,7 +153,22 @@ export default function AdviserPage() {
               padding: '0 20px',
               width: '1400px', 
             }} >
-            <input type="text" placeholder="Search Classrooms" style={{ width: '70%', padding: '8px', fontSize: '16px',   border: '1px solid #ccc', borderRadius: '4px', boxShadow: '0px 0px 10px  rgba(182, 255, 102, 1)' }} />
+            <div style={{ position: 'relative', width: '70%' }}>
+              <input 
+                  type="text" 
+                  placeholder="Search Classrooms" 
+                  style={{ 
+                      width: '100%', 
+                      padding: '8px', 
+                      fontSize: '16px', 
+                      border: '1px solid #ccc', 
+                      borderRadius: '4px', 
+                      boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)', 
+                      paddingRight: '30px'  
+                  }} 
+              />
+              <SearchIcon  style={{  position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',  color: '#ccc' }}  />
+            </div>
 
             <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
               Create
@@ -178,7 +194,7 @@ export default function AdviserPage() {
               {classrooms.length === 0 ? (
                 <p className="text-center mt-4">No active classrooms found.</p>
               ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {classrooms.map((classroom) => (
                     <ClassroomCard 
                       key={classroom.classId}

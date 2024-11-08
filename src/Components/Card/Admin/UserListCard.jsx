@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import pu from '../../Assets/icons/profile-user.png';
-import bin from '../../Assets/icons/bin.png'
-import edit from '../../Assets/icons/edit.png'
+import pu from '../../Assets/icons/profile-user.png'; 
+import DeleteIcon from '@mui/icons-material/Delete';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 
 export default function UserListCard({ fullName, userName }) {
 
@@ -25,13 +26,11 @@ export default function UserListCard({ fullName, userName }) {
 
         {/* Edit and Bin */}
         <div className="ml-auto">
-          <img
-            src={edit}
+          <BorderColorIcon
             alt="Edit Icon"
             style={{ width: '25px', height: '25px', marginRight: '10px' }}
           />
-          <img
-            src={bin}
+          <DeleteIcon
             alt="Delete Icon"
             style={{ width: '25px', height: '25px' }}
           />

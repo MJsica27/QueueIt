@@ -13,7 +13,7 @@ export default function AdviserClassroomCard({ classroom }) {
       <Row className="h-100" style={{ padding: '10px 10px 0px 10px', height: '100%' }}>
         <Col xs={9} className="d-flex align-items-center">  
           <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
-            <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '5px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
+            <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '5px', boxShadow: '0px 0px 12px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
             
             <Row className="align-items-center" style={{ width: '100%' }}>  
               {/* Image placeholder */}

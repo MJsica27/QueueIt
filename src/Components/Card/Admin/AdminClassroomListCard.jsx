@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
-import bin from '../../../Assets/icons/bin.png';
-import edit from '../../../Assets/icons/edit.png';
-import groupUser from '../../../Assets/icons/group-users.png';
+import { Card } from 'react-bootstrap';  
+import DeleteIcon from '@mui/icons-material/Delete';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import Groups3Icon from '@mui/icons-material/Groups3';
 
 export default function AdminClassroomListCard({ classID, classCode, subjectName, subjectCode, adviserID, section, onDelete }) {
 
@@ -19,18 +19,15 @@ export default function AdminClassroomListCard({ classID, classCode, subjectName
 
         {/* Edit and Bin */}
         <div className="ml-auto">
-          <img
-            src={groupUser}
+          <Groups3Icon
             alt="Group User"
             style={{ width: '25px', height: '25px', marginRight: '100px' }}
           />
-          <img
-            src={edit}
+          <BorderColorIcon
             alt="Edit Icon"
             style={{ width: '25px', height: '25px', marginRight: '10px' }}
           />
-          <img
-            src={bin}
+          <DeleteIcon
             alt="Delete Icon"
             style={{ width: '25px', height: '25px', cursor: 'pointer' }}
             onClick={() => onDelete(classID)}   

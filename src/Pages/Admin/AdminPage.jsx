@@ -7,10 +7,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle'; 
 import TextField from '@mui/material/TextField'; 
-import AdminNavbar from '../../Components/Navbar/AdminNavbar';
-import vector from '../../Assets/Vector.png';
+import AdminNavbar from '../../Components/Navbar/AdminNavbar'; 
 import { toast } from 'react-toastify';
 import AdminClassroomListCard from '../../Components/Card/Admin/AdminClassroomListCard';
+import SearchIcon from '@mui/icons-material/Search'; 
 
 export default function AdminPage() {
   const [filteredClassrooms, setFilteredClassrooms] = useState([]);
@@ -163,43 +163,67 @@ export default function AdminPage() {
   return (
     <div className="m-0"
       style={{
-        background: '#b9ff66',
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        background: '#fff',
+        color: '#333333', 
         height: 'auto'
       }}>
       <AdminNavbar />
-      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '50px' }}>
-        <div className='mb-10 d-flex align-items-center justify-content-between'>
-          <h2>Classrooms</h2>
-          <Button
-            onClick={handleClickOpenCreateDialog}  
-            variant="contained"
-            style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}
-          >
-            Create Classroom
-          </Button>
+      <div style={{ background: '#fff', color: '#333333', height: '100vh', padding: '50px 50px 0px 50px' }}>
+        <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
+        <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>
+      <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
+        <input 
+          type="text" 
+          placeholder="Search Classrooms" 
+          style={{ 
+            width: '100%', 
+            padding: '8px', 
+            fontSize: '16px', 
+            border: '1px solid #ccc', 
+            borderRadius: '4px', 
+            boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)',
+            paddingRight: '30px'
+          }} 
+        />
+        <SearchIcon style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
+      </div>
+
+      <Button  
+        onClick={handleClickOpenCreateDialog} 
+        variant="contained" 
+        style={{ 
+          background: '#b9ff66', 
+          color: '#000', 
+          textTransform: 'none', 
+          fontWeight: 'bold' 
+        }}
+      > 
+        Create Classroom
+      </Button>
+    </div>
+    
+          <div className='mt-4' style={{background: '#fafafa', width: 'auto' }}>
+          <h2>Classrooms</h2>  
+            {loading ? (
+              <p>Loading classrooms...</p>
+            ) : (
+              filteredClassrooms.map(classroom => (
+                <AdminClassroomListCard
+                  key={classroom.classCode}
+                  classID={classroom.classID}
+                  classCode={classroom.classCode}
+                  subjectName={classroom.subjectName}
+                  subjectCode={classroom.subjectCode}
+                  adviserID={classroom.adviserID}
+                  section={classroom.section}
+                  onDelete={handleOpenDeleteDialog}  
+                />
+              ))
+            )}
+          </div>  
+
         </div>
-        <div className='mt-4' style={{ width: 'auto' }}>
-          {loading ? (
-            <p>Loading classrooms...</p>
-          ) : (
-            filteredClassrooms.map(classroom => (
-              <AdminClassroomListCard
-                key={classroom.classCode}
-                classID={classroom.classID}
-                classCode={classroom.classCode}
-                subjectName={classroom.subjectName}
-                subjectCode={classroom.subjectCode}
-                adviserID={classroom.adviserID}
-                section={classroom.section}
-                onDelete={handleOpenDeleteDialog}  
-              />
-            ))
-          )}
-        </div>
+        
 
         {/* Create Classroom Dialog */}
         <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>

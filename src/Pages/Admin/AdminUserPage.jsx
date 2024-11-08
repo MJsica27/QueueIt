@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchIcon from '@mui/icons-material/Search'; 
 
 export default function AdminUserPage() {
   const [open, setOpen] = useState(false);
@@ -77,25 +78,36 @@ export default function AdminUserPage() {
 
   return (
     <div
-      className="m-0 vh-100"
-      style={{
-        background: '#b9ff66',
-        color: '#333333',
-        backgroundImage: `url(${vector})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+      className="m-0 vh-100" style={{ background: '#b9ff66', color: '#333333' }} >
       <AdminNavbar />
-      <div className="mx-5" style={{ background: 'rgba(238, 238, 238, 0.9)', color: '#333333', height: '100vh', borderRadius: '20px', padding: '50px' }}>
-        <div className='m-0  d-flex align-items-center justify-content-between'>
-          <TextField id="outlined-search" label="Search Account" type="search" />
-          
-          {/* Create Account Button */}
-          <Button onClick={handleClickOpen} style={{ background: '#000000', color: '#ffffff', marginTop: '20px' }}>
+      <div style={{background: '#fff', color: '#333333', height: '100vh', padding: '50px 50px 0px 50px'}} >
+      <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
+        <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>
+          <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
+            <input 
+              type="text" 
+              placeholder="Search user" 
+              style={{ width: '100%', padding: '8px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '4px', boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)', paddingRight: '30px'  }} />
+            <SearchIcon style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
+          </div>
+
+          <Button  
+            onClick={handleClickOpen} 
+            variant="contained" 
+            style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold' }} > 
             Create Account
-          </Button> 
+          </Button>
+        </div> 
+        <div className="mt-3 d-flex align-items-center justify-content-between" style={{ background: 'rgba(185, 255, 102, 0.78)', color: '#333333', width: 'auto', borderRadius: '5px', padding: '10px' }}>
+          <strong className="mx-2" style={{ marginLeft: '25px' }}> Name </strong>
+          <strong className='ml-auto' style={{ marginRight: '25px' }}> Action </strong>
         </div>
+          <div className='d-flex justify-content-center align-items-center' style={{ height: 'auto' }}>
+            {/* User list will go here */}
+          </div>
+      </div> 
+
+      
         
         {/* Form */}
         <Dialog open={open} onClose={handleClose}>
@@ -165,13 +177,7 @@ export default function AdminUserPage() {
           </DialogActions>
         </Dialog>
         
-        <div className="mt-3 d-flex align-items-center justify-content-between" style={{ background: 'rgba(185, 255, 102, 0.78)', color: '#333333', width: 'auto', borderRadius: '5px', padding: '10px' }}>
-          <strong className="mx-2" style={{ marginLeft: '25px' }}> Name </strong>
-          <strong className='ml-auto' style={{ marginRight: '25px' }}> Action </strong>
-        </div>
-        <div className='d-flex justify-content-center align-items-center' style={{ height: 'auto' }}>
-          {/* User list will go here */}
-        </div>
+        
       </div>
     </div>
   );
