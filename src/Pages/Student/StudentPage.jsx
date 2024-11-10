@@ -11,8 +11,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'; 
+import 'react-toastify/dist/ReactToastify.css';  
+import SearchIcon from '@mui/icons-material/Search'; 
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -99,76 +99,110 @@ export default function StudentPage() {
 
   return ( 
       <div className="m-0 vh-100" style={{ backgroundColor:'#fff', height:'95vh' }}>  
-        <StudentNavbar />
-            <div   style={{ backgroundColor:'#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}> 
-              <div  
-                style={{   
-                    color: '#333', 
-                    width: '100dvw', 
-                    overflow: 'hidden',
-                    height: '82vh',
-                    backgroundColor:'rgba(0,0,0,0.03)',
-                    margin: '10px 78px 0px 78px',  
-                    borderRadius: '5px',
-                }}> 
-                <div className='d-flex align-items-center justify-content-between'
-                  style={{
-                    fontWeight: 'bold', 
-                    height: '50px',
-                    fontSize: '22px',
-                    padding: '0 20px', 
-                    margin: '10px ',  
-                    color: '#000'
-                  }}>
-                  <h4 className="m-0">Active Classes</h4> 
-                  <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
-                    Eroll
-                  </Button>
+        <StudentNavbar /> 
+        <div  
+          style={{    
+            background: '#fff', 
+            color: '#333', 
+            width: 'auto', 
+            overflow: 'hidden',
+            height: '90vh',  
+          }}
+        > 
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+          <div
+            className="d-flex align-items-center justify-content-between"
+            style={{ 
+              margin: '20px 20px 10px 20px',
+              backgroundColor:'rgba(0,0,0,0.03)',
+              borderRadius: '5px',
+              fontWeight: 'bold',
+              height: '80px',
+              fontSize: '22px',
+              padding: '0 20px',
+              width: '1400px', 
+            }} >
+            <div style={{ position: 'relative', width: '70%' }}>
+              <input 
+                  type="text" 
+                  placeholder="Search Classrooms" 
+                  style={{ 
+                      width: '100%', 
+                      padding: '8px', 
+                      fontSize: '16px', 
+                      border: '1px solid #ccc', 
+                      borderRadius: '4px', 
+                      boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)', 
+                      paddingRight: '30px'  
+                  }} 
+              />
+              <SearchIcon  style={{  position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',  color: '#ccc' }}  />
+            </div>
+            <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
+              Enroll
+            </Button>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            className="d-flex justify-content-between"
+            style={{
+              margin: '20px 20px 10px 20px', 
+              backgroundColor:'rgba(0,0,0,0.03)',
+              borderRadius: '5px',
+              fontWeight: 'bold',
+              fontSize: '22px', 
+              height: '500px',
+              padding: '0 20px',
+              width: '1400px',
+            }}
+          >
+            
+          <div style={{ overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px ' }}> 
+            <h2>Classroom</h2>
+            {classrooms.length === 0 ? (
+              <p>No active classrooms found.</p>
+            ) : (
+              
+                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
+                  {classrooms.map((classroom) => (
+                      <ClassroomCard 
+                        key={classroom.classId}
+                        classroom={classroom}
+                        style={{ margin: '0px' }} 
+                        />
+                  ))}
                 </div>
-
-                <div  style={{  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {classrooms.length === 0 ? (
-                    <p>No active classrooms found.</p>
-                  ) : (
-                    
-                      <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
-                        {classrooms.map((classroom) => (
-                            <ClassroomCard 
-                              key={classroom.classId}
-                              classroom={classroom}
-                              style={{ margin: '0px' }} 
-                              />
-                        ))}
-                      </div>
-                    
-                  )}
-                </div>
-
-                
-      
-                <Dialog open={open} onClose={handleClose}>
-                  <DialogTitle>Enroll in Classroom</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Enter ClassCode"
-                      type="text"
-                      fullWidth
-                      value={classCode}
-                      onChange={(e) => setClassCode(e.target.value)}
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose} color="secondary">Cancel</Button>
-                    <Button onClick={handleSubmit} color="primary" disabled={loading}>
-                      {loading ? <CircularProgress size={24} color="inherit" /> : 'Enroll'}
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
-              </div> 
-           </div> 
+              
+            )}
+            </div>  
+          </div>
+        </div>       
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Enroll in Classroom</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Enter ClassCode"
+                type="text"
+                fullWidth
+                value={classCode}
+                onChange={(e) => setClassCode(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="secondary">Cancel</Button>
+              <Button onClick={handleSubmit} color="primary" disabled={loading}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Enroll'}
+              </Button>
+            </DialogActions>
+          </Dialog>
+            </div>
       </div> 
   );
 }
+
+
+

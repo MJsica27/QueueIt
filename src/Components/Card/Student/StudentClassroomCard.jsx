@@ -19,12 +19,10 @@ export default function StudentClassroomCard({ classroom }) {
             style={{textDecoration:'none'}}
          > 
       <Row   style={{paddingLeft:'20px'}}>
-        <Col xs={9}>
-         
+        <Col xs={9}> 
           <Row>
               {/* image */}
               <Col xs={4} style={{backgroundColor:'greenyellow', borderRadius:'5px', height:'85px'}}>
-
             </Col>
             <Col xs={8} className='d-flex align-items-center justify-content-left' style={{overflow:'hidden'}}>
               <Typography variant='caption' style={{fontWeight:'bold',fontSize:'15px', color:'black'}}>{classroom?classroom.subjectName:<></>}</Typography>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import pu from '../../../Assets/icons/profile-user.png';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import bin from '../../../Assets/icons/bin.png'
 import edit from '../../../Assets/icons/transfer-student.png' 
 
@@ -13,11 +13,8 @@ export default function StudentList({ fullName, userName }) {
       <Card.Body className="d-flex align-items-center justify-content-between">
         {/* Profile picture */}
         <div className="d-flex align-items-center">
-          <img
-            src={pu}
-            alt="User Profile"
-            style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-          />
+        <AccountCircleIcon alt="User Profile" style={{ fontSize: '2.3rem' }} />
+          
           <div className="mx-2">
             <Card.Text className="mb-0">{fullName}</Card.Text>
             <Card.Text className="text-muted">{userName}</Card.Text>
