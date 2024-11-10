@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 
 
-export default function DeleteClassroomDialog({ open, onClose, onDelete }) {
+export default function AdminDeleteClassroomDialog({ open, onClose, onDelete }) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Confirm Deletion</DialogTitle>

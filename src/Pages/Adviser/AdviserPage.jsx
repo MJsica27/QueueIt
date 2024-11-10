@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';   
 import SearchIcon from '@mui/icons-material/Search'; 
+import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreateClassroomDialog';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -207,51 +208,15 @@ export default function AdviserPage() {
             </div>
           </div>
         </div>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Create Classroom</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="subjectName"
-              label="Subject Name"
-              fullWidth
-              value={formData.subjectName}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="subjectCode"
-              label="Subject Code"
-              fullWidth
-              value={formData.subjectCode}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="section"
-              label="Section"
-              fullWidth
-              value={formData.section}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="classCode"
-              label="Class Code"
-              fullWidth
-              value={formData.classCode}
-              InputProps={{ readOnly: true }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">Cancel</Button>
-            <Button onClick={handleCreateClassroom} color="primary" disabled={loading}>
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Create'}
-            </Button>
-          </DialogActions>
-        </Dialog>
+        
+        <CreateClassroomDialog
+          open={open}
+          formData={formData}
+          loading={loading}
+          onClose={handleClose}
+          onChange={handleInputChange}
+          onCreate={handleCreateClassroom}
+        />
       </div> 
       </div> 
   );

@@ -6,8 +6,8 @@ import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 import { toast } from 'react-toastify';
 import AdminClassroomListCard from '../../Components/Card/Admin/AdminClassroomListCard';
 import SearchIcon from '@mui/icons-material/Search';  
-import CreateClassroomDialog from '../../Components/Dialogs/Admin/CreateClassroomDialog';
-import DeleteClassroomDialog from '../../Components/Dialogs/Admin//DeleteClassroomDialog';
+import CreateClassroomDialog from '../../Components/Dialogs/Admin/AdminCreateClassroomDialog';
+import DeleteClassroomDialog from '../../Components/Dialogs/Admin/AdminDeleteClassroomDialog';
 
 export default function AdminPage() {
   const [filteredClassrooms, setFilteredClassrooms] = useState([]);
@@ -168,36 +168,36 @@ export default function AdminPage() {
       <div style={{ background: '#fff', color: '#333333', height: '100vh', padding: '30px 50px 0px 50px' }}>
         <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
         <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>
-      <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
-        <input 
-          type="text" 
-          placeholder="Search Classrooms" 
-          style={{ 
-            width: '100%', 
-            padding: '8px', 
-            fontSize: '16px', 
-            border: '1px solid #ccc', 
-            borderRadius: '4px', 
-            boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)',
-            paddingRight: '30px'
-          }} 
-        />
-        <SearchIcon style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
-      </div>
+          <div style={{ position: 'relative', width: '70%', display: 'flex', alignItems: 'center' }}>
+            <input 
+              type="text" 
+              placeholder="Search Classrooms" 
+              style={{ 
+                width: '100%', 
+                padding: '8px', 
+                fontSize: '16px', 
+                border: '1px solid #ccc', 
+                borderRadius: '4px', 
+                boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)',
+                paddingRight: '30px'
+              }} 
+            />
+            <SearchIcon style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
+          </div>
 
-      <Button  
-        onClick={handleClickOpenCreateDialog} 
-        variant="contained" 
-        style={{ 
-          background: '#b9ff66', 
-          color: '#000', 
-          textTransform: 'none', 
-          fontWeight: 'bold' 
-        }}
-      > 
-        Create Classroom
-      </Button>
-    </div>
+          <Button  
+            onClick={handleClickOpenCreateDialog} 
+            variant="contained" 
+            style={{ 
+              background: '#b9ff66', 
+              color: '#000', 
+              textTransform: 'none', 
+              fontWeight: 'bold' 
+            }}
+          > 
+            Create Classroom
+          </Button>
+        </div>
     
           <div className='mt-4' style={{background: '#fafafa', width: 'auto' }}>
           <h2>Classrooms</h2>  

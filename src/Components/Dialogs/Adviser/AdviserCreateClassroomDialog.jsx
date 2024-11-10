@@ -5,8 +5,16 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function CreateClassroomDialog({ open, onClose, onCreate, formData, handleInputChange, generateClassCode }) {
+export default function CreateClassroomDialog({
+  open,
+  formData,
+  loading,
+  onClose,
+  onChange,
+  onCreate,
+}) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create Classroom</DialogTitle>
@@ -18,7 +26,7 @@ export default function CreateClassroomDialog({ open, onClose, onCreate, formDat
           label="Subject Name"
           fullWidth
           value={formData.subjectName}
-          onChange={handleInputChange}
+          onChange={onChange}
         />
         <TextField
           margin="dense"
@@ -26,7 +34,7 @@ export default function CreateClassroomDialog({ open, onClose, onCreate, formDat
           label="Subject Code"
           fullWidth
           value={formData.subjectCode}
-          onChange={handleInputChange}
+          onChange={onChange}
         />
         <TextField
           margin="dense"
@@ -34,28 +42,24 @@ export default function CreateClassroomDialog({ open, onClose, onCreate, formDat
           label="Section"
           fullWidth
           value={formData.section}
-          onChange={handleInputChange}
-        />
-        <TextField
-          margin="dense"
-          name="adviserID"
-          label="Assigned Adviser"
-          fullWidth
-          value={formData.adviserID}
-          onChange={handleInputChange}
+          onChange={onChange}
         />
         <TextField
           margin="dense"
           name="classCode"
           label="Class Code"
           fullWidth
-          value={formData.classCode || generateClassCode()}
+          value={formData.classCode}
           InputProps={{ readOnly: true }}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">Cancel</Button>
-        <Button onClick={onCreate} color="primary">Create</Button>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={onCreate} color="primary" disabled={loading}>
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Create'}
+        </Button>
       </DialogActions>
     </Dialog>
   );
