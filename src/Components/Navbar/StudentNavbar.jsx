@@ -1,62 +1,67 @@
-import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
+import React, { useState } from 'react';
+import logo from '../../Assets/logo/logo.png';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { IconButton } from '@mui/material';
+import { Dropdown, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';  
-import { useState } from 'react';  
-import pu from '../../Assets/icons/profile-user.png'
-import darkwo from '../../Assets/logo/dark(w-outline).png';
 
-export default function StudentNavbar() {
-  const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
+const StudentNavbar = () => {
+    const navigate = useNavigate();
+    const [showDropdown, setShowDropdown] = useState(false);
+    const handleProfile = () => {
+        console.log("Navigating to profile...");  
+        navigate('/profile');
+    };
+  
+    const handleLogout = () => {
+        console.log("User logged out"); 
+        localStorage.removeItem('user');
+        document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname; 
+        window.history.replaceState(null, null, '/login'); 
+        window.location.href = '/login'; 
+    };
+  
+    const handleProfileToggle = () => {
+        setShowDropdown(!showDropdown);
+    };
+    return (
+        //background
+        <div 
+            style={{
+                backgroundColor:'#b9ff66',
+                height:'10dvh',
+                width:'100%',
+                display:'flex',
+                justifyContent:'space-between',
+                alignItems:'center',
+                padding:'0px 6dvw 0px 6dvw'
+            }}
+        >
+            <img src={logo} alt='logo' style={{height:'75%'}}/>
+            <div style={{display:'flex', gap:10, position:'relative'}}>
+                {/* notification button */}
+                <IconButton style={{color:'black'}}>
+                    <NotificationsIcon style={{fontSize:'2.3rem'}}/>
+                </IconButton>
+                
+                {/* dropdown */}
+                <Dropdown show={showDropdown}>
+                    <Dropdown.Toggle as={Nav.Link} id="dropdown-profile" style={{}}>
+                        {/* profile button */}
+                        <IconButton style={{color:'black'}} onClick={handleProfileToggle}>
+                            <AccountCircleIcon style={{fontSize:'2.3rem'}}/>
+                        </IconButton>
+                    </Dropdown.Toggle>
 
-  const handleProfile = () => {
-      console.log("Navigating to profile...");  
-      navigate('/profile');
-  };
-
-  const handleLogout = () => {
-      console.log("User logged out"); 
-      localStorage.removeItem('user');
-      document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname; 
-      window.history.replaceState(null, null, '/login'); 
-      window.location.href = '/login'; 
-  };
-
-  const handleMouseEnter = () => {
-      setShowDropdown(true);
-  };
-
-  const handleMouseLeave = () => {
-      setShowDropdown(false);
-  };
-  return (
-    <div>
-        <Navbar expand="lg"  className="mt-0"  style={{ background: 'transparent' }}>
-            <div style={{display:'flex', justifyContent:'space-between', width:'100%', padding:'10px', padding: '2dvw 8dvw 2dvw 7.5dvw'}}>
-                <Navbar.Brand href="/">
-                    <img src={darkwo} alt="System Logo" style={{ width: '125px', height: '40px' }} />
-                </Navbar.Brand>
-                {/* Profile */}
-                <Nav onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                    {/* <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">User Profile</Tooltip>}> */}
-                        <Dropdown show={showDropdown}>
-                            <Dropdown.Toggle as={Nav.Link} id="dropdown-profile" >
-                                <img
-                                    src={pu}
-                                    alt="User Profile"
-                                    style={{ width: '35px', height: '35px', borderRadius: '50%'}}
-                                />
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu align="end" style={{position:'absolute'}}>
-                                <Dropdown.Item onClick={handleProfile}>View Profile</Dropdown.Item>
-                                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    {/* </OverlayTrigger> */}
-                </Nav>
+                    <Dropdown.Menu align="end" style={{position:'absolute'}}>
+                        <Dropdown.Item onClick={handleProfile}>View Profile</Dropdown.Item>
+                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
-        </Navbar>
-    </div>
-  )
+        </div>
+    );
 }
+
+export default StudentNavbar;

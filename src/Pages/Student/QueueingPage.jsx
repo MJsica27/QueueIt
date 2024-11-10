@@ -29,6 +29,7 @@ const QueueingPage = () => {
     useEffect(() => {
         fetchGroup();
     }, []);
+    
     return (
         <div>
             <JandelStudentNavbar/>
@@ -132,7 +133,7 @@ const QueueingPage = () => {
                                     </div>
                                     <div style={{display:'flex',flex:0.2, justifyContent:'center', alignItems:'end', gap:'10px'}}>
                                         <GroupsIcon style={{fontSize:'2em'}}/>
-                                        <Typography style={{color:'#6abf05', cursor:'pointer'}}>{group.students.length == 1? <>{group.students.length} Member</>: <>{group.students.length} Members</>}</Typography>
+                                        <Typography style={{color:'#6abf05', cursor:'pointer'}}>{group.students.length === 1? <>{group.students.length} Member</>: <>{group.students.length} Members</>}</Typography>
                                     </div>
                                 </>
                                 :

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/Student/StudentClassroomCard';
-import vector from '../../Assets/Vector.png'
+import ClassroomCard from '../../Components/Card/Student/StudentClassroomCard'; 
 import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -99,58 +98,53 @@ export default function StudentPage() {
   };
 
   return ( 
-      <div className="m-0 vh-100" 
-           style={{ 
-              backgroundImage:`url(${vector})`,
-              backgroundPosition:'center',
-              backgroundSize:'cover',
-              backgroundColor:'#fff',
-              height:'95vh',
-           }}> 
-
-           <div>
-            <StudentNavbar />
-            <div 
-              className="container d-flex align-items-center justify-content-center"> 
-              <div 
-                className="shadow-lg "
-                style={{ 
-                    background: 'rgba(255, 255, 255, 0.95)',  
+      <div className="m-0 vh-100" style={{ backgroundColor:'#fff', height:'95vh' }}>  
+        <StudentNavbar />
+            <div   style={{ backgroundColor:'#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}> 
+              <div  
+                style={{   
                     color: '#333', 
-                    width: '2000px', 
+                    width: '100dvw', 
                     overflow: 'hidden',
-                    height: '82vh', 
-                    borderRadius: '20px 20px 0 0',
+                    height: '82vh',
+                    backgroundColor:'rgba(0,0,0,0.03)',
+                    margin: '10px 78px 0px 78px',  
+                    borderRadius: '5px',
                 }}> 
-                <div div className='d-flex align-items-center justify-content-between'
+                <div className='d-flex align-items-center justify-content-between'
                   style={{
-                    fontWeight: 'bold',
-                    backgroundColor: '#abf500',
+                    fontWeight: 'bold', 
                     height: '50px',
                     fontSize: '22px',
-                    padding: '0 20px',
-                    borderBottom: '1px solid #ddd',
-                    color: '#fff'
+                    padding: '0 20px', 
+                    margin: '10px ',  
+                    color: '#000'
                   }}>
                   <h4 className="m-0">Active Classes</h4> 
-                  <Button className='shadow-sm' onClick={handleClickOpen} size='medium' variant='outlined' style={{color:'black',border:'solid 1px rgba(0,0,0,0.09)'}} startIcon={<MeetingRoomIcon/>}>Enroll</Button>
+                  <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
+                    Eroll
+                  </Button>
                 </div>
 
-                {classrooms.length === 0 ? (
-                  <p>No active classrooms found.</p>
-                ) : (
-                  
-                    <div style={{display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
-                      {classrooms.map((classroom) => (
-                          <ClassroomCard 
-                            key={classroom.classId}
-                            classroom={classroom}
-                            style={{ margin: '0px' }} 
-                            />
-                      ))}
-                    </div>
-                  
-                )}
+                <div  style={{  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {classrooms.length === 0 ? (
+                    <p>No active classrooms found.</p>
+                  ) : (
+                    
+                      <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
+                        {classrooms.map((classroom) => (
+                            <ClassroomCard 
+                              key={classroom.classId}
+                              classroom={classroom}
+                              style={{ margin: '0px' }} 
+                              />
+                        ))}
+                      </div>
+                    
+                  )}
+                </div>
+
+                
       
                 <Dialog open={open} onClose={handleClose}>
                   <DialogTitle>Enroll in Classroom</DialogTitle>
@@ -174,8 +168,7 @@ export default function StudentPage() {
                 </Dialog>
 
               </div> 
-           </div>
-      </div>
+           </div> 
       </div> 
   );
 }

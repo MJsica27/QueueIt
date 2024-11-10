@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../../Assets/logo/light(w-outline).png';
+import logo from '../../Assets/logo/logo.png';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { IconButton } from '@mui/material';

@@ -9,12 +9,10 @@ export default function AdviserClassroomCard({ classroom }) {
   
 
   return ( 
-    <>
-      <Row className="h-100" style={{ padding: '10px 10px 0px 10px', height: '100%' }}>
-        <Col xs={9} className="d-flex align-items-center">  
-          <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
-            <div className="navlinkcustom" style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '5px', boxShadow: '0px 0px 12px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s', height: '100%' , width: '300px'}}>
-            
+    <div className="navlinkcustom">
+      <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
+        <Row  style={{ paddingLeft:'20px'}}>
+          <Col xs={9} >    
             <Row className="align-items-center" style={{ width: '100%' }}>  
               {/* Image placeholder */}
               <Col xs={4} style={{ backgroundColor: '#b9ff66', borderRadius: '5px', height: '85px', display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
@@ -30,12 +28,12 @@ export default function AdviserClassroomCard({ classroom }) {
                 <GroupIcon style={{color:'black'}}/>
                 {/* show how many student enrolled this classroom */}
               </div>
-            </Row>
-            </div>
-          </NavLink> 
-        </Col>
-      </Row> 
-    </>
+            </Row> 
+          
+          </Col>
+        </Row> 
+      </NavLink> 
+    </div>
       
  
   );

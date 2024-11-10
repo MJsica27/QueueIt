@@ -14,8 +14,8 @@ export default function AdviserGroupPage() {
             <AdviserNavbar /> 
 
             <div  className=" d-flex align-items-center justify-content-center"> 
-                <div  style={{ background: '#fafafa', color: '#333',  width: '1400px', overflow: 'hidden', height: '82vh', margin: '20px 0 0 20px',  }} >  
-                    <div  style={{ fontWeight: 'bold', backgroundColor: '#fafafa', height: '50px', fontSize: '22px', padding: '0 20px', color: '#000', display: 'flex', alignItems: 'center'}} >
+                <div  style={{ backgroundColor:'rgba(0,0,0,0.03)', borderRadius: '5px', color: '#333',  width: '1400px', overflow: 'hidden', height: '82vh', margin: '20px 0 0 20px',  }} >  
+                    <div  style={{ fontWeight: 'bold',   height: '50px', fontSize: '22px', padding: '0 20px', color: '#000', display: 'flex', alignItems: 'center'}} >
                         <span>
                         <ArrowBackIcon />
                                 {group.groupName}

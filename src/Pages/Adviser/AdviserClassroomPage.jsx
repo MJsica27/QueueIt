@@ -127,7 +127,8 @@ const AdviserClassroomPage = () => {
                 <div 
                     style={{  
                         margin: '20px 0 0 0',
-                        background: '#fafafa', 
+                        backgroundColor:'rgba(0,0,0,0.03)',
+                        borderRadius: '5px',
                         color: '#000',  
                         width: '1410px', 
                         overflow: 'hidden',
@@ -136,29 +137,32 @@ const AdviserClassroomPage = () => {
                 >  
                     <div 
                         style={{
-                            fontWeight: 'bold',
-                            backgroundColor: '#fafafa',
+                            fontWeight: 'bold', 
                             color: '#000',
                             height: '50px', 
                             fontSize: '20px',
                             padding: '0 20px', 
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'space-between'
+                            justifyContent: 'space-between',
+                            marginTop: '15px'
                         }}
                     > 
-                        <span style={{ display: 'inline-flex', alignItems: 'center', }} >
+                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                             <ArrowBackIcon />
                             {classroomDetails.subjectName} - {classroomDetails.section}
                             <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
-                            <div>
-                            <OptionsMenu onAction={handleAction} color="black" /> 
-                            </div> 
+                                <div>
+                                    <OptionsMenu onAction={handleAction} color="black" /> 
+                                </div> 
                             </OverlayTrigger>
                         </span>
 
-                        <span style={{ fontWeight: 'normal' }}>Classcode: {classroom.classCode}</span>
+                        <span>
+                            <span style={{ fontWeight: 'normal' }}>Classcode</span>: {classroom.classCode}
+                        </span>
                     </div>
+
 
                     <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 70px '  }} gap={3} >  
                         {groups.length === 0 ? (

@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';   
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';   
 import SearchIcon from '@mui/icons-material/Search'; 
 
 export default function AdviserPage() {
@@ -141,12 +141,13 @@ export default function AdviserPage() {
             height: '90vh',  
           }}
         > 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }} >
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
           <div
             className="d-flex align-items-center justify-content-between"
             style={{ 
               margin: '20px 20px 10px 20px',
-              background: '#fafafa',
+              backgroundColor:'rgba(0,0,0,0.03)',
+              borderRadius: '5px',
               fontWeight: 'bold',
               height: '80px',
               fontSize: '22px',
@@ -169,7 +170,6 @@ export default function AdviserPage() {
               />
               <SearchIcon  style={{  position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',  color: '#ccc' }}  />
             </div>
-
             <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
               Create
             </Button>
@@ -180,8 +180,9 @@ export default function AdviserPage() {
           <div
             className="d-flex justify-content-between"
             style={{
-              margin: '20px 20px 10px 20px',
-              background: '#fafafa',
+              margin: '20px 20px 10px 20px', 
+              backgroundColor:'rgba(0,0,0,0.03)',
+              borderRadius: '5px',
               fontWeight: 'bold',
               fontSize: '22px', 
               height: '500px',
@@ -194,7 +195,7 @@ export default function AdviserPage() {
               {classrooms.length === 0 ? (
                 <p className="text-center mt-4">No active classrooms found.</p>
               ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
                   {classrooms.map((classroom) => (
                     <ClassroomCard 
                       key={classroom.classId}
