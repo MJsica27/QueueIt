@@ -1,0 +1,196 @@
+
+
+
+#mainContainer{
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    font-family: poppins;
+}
+
+#QueuePageSecondRowContainer{
+    display: flex;
+    flex-grow: 1;
+    padding: 1em+5dvw;
+    max-height: calc(100vh - 100px);
+    gap: 10px;
+}
+
+#leftContainer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#rightContainer{
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.adviserProfilePhoto{
+    font-size: 5.5em !important;
+}
+
+#adviserName{
+    font-size: calc(1em + 0.5dvw);
+}
+
+#adviserInfoContainer{
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    gap: 10px;
+    padding-inline:1dvw;
+}
+
+#QueueingInformationContainer{
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+    padding-top: 10px;
+    overflow: hidden;
+}
+
+#nextToUpNextContainer{
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#timeContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    flex: 0.25;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: clamp(1rem, 2vw + 0.8rem, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#onHoldContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    flex: 1;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#upNextContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    flex: 1;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    overflow: auto;
+}
+
+#queueingTeamContainer{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    padding: 10px;
+}
+
+
+
+#indexNumber{
+    color: white;
+    background-color: #457B06;
+    clip-path: circle();
+    font-size: clamp(0.6rem,0.8vw + 1rem, 1.5rem);
+    height: 1em;
+    width: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8em;
+}
+
+#queueingTeamMiniProfile{
+    background-color: #B9FF66;
+    height: 5em;
+    aspect-ratio: 1;
+}
+
+#queueingTeamInformationLive{
+    flex: 1;
+    height: 100%;
+}
+
+#queueingTeamNameLive{
+    font-weight: 450;
+    font-size: calc(1em + 0.5dvw);
+}
+
+#queueingTeamSectionLive{
+    color: gray;
+    font-size: calc(0.5em + 0.5dvw);
+}
+
+
+#currentlyTendingContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    padding: 1em;
+}
+
+#ChatBoxContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    padding: 1em;
+    flex: 1;
+    max-height: calc(100% - 100px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-width: calc(100%);
+}
+
+#chatBoxFeed{
+    background-color: white;
+    flex-grow: 1;
+    max-height: calc(100%);
+    /* width: 100%; */
+    padding: 1em;
+    max-width: 100%;
+    overflow-y: auto;
+}
+
+#welcomeChatMessage{
+    color: gray;
+    text-align: center;
+}
+
+#chatProfile{
+    background-color: #B9FF66;
+    height: 3em;
+    aspect-ratio: 1;
+    clip-path: circle();
+}
+
+@media (max-width: 850px){
+    #QueuePageSecondRowContainer{
+        flex-direction: column;
+    }
+    #leftContainer{
+        order: 1;
+    }
+    #rightContainer{
+        order: 0;
+        /* flex-basis: 1; */
+    }
+    #ChatBoxContainer{
+        max-height: 80vh;
+    }
+    #queueingTeamContainer{
+        flex-direction: column;
+    }
+}

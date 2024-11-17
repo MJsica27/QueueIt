@@ -21,6 +21,7 @@ import ProfilePage from './Pages/ProfilePage';
 import { UserProvider } from './Components/User/UserContext';
 import { ToastContainer } from 'react-toastify';
 import QueueingPage from './Pages/Student/QueueingPage';
+import OnQueuePage from './Pages/Student/OnQueuePage';
 
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
                         {/* student */}
                         <Route path="/studenthomepage" element={<StudentHomePage />} />
                         <Route path='/queuePage' element={<QueueingPage/>} />
+                        <Route path='/onQueuePage' element={<OnQueuePage/>} />
                         {/* user */}
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/" element={<LoginForm />} />

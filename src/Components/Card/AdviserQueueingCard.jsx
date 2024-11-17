@@ -65,7 +65,7 @@ const AdviserQueueingCard = ({adviserID}) => {
             style={{
                 display:'flex',
                 flexDirection:'column',
-                flex:1
+                flex:1,
             }}
         >
             {adviser?

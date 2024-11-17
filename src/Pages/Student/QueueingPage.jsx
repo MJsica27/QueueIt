@@ -114,7 +114,7 @@ const QueueingPage = () => {
                         <>
                             {/* if wala pay group */}
                             <div style={{flex:1, display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center', gap:'20px'}}>
-                                <LockPersonIcon style={{fontSize:'12em', color:'gray'}}/>
+                                <LockPersonIcon style={{fontSize:'12em'}}/>
                                 <Typography variant='subtitle2' fontSize='1em' fontFamily='Poppins' textAlign='center' color='gray'>Find a group first to enable mentorship availability.</Typography>
                             </div>
                         </>}
@@ -139,9 +139,9 @@ const QueueingPage = () => {
                                 :
                                 <>
                                     <div style={{display:'flex',flex:1,flexDirection:'column'}}>
-                                        <ConnectWithoutContactIcon style={{fontSize:'8em',color:'gray',alignSelf:'center', flex:2}}/>
-                                        <Typography style={{padding:'0px 0.8em 0px 0.8em',color:'gray',flex:1, display:'flex',alignItems:'center', justifyContent:'center', textAlign:'center' }}>You have yet to find any group. Connect with others</Typography>
-                                        <div style={{flex:1,display:'flex', alignItems:'center',justifyContent:'center'}}>
+                                        <ConnectWithoutContactIcon style={{fontSize:'clamp(5em, 8em, 12em)',alignSelf:'center', flex:1}}/>
+                                        <Typography style={{padding:'0px 0.8em 0px 0.8em',color:'gray', display:'flex',alignItems:'center', justifyContent:'center', textAlign:'center', flex:1 }}>You have yet to find any group. Connect with others</Typography>
+                                        <div style={{display:'flex', alignItems:'center',justifyContent:'center'}}>
                                             <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>Connect</Button>
                                         </div>
                                     </div>
@@ -155,7 +155,7 @@ const QueueingPage = () => {
                             <div style={{flex:1,display:'flex',flexDirection:'column', textAlign:'center'}}>
                                 <span id='count'>{count}</span>
                                 <span id='consul'>Consultations conducted.</span>
-                                <div style={{flex:1,display:'flex', alignItems:'center',justifyContent:'center'}}>
+                                <div style={{display:'flex', alignItems:'center',justifyContent:'center'}}>
                                     <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>History</Button>
                                 </div>
                             </div>

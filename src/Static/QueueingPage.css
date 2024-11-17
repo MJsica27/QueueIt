@@ -5,12 +5,13 @@
 #SecondRowContainer{
     display: flex;
     gap: 20px;
+    min-height: 75dvh;
+    
 }
 
 .adviserQueueingCard{
     background-color: rgba(0, 0, 0, 0.03);
     border-radius: 5px;
-    height: 74dvh;
     flex: 1;
     padding: 1rem;
     display: flex;
@@ -23,11 +24,10 @@
     flex-direction: column;
     gap: 20px;
     background-color: white;
-    flex: 1;
 }
 
 .extraInfoSubCard{
-    height: 20dvh;
+    height: fit-content;
     padding: 1em;
     flex: 1;
     background-color: rgba(0, 0, 0, 0.03);
@@ -48,6 +48,15 @@
 #count{
     font-size: 8em;
     line-height: 1;
+}
+
+.buttonCustom{
+    background-color: #b9ff66;
+    color: black;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    padding: calc(0.5em + 2px);
 }
 
 
