@@ -3,13 +3,9 @@ package com.QueueIt.capstone.API.Services;
 import com.QueueIt.capstone.API.Config.JWTService;
 import com.QueueIt.capstone.API.Entities.*;
 //import com.QueueIt.capstone.API.Entities.Student;
+import com.QueueIt.capstone.API.Repository.*;
 import com.QueueIt.capstone.API.Requests.LoginRequest;
-import com.QueueIt.capstone.API.Repository.AdminRepository;
-import com.QueueIt.capstone.API.Repository.AdviserRepository;
-import com.QueueIt.capstone.API.Repository.ClassroomRepository;
 //import com.QueueIt.capstone.API.Repository.StudentRepository;
-import com.QueueIt.capstone.API.Repository.StudentRepository;
-import com.QueueIt.capstone.API.Repository.UserRepository;
 
 import com.QueueIt.capstone.API.Requests.StudentRegistrationRequest;
 import com.QueueIt.capstone.API.Returns.AuthenticationResponse;
@@ -56,6 +52,9 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private QueueingGroupsRepository queueingGroupsRepository;
+
     //private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -80,6 +79,7 @@ public class UserService {
                 user.getLastname(), user.getPhotoURL(), Role.ADVISER));
         Adviser adviser = adviserRepository.save(new Adviser(my_user));
         if (adviser != null) {
+            queueingGroupsRepository.save(new QueueingGroups(adviser.getUser().getUserID()));
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

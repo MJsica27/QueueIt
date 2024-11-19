@@ -36,4 +36,19 @@ public class QueueController {
     public ResponseEntity<Object> adviserConcludeMeeting(@RequestBody Long meetingID, HttpServletRequest request){
         return queueService.adviserConcludeMeeting(meetingID,request);
     }
+
+    @GetMapping("/getQueueingTeams")
+    public ResponseEntity<Object> getQueueingTeams(@RequestParam Long adviserID){
+        return queueService.getQueueingTeams(adviserID);
+    }
+
+    @PostMapping("/student/enqueue")
+    public ResponseEntity<Object> studentEnqueue(@RequestParam Long adviserID, @RequestParam Long groupID){
+        return queueService.studentEnqueue(adviserID, groupID);
+    }
+
+    @PostMapping("/student/dequeue")
+    public ResponseEntity<Object> studentDequeue(@RequestParam Long adviserID, @RequestParam Long studentID, @RequestParam Long classID){
+        return queueService.studentDequeue(adviserID, studentID, classID);
+    }
 }
