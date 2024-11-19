@@ -1,56 +1,127 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import JandelStudentNavbar from '../../Components/Navbar/JandelStudentNavbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../../Static/OnQueuePage.css';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { Button } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useWebSocket } from '../../Components/User/WebSocketContext';
 
 const OnQueuePage = () => {
-    const groupID = 3
-    const teams = [
-        {
-            "groupID":1,
-            "classID":2,
-            "mentorID":3,
-            "groupName":"Natus Vincere",
-            "subjectCode":"IT322",
-            "section":"G1"
-        },
-        {
-            "groupID":2,
-            "classID":2,
-            "mentorID":3,
-            "groupName":"Team Liquid",
-            "subjectCode":"IT321",
-            "section":"F2"
-        },
-        {
-            "groupID":3,
-            "classID":2,
-            "mentorID":3,
-            "groupName":"Team Bangan",
-            "subjectCode":"IT322",
-            "section":"G01"
-        },
-        {
-            "groupID":5,
-            "classID":2,
-            "mentorID":3,
-            "groupName":"Team Secret",
-            "subjectCode":"IT301",
-            "section":"F1  "
-        },
-        {
-            "groupID":7,
-            "classID":2,
-            "mentorID":3,
-            "groupName":"Team LAIN NAPUD!",
-            "subjectCode":"IT301",
-            "section":"F1  "
-        },
+    const location = useLocation()
+    const {adviser, groupID} = location.state || {};
+    const [teams, setTeams] = useState([]);
 
-    ]
+    const client = useWebSocket();
+
+    const fetchTeams = async ()=>{
+        try {
+            const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${adviser.user.userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            switch (response.status) {
+                case 200:
+                    const data = await response.json();
+                    // console.log(data.groups)
+                    setTeams([...teams, ...data.groups])
+                    break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    toast.error("Something went wrong while fetching teams.");
+            }
+        } catch (error) {
+            toast.error("An error occurred: " + error.message);
+        }
+    }
+
+    useEffect(() => {
+        // Update the clock every second (1000 milliseconds)
+        updateClock();
+        const clockInterval = setInterval(updateClock, 1000);
+
+        fetchTeams();
+        return ()=>{
+            clearInterval(clockInterval);
+        }
+    }, []);
+
+    
+
+    useEffect(() => {
+        if (client) {
+            const subscription = client.subscribe(`/topic/queueingTeamsStatus/student/enqueue/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                // console.log(receivedMessage)
+                setTeams((prevTeams) => [...prevTeams, receivedMessage]);
+            })
+
+            const subscription2 = client.subscribe(`/topic/queueingTeamsStatus/student/dequeue/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                // console.log(receivedMessage)
+                setTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
+            })
+
+            // Cleanup subscription on unmount
+            return () => {
+                subscription.unsubscribe();
+                subscription2.unsubscribe();
+            };
+        }
+    }, [client]);
+
+
+    // const teams = [
+    //     {
+    //         "groupID":1,
+    //         "classID":2,
+    //         "mentorID":3,
+    //         "groupName":"Natus Vincere",
+    //         "subjectCode":"IT322",
+    //         "section":"G1"
+    //     },
+    //     {
+    //         "groupID":2,
+    //         "classID":2,
+    //         "mentorID":3,
+    //         "groupName":"Team Liquid",
+    //         "subjectCode":"IT321",
+    //         "section":"F2"
+    //     },
+    //     {
+    //         "groupID":3,
+    //         "classID":2,
+    //         "mentorID":3,
+    //         "groupName":"Team Bangan",
+    //         "subjectCode":"IT322",
+    //         "section":"G01"
+    //     },
+    //     {
+    //         "groupID":5,
+    //         "classID":2,
+    //         "mentorID":3,
+    //         "groupName":"Team Secret",
+    //         "subjectCode":"IT301",
+    //         "section":"F1  "
+    //     },
+    //     {
+    //         "groupID":7,
+    //         "classID":2,
+    //         "mentorID":3,
+    //         "groupName":"Team LAIN NAPUD!",
+    //         "subjectCode":"IT301",
+    //         "section":"F1  "
+    //     },
+
+    // ]
 
     const onHoldTeams = [
         
@@ -73,11 +144,11 @@ const OnQueuePage = () => {
         "section":"F1  "
     }
 
-    const adviser = {
-        "firstname":"ice",
-        "lastname":"man",
-        "photoURL":""
-    }
+    // const adviser = {
+    //     "firstname":"ice",
+    //     "lastname":"man",
+    //     "photoURL":""
+    // }
 
     const chats = [
         {
@@ -157,15 +228,7 @@ const OnQueuePage = () => {
     }
     
     
-    useEffect(() => {
-        // Update the clock every second (1000 milliseconds)
-        updateClock();
-        setInterval(updateClock, 1000);
-        return ()=>{
-            clearInterval();
-        }
-    }, []);
-
+    
     return (
         <div id='mainContainer'>
             <JandelStudentNavbar/>
@@ -174,7 +237,7 @@ const OnQueuePage = () => {
                     <div id="adviserInfoContainer">
                         <AccountCircleIcon className='adviserProfilePhoto'/>
                         <div style={{display:'flex', flexDirection:'column',justifyItems:'center'}}>
-                            <span id='adviserName'>{adviser.firstname.charAt(0).toUpperCase()+adviser.firstname.slice(1)+" "+adviser.lastname.charAt(0).toUpperCase()+adviser.lastname.slice(1)}</span>
+                            {adviser?<span id='adviserName'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</span>:<></>}
                             <a href='/' style={{color:'#6ABf05'}}>View Profile</a>
                         </div>
                         <span style={{flex:1, display:'flex',justifyContent:'end', paddingInlineEnd:'2em'}}>Queueing ends 3:00 pm</span>
@@ -186,7 +249,7 @@ const OnQueuePage = () => {
                                     groupID == team.groupID?
 
                                     <>
-                                    <div id='queueingTeamContainer' style={{backgroundColor:'rgba(185,255,102,0.22)'}}>
+                                    <div id='queueingTeamContainer' style={{backgroundColor:'rgba(185,255,102,0.22)'}} key={index}>
                                         <div id='indexNumber'>{index+1}</div>
                                         <div id="queueingTeamMiniProfile"></div>
                                         <div id="queueingTeamInformationLive">
@@ -199,7 +262,7 @@ const OnQueuePage = () => {
                                     </div>
                                     </>
                                     :
-                                    <div id='queueingTeamContainer'>
+                                    <div id='queueingTeamContainer' key={index}>
                                         <div id='indexNumber'>{index+1}</div>
                                         <div id="queueingTeamMiniProfile"></div>
                                         <div id="queueingTeamInformationLive">

@@ -21,7 +21,7 @@ const QueueingPage = () => {
         const response = await fetch(`http://localhost:8080/group/getGroupGivenStudent?classID=${classroom.classID}&userID=${user.userID}`)
         if (response.ok){
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
             setGroup(data);
         }
     }
@@ -94,13 +94,13 @@ const QueueingPage = () => {
                 <div id='SecondRowContainer'>
                     <div className='adviserQueueingCard'>
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
-                        <AdviserQueueingCard adviserID={classroom.adviserID}/>
+                        <AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""}/>
                     </div>
                     <div className='adviserQueueingCard'>
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>
                         {group?
                             group.mentorID?
-                            <><AdviserQueueingCard adviserID={group.mentorID}/></>
+                            <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""}/></>
                             :
                             //if wala pay mentor
                             <>
