@@ -8,7 +8,7 @@ import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu';
 import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
 import { toast } from 'react-toastify';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import BackButton from '../../Components/Buttons/BackButton';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -19,11 +19,15 @@ const AdviserClassroomPage = () => {
     const [showStudentsModal, setShowStudentsModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [classroomDetails, setClassroomDetails] = useState({
-        subjectCode: classroom.subjectCode,
-        subjectName: classroom.subjectName,
-        section: classroom.section
-    });
+    
+    // Initialize state from localStorage or fallback to initial classroom details
+    const [classroomDetails, setClassroomDetails] = useState(
+        JSON.parse(localStorage.getItem('classroomDetails')) || {
+            subjectCode: classroom.subjectCode,
+            subjectName: classroom.subjectName,
+            section: classroom.section
+        }
+    );
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -66,10 +70,10 @@ const AdviserClassroomPage = () => {
     };
 
     const handleCloseStudentsModal = () => setShowStudentsModal(false);
-    const handleCloseEditModal = () => setShowEditModal(false);
+    const closeEditClassroomModal = () => setShowEditModal(false);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
-    const handleSaveChanges = async () => {
+    const editClassroom = async () => {
         console.log("Updating classroom with data:", classroomDetails); 
         
         try {
@@ -83,12 +87,12 @@ const AdviserClassroomPage = () => {
                     subjectName: classroomDetails.subjectName,
                     section: classroomDetails.section
                 })
-            });
-    
+            }); 
             console.log("Response status:", response.status);  
     
             if (response.ok) {
-                setClassroomDetails(prev => ({ ...prev, ...classroomDetails }));
+                // Save the updated classroom details to localStorage
+                localStorage.setItem('classroomDetails', JSON.stringify(classroomDetails));
                 setShowEditModal(false);
                 toast.success('Update classroom successful');
             } else {
@@ -149,8 +153,8 @@ const AdviserClassroomPage = () => {
                         }}
                     > 
                         <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-                            <ArrowBackIcon />
-                            {classroomDetails.subjectName} - {classroomDetails.section}
+                            <BackButton />
+                            {classroomDetails.subjectCode} | {classroomDetails.subjectName} | {classroomDetails.section}
                             <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
                                 <div>
                                     <OptionsMenu onAction={handleAction} color="black" /> 
@@ -162,7 +166,6 @@ const AdviserClassroomPage = () => {
                             <span style={{ fontWeight: 'normal' }}>Classcode</span>: {classroom.classCode}
                         </span>
                     </div>
-
 
                     <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 70px '  }} gap={3} >  
                         {groups.length === 0 ? (
@@ -208,7 +211,7 @@ const AdviserClassroomPage = () => {
             </Modal>
 
             {/* Modal for editing classroom */}
-            <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
+            <Modal show={showEditModal} onHide={closeEditClassroomModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Classroom</Modal.Title>
                 </Modal.Header>
@@ -241,22 +244,22 @@ const AdviserClassroomPage = () => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseEditModal}>Close</Button>
-                    <Button variant="primary" onClick={handleSaveChanges}>Save Changes</Button>
+                    <Button variant="secondary" onClick={closeEditClassroomModal}>Cancel</Button>
+                    <Button variant="primary" onClick={editClassroom}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
 
-            {/* Modal for delete confirmation */}
+            {/* Modal for deleting classroom */}
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete Classroom</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete this classroom? This action cannot be undone.
+                    <p>Are you sure you want to delete this classroom?</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseDeleteModal}>Cancel</Button>
-                    <Button variant="danger" onClick={handleDeleteClassroom}>Delete</Button>
+                    <Button variant="danger" onClick={handleDeleteClassroom}>Delete Classroom</Button>
                 </Modal.Footer>
             </Modal>
         </div>

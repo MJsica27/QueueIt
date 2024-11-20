@@ -1,6 +1,6 @@
 import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import { useLocation } from 'react-router-dom'; 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import BackButton from '../../Components/Buttons/BackButton';
 import { IconButton, } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
@@ -17,7 +17,7 @@ export default function AdviserGroupPage() {
                 <div  style={{ backgroundColor:'rgba(0,0,0,0.03)', borderRadius: '5px', color: '#333',  width: '1400px', overflow: 'hidden', height: '82vh', margin: '20px 0 0 20px',  }} >  
                     <div  style={{ fontWeight: 'bold',   height: '50px', fontSize: '22px', padding: '0 20px', color: '#000', display: 'flex', alignItems: 'center'}} >
                         <span>
-                        <ArrowBackIcon />
+                        <BackButton />
                                 {group.groupName}
                             <IconButton  style={{ color: 'black'}}>
                                 <MoreHorizIcon/>

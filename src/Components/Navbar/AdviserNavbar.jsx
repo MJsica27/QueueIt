@@ -1,5 +1,5 @@
 import { Dropdown, Nav } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';  // Import Link for routing
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react'; 
 import darkwo from '../../Assets/logo/logo.png';
@@ -9,7 +9,7 @@ import { IconButton } from '@mui/material';
 
 export default function AdviserNavbar() {
     const navigate = useNavigate();
-    const location = useLocation();
+    const location = useLocation();  // Use location once
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleProfile = () => {
@@ -29,8 +29,12 @@ export default function AdviserNavbar() {
         setShowDropdown(!showDropdown);
     };
 
-    const isActiveLink = (path) => {
-        return location.pathname === path;
+    const isActiveLink = (...paths) => {
+        return paths.some(path => location.pathname === path); // Check if the current location matches any of the paths
+    };
+
+    const handleLogoClick = () => {
+        navigate('/adviserhomepage');
     };
 
     return (
@@ -45,33 +49,37 @@ export default function AdviserNavbar() {
                 padding: '0px 6dvw'
             }}
         >
-            <img src={darkwo} alt="System Logo" style={{ height: '75%' }} />
+            <img onClick={handleLogoClick} src={darkwo} alt="System Logo" style={{ height: '75%' }} />
             
             <Nav className="d-flex gap-3">
                 <Nav.Link
-                    className={`nav-link-custom ${isActiveLink('/adviserhomepage') ? 'active' : ''}`}
-                    href="adviserhomepage"
-                    style={{ color: '#666666', fontWeight: isActiveLink('/adviserhomepage') ? 'bold' : 'normal' }}
+                    as={Link}  // Use Link component for React Router routing
+                    to="/adviserhomepage"
+                    className={`nav-link-custom ${isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'active' : ''}`}
+                    style={{ color: '#666666', fontWeight: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'bold' : 'normal' }}
                 >
                     Home
                 </Nav.Link>
                 <Nav.Link
+                    as={Link}
+                    to="/adviserqueuepage"
                     className={`nav-link-custom ${isActiveLink('/adviserqueuepage') ? 'active' : ''}`}
-                    href="adviserqueuepage"
                     style={{ color: '#666666', fontWeight: isActiveLink('/adviserqueuepage') ? 'bold' : 'normal' }}
                 >
                     Queue
                 </Nav.Link>
                 <Nav.Link
+                    as={Link}
+                    to="/adviseravailabilitypage"
                     className={`nav-link-custom ${isActiveLink('/adviseravailabilitypage') ? 'active' : ''}`}
-                    href="adviseravailabilitypage"
                     style={{ color: '#666666', fontWeight: isActiveLink('/adviseravailabilitypage') ? 'bold' : 'normal' }}
                 >
                     Availability
                 </Nav.Link>
                 <Nav.Link
+                    as={Link}
+                    to="/adviserlogpage"
                     className={`nav-link-custom ${isActiveLink('/adviserlogpage') ? 'active' : ''}`}
-                    href="adviserlogpage"
                     style={{ color: '#666666', fontWeight: isActiveLink('/adviserlogpage') ? 'bold' : 'normal' }}
                 >
                     Logs
