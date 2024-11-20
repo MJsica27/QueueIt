@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const BackButton = () => {
@@ -15,7 +15,7 @@ const BackButton = () => {
        
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">back</Tooltip>}>
          <span onClick={handleBackClick} style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}>
-            <ArrowBackIcon /> 
+            <ArrowBackIosIcon /> 
         </span>
     </OverlayTrigger>
     );

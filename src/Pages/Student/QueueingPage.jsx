@@ -8,7 +8,8 @@ import LockPersonIcon from '@mui/icons-material/LockPerson';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import { Button } from 'react-bootstrap';
 import GroupsIcon from '@mui/icons-material/Groups';
-import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'; 
+import BackButton from '../../Components/Buttons/BackButton';
 
 const QueueingPage = () => {
     const location = useLocation();
@@ -55,6 +56,7 @@ const QueueingPage = () => {
                         alignItems:'center',
                     }}
                 >
+                    <BackButton />  
                     {/* green box  */}
                     <div
                         style={{
@@ -79,14 +81,15 @@ const QueueingPage = () => {
                         <Typography variant='caption' color='gray'>{classroom.section}</Typography>
                     </div>
 
-
+                    {/* si MJ ang nag tangtang ani, if okay lang akoa ge butang sa left most */}
                     {/* All Teams */}
-                    <div
+                    
+                    {/* <div
                         style={{
                         }}
                     >
                         <a href='studentHomePage' style={{textDecoration:'none', color:'inherit'}}><Typography variant='subtitle2' fontWeight='bold'>{`< All Teams`}</Typography></a>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* ------------------- end of first row  ----------------- */}
