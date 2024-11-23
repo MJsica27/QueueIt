@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Entities;
 
 import jakarta.persistence.*;
 
+import java.sql.Time;
 import java.util.List;
 
 @Entity
@@ -13,6 +14,8 @@ public class Group {
     private Long classID;
     private Long mentorID;
     private String groupName;
+    private String section;
+    private String subjectCode;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "group_user",
@@ -20,6 +23,8 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> students;
+    private Boolean isQueueing;
+    private Time queueingTimeStart;
 
     public Group() {
     }
@@ -67,5 +72,37 @@ public class Group {
 
     public void setStudents(List<User> students) {
         this.students = students;
+    }
+
+    public Time getQueueingTimeStart() {
+        return queueingTimeStart;
+    }
+
+    public void setQueueingTimeStart(Time queueingTimeStart) {
+        this.queueingTimeStart = queueingTimeStart;
+    }
+
+    public Boolean getQueueing() {
+        return isQueueing;
+    }
+
+    public void setQueueing(Boolean queueing) {
+        isQueueing = queueing;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 }

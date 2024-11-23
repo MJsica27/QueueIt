@@ -48,7 +48,17 @@ public class QueueController {
     }
 
     @PostMapping("/student/dequeue")
-    public ResponseEntity<Object> studentDequeue(@RequestParam Long adviserID, @RequestParam Long studentID, @RequestParam Long classID){
-        return queueService.studentDequeue(adviserID, studentID, classID);
+    public ResponseEntity<Object> studentDequeue(@RequestParam Long adviserID, @RequestParam Long groupID){
+        return queueService.studentDequeue(adviserID, groupID);
+    }
+
+    @PostMapping("/student/holdQueue")
+    public ResponseEntity<Object> studentHoldQueue(@RequestParam Long adviserID, @RequestParam Long groupID){
+        return queueService.studentHoldQueue(adviserID, groupID);
+    }
+
+    @PostMapping("/student/requeue")
+    public ResponseEntity<Object> studentRequeue(@RequestParam Long adviserID, @RequestParam Long groupID){
+        return queueService.studentRequeue(adviserID,groupID);
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -133,6 +135,9 @@ public class QueueService {
             if (queueingGroups.getGroups().contains(group)){
                 return ResponseEntity.badRequest().body("Group already in queue");
             }
+            group.setQueueingTimeStart(new Time(System.currentTimeMillis()));
+            group.setQueueing(Boolean.TRUE);
+            groupRepository.save(group);
             queueingGroups.getGroups().add(group);
             queueingGroupsRepository.save(queueingGroups);
             simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/enqueue/"+adviserID,group);
@@ -144,29 +149,72 @@ public class QueueService {
         }
     }
 
-    public ResponseEntity<Object> studentDequeue(Long adviserID, Long studentID, Long classID){
+    public ResponseEntity<Object> studentDequeue(Long adviserID, Long groupID){
         try{
-            List<Group> groupList = groupRepository.findByClassID(classID);
-            User student = userRepository.findById(studentID).orElseThrow();
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviserID);
-            for (Group group:groupList){
-                if (group.getStudents().contains(student)){
-                    if (queueingGroups.getGroups().contains(group)){
-                        queueingGroups.getGroups().remove(group);
-                        queueingGroupsRepository.save(queueingGroups);
-                        simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/dequeue/"+adviserID,group);
-                        group.getStudents().clear();
-                        simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/dequeue/"+adviserID,group);
-                        return ResponseEntity.ok("Group dequeued");
-                    }
-                    return ResponseEntity.badRequest().body("Group is not in queue");
-                }
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            if (queueingGroups.getGroups().contains(group)){
+                group.setQueueingTimeStart(null);
+                group.setQueueing(Boolean.FALSE);
+                groupRepository.save(group);
+                queueingGroups.getGroups().remove(group);
+                queueingGroupsRepository.save(queueingGroups);
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/dequeue/"+adviserID,group);
+                group.getStudents().clear();
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/dequeue/"+adviserID,group);
+                return ResponseEntity.ok("Group dequeued");
+            } else if (queueingGroups.getOnHoldGroups().contains(group)) {
+                group.setQueueingTimeStart(null);
+                groupRepository.save(group);
+                queueingGroups.getOnHoldGroups().remove(group);
+                queueingGroupsRepository.save(queueingGroups);
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/dequeue/"+adviserID,group);
+                group.getStudents().clear();
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/dequeue/"+adviserID,group);
+                return ResponseEntity.ok("Group dequeued");
+            }else{
+                return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.notFound().build();
         }catch (NoSuchElementException e){
             return ResponseEntity.status(404).body("Student not found");
         }
     }
 
 
+    public ResponseEntity<Object> studentHoldQueue(Long adviserID, Long groupID) {
+        try{
+            QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviserID);
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            if (queueingGroups.getGroups().contains(group)){
+                //ibot sa queueing groups
+                queueingGroups.getGroups().remove(group);
+                //sulod sa on hold groups
+                queueingGroups.getOnHoldGroups().add(group);
+                //i sort via queueing Start
+                queueingGroups.getOnHoldGroups().sort(Comparator.comparing(Group::getQueueingTimeStart));
+                //save
+                queueingGroupsRepository.save(queueingGroups);
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/onHold/"+adviserID,group);
+                return ResponseEntity.ok("Group set to hold");
+            }
+            return ResponseEntity.notFound().build();
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<Object> studentRequeue(Long adviserID, Long groupID) {
+        try{
+            QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviserID);
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            queueingGroups.getOnHoldGroups().remove(group);
+            queueingGroups.getGroups().add(group);
+            queueingGroups.getGroups().sort(Comparator.comparing(Group::getQueueingTimeStart));
+            queueingGroupsRepository.save(queueingGroups);
+            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/requeue/"+adviserID,group);
+            return ResponseEntity.ok("Group requeued");
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
