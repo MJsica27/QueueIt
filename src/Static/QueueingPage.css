@@ -6,7 +6,6 @@
     display: flex;
     gap: 20px;
     min-height: 75dvh;
-    
 }
 
 .adviserQueueingCard{
@@ -51,12 +50,8 @@
 }
 
 .buttonCustom{
-    background-color: #b9ff66;
-    color: black;
-    border-radius: 5px;
-    font-weight: bold;
-    border: none;
-    padding: calc(0.5em + 2px);
+    background-color: rgb(106, 191, 5);
+    font-size: clamp(0.20em + 0.8dvw, 0.5em + 1dvw, 0.20em + 0.8dvw);
 }
 
 
@@ -108,5 +103,16 @@
     }
     #groupGreenBox{
         width: 100% !important;
+    }
+    #leftContainer{
+        min-height: 100dvh;
+    }
+    #queueingTeamContainer{
+        flex-direction: row !important;
+        font-size: calc(0.35em + 1dvw);
+        gap: 10px !important;
+    }
+    #indexNumber{
+        font-size: calc(1em + 2dvw) !important;
     }
 }
