@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import JandelStudentNavbar from '../../Components/Navbar/JandelStudentNavbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../../Static/OnQueuePage.css';
@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useWebSocket } from '../../Components/User/WebSocketContext';
 import CategoryIcon from '@mui/icons-material/Category';
+import { UserContext } from '../../Components/User/UserContext';
 
 const OnQueuePage = () => {
     const location = useLocation()
@@ -16,9 +17,11 @@ const OnQueuePage = () => {
     const [teams, setTeams] = useState([]);
     const [onHoldTeams, setOnHoldTeams] = useState([]);
     const [tendingTeam, setTendingTeam] = useState(null);
-
+    const [chats, setChats] = useState([]);
+    const user = useContext(UserContext);
     const client = useWebSocket();
-
+    const [message, setMessage] = useState("");
+    const containerRef = useRef(null)
     const fetchTeams = async ()=>{
         try {
             const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${adviser.user.userID}`, {
@@ -60,7 +63,7 @@ const OnQueuePage = () => {
             switch (response.status) {
                 case 200:
                     const data = await response.json();
-                    console.log(data)
+                    // console.log(data)
                     break;
                 case 404:
                     const message = await response.text();
@@ -86,7 +89,7 @@ const OnQueuePage = () => {
             switch (response.status) {
                 case 200:
                     const data = await response.json();
-                    console.log(data)
+                    // console.log(data)
                     break;
                 case 404:
                     const message = await response.text();
@@ -150,13 +153,41 @@ const OnQueuePage = () => {
         }
     }
 
+    const sendMessage = async ()=>{
+        try {
+            if(message){
+                const response = await fetch(`http://localhost:8080/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body:JSON.stringify({
+                        "userID":user.user.userID,
+                        "adviserID":adviser.user.userID,
+                        "message":message
+                    })
+                });
+            }
+            setMessage("")
+        } catch (error) {
+            // toast.error("An error occurred: " + error.message);
+        }
+    }
+
+    useEffect(()=>{ 
+        if(containerRef.current){
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+        // console.log("nidagan")
+    },[chats])
+
     useEffect(() => {
         // Update the clock every second (1000 milliseconds)
         updateClock();
         const clockInterval = setInterval(updateClock, 1000);
 
         fetchTeams();
-        console.log("this useeffect reran after receiving subscription message")
+        // console.log("this useeffect reran after receiving subscription message")
         return ()=>{
             clearInterval(clockInterval);
         }
@@ -223,74 +254,22 @@ const OnQueuePage = () => {
                 setOnHoldTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
             })
 
+            const chatSubscription = client.subscribe(`/topic/chat/adviser/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                // console.log(receivedMessage)
+                setChats((prevMessages)=>[...prevMessages, receivedMessage]);
+            })
+
             // Cleanup subscription on unmount
             return () => {
                 subscription.unsubscribe();
                 subscription2.unsubscribe();
                 subscription3.unsubscribe();
                 subscription4.unsubscribe();
+                chatSubscription.unsubscribe();
             };
         }
     }, [client]);
-
-    const chats = [
-        {
-            "userID":1,
-            "firstname":"jandel",
-            "lastname":"macabecha",
-            "photoURL":"",
-            "message":"test message lamang  hehekz"
-        },
-        {
-            "userID":2,
-            "firstname":"shimbal",
-            "lastname":"gisaeki",
-            "photoURL":"",
-            "message":"test message lamang  hehekz"
-        },
-        {
-            "userID":3,
-            "firstname":"xaler",
-            "lastname":"vivi",
-            "photoURL":"",
-            "message":"GAE SAEKEIYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ASLKDNNDOPQWE ALSD NA;LSND ;LQWEQWE"
-        },
-        {
-            "userID":3,
-            "firstname":"xaler",
-            "lastname":"vivi",
-            "photoURL":"",
-            "message":"KGHWQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQWEQWEQWEQWEASASDASDQWEQWE"
-        },
-        {
-            "userID":1,
-            "firstname":"jandel",
-            "lastname":"macabecha",
-            "photoURL":"",
-            "message":"test message lamang  hehekz"
-        },
-        {
-            "userID":2,
-            "firstname":"shimbal",
-            "lastname":"gisaeki",
-            "photoURL":"",
-            "message":"test message lamang  hehekz"
-        },
-        {
-            "userID":3,
-            "firstname":"xaler",
-            "lastname":"vivi",
-            "photoURL":"",
-            "message":"GAE SAEKEIYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ASLKDNNDOPQWE ALSD NA;LSND ;LQWEQWE"
-        },
-        {
-            "userID":3,
-            "firstname":"xaler",
-            "lastname":"vivi",
-            "photoURL":"",
-            "message":"KGHWQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQWEQWEQWEQWEASASDASDQWEQWE"
-        },
-    ]
 
     function updateClock() {
         const now = new Date(); // Get the current date and time
@@ -433,17 +412,17 @@ const OnQueuePage = () => {
                     </div>
                     <div id="ChatBoxContainer">
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Chat</Typography>
-                        <div id="chatBoxFeed">
+                        <div id="chatBoxFeed" ref={containerRef}>
                             <div id="welcomeChatMessage">
                                 Welcome to {`${adviser.firstname} ${adviser.lastname}'s chat!`}
                             </div>
                             <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
                                 {chats.map((chat,index)=>(
-                                    <div style={{display:'flex',justifyContent:chat.userID==2?'end':'start', flexDirection:chat.userID == 2?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
+                                    <div style={{display:'flex',justifyContent:chat.userID==user.user.userID?'end':'start', flexDirection:chat.userID == user.user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
                                         <div id="chatProfile"></div>
                                         <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
-                                            <div style={{fontSize:'0.7em',alignSelf:chat.userID == 2?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
-                                            <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == 2?'end':''}}>
+                                            <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
+                                            <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.user.userID?'end':''}}>
                                                 {chat.message}
                                             </div>
                                         </div>
@@ -453,8 +432,8 @@ const OnQueuePage = () => {
                             
                         </div>
                         <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                            <input style={{flexGrow:1}} type='text' placeholder='Enter message.' id='messageInput'/>
-                            <IconButton>
+                            <input style={{flexGrow:1}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value)}} value={message}/>
+                            <IconButton onClick={sendMessage}>
                                 <SendIcon style={{color:'black'}}/>
                             </IconButton>
                         </div>
