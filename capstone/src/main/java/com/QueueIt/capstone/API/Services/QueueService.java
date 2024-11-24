@@ -40,12 +40,19 @@ public class QueueService {
         try{
             //update adviser queueing status
             Adviser adviser = adviserRepository.findById(adviserOpenCloseQueueRequest.getAdviserID()).orElseThrow();
+            //set kung kinsa ang pwede mo queue nga classID
+            adviser.setCateringClassID(adviserOpenCloseQueueRequest.getClassID());
+            //set nga ready na ang adviser for queueing
             adviser.setReady(Boolean.TRUE);
+            //set ang intro message nga mo gawas sa chat feed inig sulod ni student sa queueing page
+            adviser.setIntroMessage(adviserOpenCloseQueueRequest.getMessage());
             adviserRepository.save(adviser);
 
-            //save time ends when queue is opened and is set isActive to TRUE
+            //update queueing groups object
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
+            //set kanus-a kutob ang queueing
             queueingGroups.setTimeEnds(adviserOpenCloseQueueRequest.getTimeEnds());
+            //set is active kay if dili active, palayason tanan users nga nag access sa queueing page.
             queueingGroups.setActive(Boolean.TRUE);
             queueingGroupsRepository.save(queueingGroups);
 
@@ -60,13 +67,25 @@ public class QueueService {
         try{
             //update adviser queueing status
             Adviser adviser = adviserRepository.findById(adviserOpenCloseQueueRequest.getAdviserID()).orElseThrow();
+            //set nga dili na siya ready for queueing
             adviser.setReady(Boolean.FALSE);
+            //set to default -1, meaning mo cater siya tanan classes / groups
+            adviser.setCateringClassID((long) -1);
+            //reset ang intro message
+            adviser.setIntroMessage(null);
             adviserRepository.save(adviser);
 
-            //clear time ends and set isActive to FALSE
+            //update queueing groups
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
+            //clear ang queueing time range
             queueingGroups.setTimeEnds(null);
+            //set is active kay if dili active, palayason tanan users nga nag access sa queueing page.
             queueingGroups.setActive(Boolean.FALSE);
+
+
+            //katong logic nga ang mga naka onhold or wala ma cater ni adviser nga naka queue, i cater next open.
+
+
             queueingGroupsRepository.save(queueingGroups);
 
             //broadcast after saving
@@ -119,6 +138,8 @@ public class QueueService {
     public ResponseEntity<Object> getQueueingTeams(Long adviserID) {
         try{
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviserID);
+            queueingGroups.getGroups().sort(Comparator.comparing(Group::getQueueingTimeStart));
+            queueingGroups.getOnHoldGroups().sort(Comparator.comparing(Group::getQueueingTimeStart));
             return ResponseEntity.ok(queueingGroups);
         }catch (NoSuchElementException nse){
             return ResponseEntity.status(404).body("Adviser not found.");

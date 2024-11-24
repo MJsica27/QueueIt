@@ -18,6 +18,8 @@ public class Adviser{
     private List<Time> availableTime;
     private List<String> expertise;
     private Boolean isReady;
+    private Long cateringClassID;
+    private String introMessage;
 
     public Adviser() {
     }
@@ -27,6 +29,7 @@ public class Adviser{
         this.availableTime = null;
         this.expertise = null;
         this.isReady = Boolean.FALSE;
+        this.cateringClassID = (long) -1;
     }
 
     public User getUser() {
@@ -59,5 +62,21 @@ public class Adviser{
 
     public void setReady(Boolean ready) {
         isReady = ready;
+    }
+
+    public Long getCateringClassID() {
+        return cateringClassID;
+    }
+
+    public void setCateringClassID(Long cateringClassID) {
+        this.cateringClassID = cateringClassID;
+    }
+
+    public String getIntroMessage() {
+        return introMessage;
+    }
+
+    public void setIntroMessage(String introMessage) {
+        this.introMessage = introMessage;
     }
 }

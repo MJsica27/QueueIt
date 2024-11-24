@@ -73,12 +73,7 @@ public class ClassroomController {
 
     @GetMapping("/ClassroomsByAdviser")
     public ResponseEntity<List<Classroom>> viewUserClassrooms(@RequestParam Long userID){
-        try{
-            List<Classroom> classrooms = classroomService.viewUserClassrooms(userID);
-            return ResponseEntity.ok(classrooms);
-        }catch (EmptyStackException e){
-            return ResponseEntity.notFound().build();
-        }
+        return classroomService.viewUserClassrooms(userID);
     }
 
     @GetMapping("/getStudents")

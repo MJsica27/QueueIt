@@ -111,12 +111,9 @@ public class ClassroomService {
         }
     }
 
-    public List<Classroom> viewUserClassrooms(Long userID){
+    public ResponseEntity<List<Classroom>> viewUserClassrooms(Long userID){
         List<Classroom> classrooms = classroomRepository.findByAdviserID(userID);
-        if (!classrooms.isEmpty()){
-            return classrooms;
-        }
-        throw new EmptyStackException();
+        return ResponseEntity.ok(classrooms);
     }
 
     public List<Student> getStudentsGivenClassroom(Long classID){

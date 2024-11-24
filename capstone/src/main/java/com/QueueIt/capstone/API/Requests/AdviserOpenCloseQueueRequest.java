@@ -6,14 +6,21 @@ public class AdviserOpenCloseQueueRequest {
     private Long adviserID;
     private Boolean queueStatus;
     private Time timeEnds;
+    private Long classID;
+    private String message;
 
     public AdviserOpenCloseQueueRequest() {
     }
 
-    public AdviserOpenCloseQueueRequest(Long adviserID, Boolean queueStatus, Time timeEnds) {
+    public AdviserOpenCloseQueueRequest(Long adviserID, Time timeEnds, Long classID, String message) {
         this.adviserID = adviserID;
-        this.queueStatus = queueStatus;
         this.timeEnds = timeEnds;
+        this.classID = classID;
+        this.message = message;
+    }
+
+    public AdviserOpenCloseQueueRequest(Long adviserID) {
+        this.adviserID = adviserID;
     }
 
     public Long getAdviserID() {
@@ -38,5 +45,21 @@ public class AdviserOpenCloseQueueRequest {
 
     public void setTimeEnds(Time timeEnds) {
         this.timeEnds = timeEnds;
+    }
+
+    public Long getClassID() {
+        return classID;
+    }
+
+    public void setClassID(Long classID) {
+        this.classID = classID;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
