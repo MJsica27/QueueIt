@@ -44,6 +44,8 @@
     border-radius: 5px;
     gap: 10px;
     padding-inline:1dvw;
+    padding-block: 10px;
+    height: fit-content;
 }
 
 #QueueingInformationContainer{
@@ -140,9 +142,10 @@
     background-color: rgba(0, 0, 0, 0.03);
     border-radius: 5px;
     padding: 1em;
+    flex: 0.25;
 }
 
-#ChatBoxContainer{
+#ChatBoxContainer, #savedNotesContainer{
     background-color: rgba(0, 0, 0, 0.03);
     border-radius: 5px;
     padding: 1em;
@@ -189,8 +192,22 @@
     }
     #ChatBoxContainer{
         max-height: 80vh;
+        /* flex-wrap: wrap; */
+    }
+    #chatBoxFeed{
+        height: 80vh;
     }
     #queueingTeamContainer{
         flex-direction: column;
+    }
+    #NotesContainer{
+        flex-basis: 100% !important;
+        min-height: 50dvh;
+    }
+
+    #savedNotesContainer{
+        max-height: 50dvh;
+        overflow-y: auto;
+        color: #d0d0d0;
     }
 }

@@ -31,7 +31,11 @@ const QueueingPage = () => {
 
     useEffect(() => {
         if(user){
-            fetchGroup();
+            if(user.role === "STUDENT"){
+                fetchGroup();
+            }else{
+                navigate("*")
+            }
         }else{
             navigate("/")
         }
@@ -83,8 +87,8 @@ const QueueingPage = () => {
                             flex:1
                         }}
                     >
-                        <Typography variant='h6' fontWeight='bold'>{classroom.subjectName}</Typography>
-                        <Typography variant='caption' color='gray'>{classroom.section}</Typography>
+                        <Typography variant='h6' fontWeight='bold'>{classroom?classroom.subjectName:<></>}</Typography>
+                        <Typography variant='caption' color='gray'>{classroom?classroom.section:<></>}</Typography>
                     </div>
 
                     {/* si MJ ang nag tangtang ani, if okay lang akoa ge butang sa left most */}
@@ -103,7 +107,7 @@ const QueueingPage = () => {
                 <div id='SecondRowContainer'>
                     <div className='adviserQueueingCard'>
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
-                        <AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""}/>
+                        {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""}/>:<></>}
                     </div>
                     <div className='adviserQueueingCard'>
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>

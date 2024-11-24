@@ -11,8 +11,11 @@ const HomePage = () => {
         <>
             {user?
                 user.role == "STUDENT"?
-                <StudentPage/>:user.role === "ADVISER"?
-                                <AdviserPage/>:<AdminPage/>:<LoginForm/>
+                    <StudentPage/>:
+                        user.role === "ADVISER"?
+                            <AdviserPage/>:
+                                <AdminPage/>:
+            <LoginForm/>
             }
         </>
     );

@@ -28,16 +28,20 @@ const OnQueuePage = () => {
     useEffect(() => {
 
         if(user){
-            console.log(user)
-            // Update the clock every second (1000 milliseconds)
-            updateClock();
-            const clockInterval = setInterval(updateClock, 1000);
-
-            fetchTeams();
-            // console.log("this useeffect reran after receiving subscription message")
-            return ()=>{
+           if(user.role === "STUDENT"){
+             // Update the clock every second (1000 milliseconds)
+             updateClock();
+             const clockInterval = setInterval(updateClock, 1000);
+ 
+             fetchTeams();
+             // console.log("this useeffect reran after receiving subscription message")
+             return ()=>{
                 clearInterval(clockInterval);
             }
+           }else{
+            navigate("*")
+           }
+            
         }else{
             navigate("/")
         }
@@ -175,23 +179,25 @@ const OnQueuePage = () => {
     }
 
     const sendMessage = async ()=>{
-        try {
-            if(message){
-                const response = await fetch(`http://localhost:8080/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body:JSON.stringify({
-                        "userID":user.user.userID,
-                        "adviserID":adviser.user.userID,
-                        "message":message
-                    })
-                });
+        if(user){
+            try {
+                if(message){
+                    const response = await fetch(`http://localhost:8080/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body:JSON.stringify({
+                            "userID":user.userID,
+                            "adviserID":adviser.user.userID,
+                            "message":message
+                        })
+                    });
+                }
+                setMessage("")
+            } catch (error) {
+                toast.error("An error occurred: " + error.message);
             }
-            setMessage("")
-        } catch (error) {
-            // toast.error("An error occurred: " + error.message);
         }
     }
 
@@ -427,15 +433,15 @@ const OnQueuePage = () => {
                             <Typography variant='subtitle1' fontWeight='bold' color='gray'>Chat</Typography>
                             <div id="chatBoxFeed" ref={containerRef}>
                                 <div id="welcomeChatMessage">
-                                    Welcome to {`${adviser.firstname} ${adviser.lastname}'s chat!`}
+                                    Welcome to {`${adviser.user.firstname} ${adviser.user.lastname}'s chat!`}
                                 </div>
                                 <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
                                     {chats.map((chat,index)=>(
-                                        <div style={{display:'flex',justifyContent:chat.userID==user.user.userID?'end':'start', flexDirection:chat.userID == user.user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
+                                        <div style={{display:'flex',justifyContent:chat.userID==user.userID?'end':'start', flexDirection:chat.userID == user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
                                             <div id="chatProfile"></div>
                                             <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
-                                                <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
-                                                <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.user.userID?'end':''}}>
+                                                <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
+                                                <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.userID?'end':'start'}}>
                                                     {chat.message}
                                                 </div>
                                             </div>
@@ -445,7 +451,7 @@ const OnQueuePage = () => {
                                 
                             </div>
                             <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                                <input style={{flexGrow:1}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value)}} value={message}/>
+                                <input style={{flexGrow:1, paddingInline:'1em'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); console.log(e.target.value)}} value={message}/>
                                 <IconButton onClick={sendMessage}>
                                     <SendIcon style={{color:'black'}}/>
                                 </IconButton>
