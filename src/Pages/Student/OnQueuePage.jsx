@@ -1,27 +1,48 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import JandelStudentNavbar from '../../Components/Navbar/UserNavbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../../Static/OnQueuePage.css';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { Button } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useWebSocket } from '../../Components/User/WebSocketContext';
 import CategoryIcon from '@mui/icons-material/Category';
 import { UserContext } from '../../Components/User/UserContext';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 const OnQueuePage = () => {
     const location = useLocation()
+    const navigate = useNavigate();
     const {adviser, groupID} = location.state || {};
     const [teams, setTeams] = useState([]);
     const [onHoldTeams, setOnHoldTeams] = useState([]);
     const [tendingTeam, setTendingTeam] = useState(null);
     const [chats, setChats] = useState([]);
-    const user = useContext(UserContext);
+    const user = useContext(UserContext).user;
     const client = useWebSocket();
     const [message, setMessage] = useState("");
     const containerRef = useRef(null)
+    const [time, setTime] = useState("");
+
+    useEffect(() => {
+
+        if(user){
+            console.log(user)
+            // Update the clock every second (1000 milliseconds)
+            updateClock();
+            const clockInterval = setInterval(updateClock, 1000);
+
+            fetchTeams();
+            // console.log("this useeffect reran after receiving subscription message")
+            return ()=>{
+                clearInterval(clockInterval);
+            }
+        }else{
+            navigate("/")
+        }
+    }, []);
+
     const fetchTeams = async ()=>{
         try {
             const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${adviser.user.userID}`, {
@@ -174,29 +195,20 @@ const OnQueuePage = () => {
         }
     }
 
+    
+
+    
+
     useEffect(()=>{ 
         if(containerRef.current){
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
         // console.log("nidagan")
     },[chats])
-
-    useEffect(() => {
-        // Update the clock every second (1000 milliseconds)
-        updateClock();
-        const clockInterval = setInterval(updateClock, 1000);
-
-        fetchTeams();
-        // console.log("this useeffect reran after receiving subscription message")
-        return ()=>{
-            clearInterval(clockInterval);
-        }
-    }, []);
-
     
 
     useEffect(() => {
-        if (client) {
+        if (client && user) {
             const subscription = client.subscribe(`/topic/queueingTeamsStatus/student/enqueue/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 // console.log(receivedMessage)
@@ -286,15 +298,15 @@ const OnQueuePage = () => {
         const currentTime = `${hours}:${minutes} ${isPM ? 'PM' : 'AM'}`;
     
         // Update the clock div with the current time
-        document.getElementById('timeContainer').textContent = currentTime;
+        setTime(currentTime);
     }
     
     
     
     return (
         <div id='mainContainer'>
-            <JandelStudentNavbar/>
-            {client?
+            <UserNavbar/>
+            {client && user?
                 <div id="QueuePageSecondRowContainer">
                     <div id="leftContainer">
                         <div id="adviserInfoContainer">
@@ -355,7 +367,7 @@ const OnQueuePage = () => {
                             </div>
                             <div id="nextToUpNextContainer">
                                 <div id="timeContainer">
-
+                                    {time}
                                 </div>
                                 <div id="onHoldContainer">
                                     {onHoldTeams.map((team,index)=>(

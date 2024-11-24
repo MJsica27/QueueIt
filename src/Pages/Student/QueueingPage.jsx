@@ -1,22 +1,24 @@
 import { Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import JandelStudentNavbar from '../../Components/Navbar/UserNavbar';
 import '../../Static/QueueingPage.css';
 import AdviserQueueingCard from '../../Components/Card/AdviserQueueingCard';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import { Button } from 'react-bootstrap';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'; 
 import BackButton from '../../Components/Buttons/BackButton';
+import { UserContext } from '../../Components/User/UserContext';
 
 const QueueingPage = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const classroom = location.state;
     const [group,setGroup] = useState(null);
     const [count,setCount] = useState(0);
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = useContext(UserContext).user;
 
     const fetchGroup = async ()=>{
         const response = await fetch(`http://localhost:8080/group/getGroupGivenStudent?classID=${classroom.classID}&userID=${user.userID}`)
@@ -28,7 +30,11 @@ const QueueingPage = () => {
     }
 
     useEffect(() => {
-        fetchGroup();
+        if(user){
+            fetchGroup();
+        }else{
+            navigate("/")
+        }
     }, []);
     
     return (

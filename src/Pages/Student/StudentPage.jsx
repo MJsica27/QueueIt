@@ -27,8 +27,7 @@ export default function StudentPage() {
     if (storedUser) {
       setUser(storedUser);
     } else {
-      console.log('No user is logged in');
-      navigate('/login');
+      navigate('/');
     }
   }, [navigate]);
 
