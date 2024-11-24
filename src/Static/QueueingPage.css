@@ -52,6 +52,11 @@
 .buttonCustom{
     background-color: rgb(106, 191, 5);
     font-size: clamp(0.20em + 0.8dvw, 0.5em + 1dvw, 0.20em + 0.8dvw);
+    border: transparent;
+}
+
+.buttonCustom:hover{
+    background-color: #3e6a08;
 }
 
 

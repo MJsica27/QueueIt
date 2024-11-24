@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/Student/StudentClassroomCard'; 
-import StudentNavbar from '../../Components/Navbar/StudentNavbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -13,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';  
 import SearchIcon from '@mui/icons-material/Search'; 
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ export default function StudentPage() {
 
   return ( 
       <div className="m-0 vh-100" style={{ backgroundColor:'#fff', height:'95vh' }}>  
-        <StudentNavbar /> 
+        <UserNavbar/>
         <div  
           style={{    
             background: '#fff', 

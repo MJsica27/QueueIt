@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../../Components/Navbar/AdminNavbar'; 
 import CreateUserAccount from '../../Components/Dialogs/Admin/AdminCreateUserAccountDialog';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
-import CircularProgress from '@mui/material/CircularProgress';   
+import Button from '@mui/material/Button';  
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchIcon from '@mui/icons-material/Search'; 
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function AdminUserPage() {
   const [open, setOpen] = useState(false);
@@ -79,7 +72,7 @@ export default function AdminUserPage() {
   return (
     <div
       className="m-0 vh-100" style={{ background: '#b9ff66', color: '#333333' }} >
-      <AdminNavbar />
+      <UserNavbar/>
       <div style={{background: '#fff', color: '#333333', height: '100vh', padding: '30px 50px 0px 50px'}} >
       <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
         <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>

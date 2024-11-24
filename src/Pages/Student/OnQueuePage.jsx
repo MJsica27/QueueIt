@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import JandelStudentNavbar from '../../Components/Navbar/JandelStudentNavbar';
+import JandelStudentNavbar from '../../Components/Navbar/UserNavbar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../../Static/OnQueuePage.css';
 import { IconButton, Tooltip, Typography } from '@mui/material';
@@ -294,152 +294,158 @@ const OnQueuePage = () => {
     return (
         <div id='mainContainer'>
             <JandelStudentNavbar/>
-            <div id="QueuePageSecondRowContainer">
-                <div id="leftContainer">
-                    <div id="adviserInfoContainer">
-                        <AccountCircleIcon className='adviserProfilePhoto'/>
-                        <div style={{display:'flex', flexDirection:'column',justifyItems:'center'}}>
-                            {adviser?<span id='adviserName'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</span>:<></>}
-                            <a href='/' style={{color:'#6ABf05'}}>View Profile</a>
-                        </div>
-                        <span style={{flex:1, display:'flex',justifyContent:'end', paddingInlineEnd:'2em'}}>Queueing ends 3:00 pm</span>
-                    </div>
-                    <div id="QueueingInformationContainer">
-                        <div id="upNextContainer">
-                            <div style={{display:'flex', justifyContent:'space-between'}}>
-                                <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
-                                {
-                                    teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID) ?<></>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>
-                                }
-                                
+            {client?
+                <div id="QueuePageSecondRowContainer">
+                    <div id="leftContainer">
+                        <div id="adviserInfoContainer">
+                            <AccountCircleIcon className='adviserProfilePhoto'/>
+                            <div style={{display:'flex', flexDirection:'column',justifyItems:'center'}}>
+                                {adviser?<span id='adviserName'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</span>:<></>}
+                                <a href='/' style={{color:'#6ABf05'}}>View Profile</a>
                             </div>
-                                {teams.length > 0?
-                                
-                                    <>
-                                        {teams.map((team,index)=>(
-                                            groupID == team.groupID?
+                            <span style={{flex:1, display:'flex',justifyContent:'end', paddingInlineEnd:'2em'}}>Queueing ends 3:00 pm</span>
+                        </div>
+                        <div id="QueueingInformationContainer">
+                            <div id="upNextContainer">
+                                <div style={{display:'flex', justifyContent:'space-between'}}>
+                                    <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
+                                    {
+                                        teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID) ?<></>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>
+                                    }
+                                    
+                                </div>
+                                    {teams.length > 0?
+                                    
+                                        <>
+                                            {teams.map((team,index)=>(
+                                                groupID == team.groupID?
 
-                                            <>
-                                            <div id='queueingTeamContainer' style={{backgroundColor:'rgba(185,255,102,0.22)'}} key={index}>
-                                                <div id='indexNumber'>{index+1}</div>
-                                                <div id="queueingTeamMiniProfile"></div>
-                                                <div id="queueingTeamInformationLive">
-                                                    <div id='queueingTeamNameLive'>{team.groupName}</div>
-                                                    <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                                                    <Button size='sm' style={{paddingInline:'1.5em', backgroundColor:'#FFD466', border:'none'}} className='buttonCustom' onClick={holdQueue}>Hold</Button>
-                                                    <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
+                                                <>
+                                                <div id='queueingTeamContainer' style={{backgroundColor:'rgba(185,255,102,0.22)'}} key={index}>
+                                                    <div id='indexNumber'>{index+1}</div>
+                                                    <div id="queueingTeamMiniProfile"></div>
+                                                    <div id="queueingTeamInformationLive">
+                                                        <div id='queueingTeamNameLive'>{team.groupName}</div>
+                                                        <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
+                                                        <Button size='sm' style={{paddingInline:'1.5em', backgroundColor:'#FFD466', border:'none'}} className='buttonCustom' onClick={holdQueue}>Hold</Button>
+                                                        <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
+                                                </>
+                                                :
+                                                <div id='queueingTeamContainer' key={index}>
+                                                    <div id='indexNumber'>{index+1}</div>
+                                                    <div id="queueingTeamMiniProfile"></div>
+                                                    <div id="queueingTeamInformationLive">
+                                                        <div id='queueingTeamNameLive'>{team.groupName}</div>
+                                                        <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                        :
+                                        <>
+                                            <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                                                <CategoryIcon style={{fontSize:'15dvw', color:'gray'}}/>
+                                                <Typography style={{fontSize:'2.5dvw', color:'gray'}}>Awaiting queueing teams.</Typography>
                                             </div>
+                                        </>
+                                    }
+                            </div>
+                            <div id="nextToUpNextContainer">
+                                <div id="timeContainer">
+
+                                </div>
+                                <div id="onHoldContainer">
+                                    {onHoldTeams.map((team,index)=>(
+                                        team.groupID == groupID?
+                                            <>
+                                                <div id='queueingTeamContainer' style={{flexDirection:'column'}}>
+                                                    <div id='queueingTeamContainer'>
+                                                        <div id='indexNumber' style={{backgroundColor:'#FFD466'}}>{index+1}</div>
+                                                        <Tooltip title={team.groupName}>
+                                                            <div id="queueingTeamMiniProfile"></div>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div>
+                                                        <Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={requeue}>Requeue</Button>
+                                                        <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
+                                                    </div>
+                                                </div>
                                             </>
                                             :
-                                            <div id='queueingTeamContainer' key={index}>
-                                                <div id='indexNumber'>{index+1}</div>
-                                                <div id="queueingTeamMiniProfile"></div>
-                                                <div id="queueingTeamInformationLive">
-                                                    <div id='queueingTeamNameLive'>{team.groupName}</div>
-                                                    <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </>
-                                    :
-                                    <>
-                                        <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                                            <CategoryIcon style={{fontSize:'15dvw', color:'gray'}}/>
-                                            <Typography style={{fontSize:'2.5dvw', color:'gray'}}>Awaiting queueing teams.</Typography>
-                                        </div>
-                                    </>
-                                }
-                        </div>
-                        <div id="nextToUpNextContainer">
-                            <div id="timeContainer">
-
-                            </div>
-                            <div id="onHoldContainer">
-                                {onHoldTeams.map((team,index)=>(
-                                    team.groupID == groupID?
-                                        <>
-                                            <div id='queueingTeamContainer' style={{flexDirection:'column'}}>
+                                            <>
                                                 <div id='queueingTeamContainer'>
                                                     <div id='indexNumber' style={{backgroundColor:'#FFD466'}}>{index+1}</div>
                                                     <Tooltip title={team.groupName}>
                                                         <div id="queueingTeamMiniProfile"></div>
                                                     </Tooltip>
                                                 </div>
-                                                <div>
-                                                    <Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={requeue}>Requeue</Button>
-                                                    <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
+                                            </>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div id="rightContainer">
+                        <div id="currentlyTendingContainer">
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
+                            <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
+                                {tendingTeam?
+                                    <>
+                                        <div id="queueingTeamMiniProfile"></div>
+                                        <div>
+                                            <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
+                                            <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
+                                            <div style={{color:'#6abf05'}}>Time elapsed: 23 minutes</div>
+                                        </div>    
+                                    </>
+                                    :
+                                    <>Walay sulod tending team</>
+                                }
+                            </div>
+                        </div>
+                        <div id="ChatBoxContainer">
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Chat</Typography>
+                            <div id="chatBoxFeed" ref={containerRef}>
+                                <div id="welcomeChatMessage">
+                                    Welcome to {`${adviser.firstname} ${adviser.lastname}'s chat!`}
+                                </div>
+                                <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
+                                    {chats.map((chat,index)=>(
+                                        <div style={{display:'flex',justifyContent:chat.userID==user.user.userID?'end':'start', flexDirection:chat.userID == user.user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
+                                            <div id="chatProfile"></div>
+                                            <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
+                                                <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
+                                                <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.user.userID?'end':''}}>
+                                                    {chat.message}
                                                 </div>
                                             </div>
-                                        </>
-                                        :
-                                        <>
-                                            <div id='queueingTeamContainer'>
-                                                <div id='indexNumber' style={{backgroundColor:'#FFD466'}}>{index+1}</div>
-                                                <Tooltip title={team.groupName}>
-                                                    <div id="queueingTeamMiniProfile"></div>
-                                                </Tooltip>
-                                            </div>
-                                        </>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-                <div id="rightContainer">
-                    <div id="currentlyTendingContainer">
-                        <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
-                        <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
-                            {tendingTeam?
-                                <>
-                                    <div id="queueingTeamMiniProfile"></div>
-                                    <div>
-                                        <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
-                                        <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
-                                        <div style={{color:'#6abf05'}}>Time elapsed: 23 minutes</div>
-                                    </div>    
-                                </>
-                                :
-                                <>Walay sulod tending team</>
-                            }
-                        </div>
-                    </div>
-                    <div id="ChatBoxContainer">
-                        <Typography variant='subtitle1' fontWeight='bold' color='gray'>Chat</Typography>
-                        <div id="chatBoxFeed" ref={containerRef}>
-                            <div id="welcomeChatMessage">
-                                Welcome to {`${adviser.firstname} ${adviser.lastname}'s chat!`}
-                            </div>
-                            <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
-                                {chats.map((chat,index)=>(
-                                    <div style={{display:'flex',justifyContent:chat.userID==user.user.userID?'end':'start', flexDirection:chat.userID == user.user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
-                                        <div id="chatProfile"></div>
-                                        <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
-                                            <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
-                                            <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.user.userID?'end':''}}>
-                                                {chat.message}
-                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                                
                             </div>
-                            
-                        </div>
-                        <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                            <input style={{flexGrow:1}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value)}} value={message}/>
-                            <IconButton onClick={sendMessage}>
-                                <SendIcon style={{color:'black'}}/>
-                            </IconButton>
+                            <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
+                                <input style={{flexGrow:1}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value)}} value={message}/>
+                                <IconButton onClick={sendMessage}>
+                                    <SendIcon style={{color:'black'}}/>
+                                </IconButton>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                :
+                <>
+                    <div style={{fontSize:'20dvw'}}>Loading</div>
+                </>
+            }
         </div>
     );
 }

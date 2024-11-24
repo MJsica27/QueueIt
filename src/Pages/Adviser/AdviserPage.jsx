@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/Adviser/AdviserClassroomCard';
-import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';  
 import Button from '@mui/material/Button'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';   
 import SearchIcon from '@mui/icons-material/Search'; 
 import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreateClassroomDialog';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ export default function AdviserPage() {
 
   return (
     <div className="m-0 vh-100" style={{ background: '#fff', color: '#333333', height: '95vh' }}>
-      <AdviserNavbar /> 
+      <UserNavbar/>
         <div  
           style={{    
             background: '#fff', 

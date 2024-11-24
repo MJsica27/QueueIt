@@ -1,8 +1,8 @@
-import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import { useLocation } from 'react-router-dom'; 
 import BackButton from '../../Components/Buttons/BackButton';
 import { IconButton, } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function AdviserGroupPage() {
 
@@ -11,7 +11,7 @@ export default function AdviserGroupPage() {
 
     return ( 
         <div className="m-0 vh-100" style={{  backgroundPosition: 'center', backgroundSize: 'cover', backgroundColor: '#fff', height: '95vh' }} >
-            <AdviserNavbar /> 
+            <UserNavbar/>
 
             <div  className=" d-flex align-items-center justify-content-center"> 
                 <div  style={{ backgroundColor:'rgba(0,0,0,0.03)', borderRadius: '5px', color: '#333',  width: '1400px', overflow: 'hidden', height: '82vh', margin: '20px 0 0 20px',  }} >  

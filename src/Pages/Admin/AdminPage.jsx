@@ -2,12 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button'; 
-import AdminNavbar from '../../Components/Navbar/AdminNavbar'; 
 import { toast } from 'react-toastify';
 import AdminClassroomListCard from '../../Components/Card/Admin/AdminClassroomListCard';
 import SearchIcon from '@mui/icons-material/Search';  
 import CreateClassroomDialog from '../../Components/Dialogs/Admin/AdminCreateClassroomDialog';
 import DeleteClassroomDialog from '../../Components/Dialogs/Admin/AdminDeleteClassroomDialog';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function AdminPage() {
   const [filteredClassrooms, setFilteredClassrooms] = useState([]);
@@ -164,7 +164,7 @@ export default function AdminPage() {
         color: '#333333', 
         height: 'auto'
       }}>
-      <AdminNavbar />
+      <UserNavbar/>
       <div style={{ background: '#fff', color: '#333333', height: '100vh', padding: '30px 50px 0px 50px' }}>
         <div  style={{background: '#fafafa', padding: '30px 50px 0px 50px'}}>
         <div className='mb-1 d-flex align-items-center justify-content-between' style={{ width: '100%', marginBottom: '20px' }}>

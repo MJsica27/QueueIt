@@ -6,7 +6,7 @@
     import { Dropdown, Nav } from 'react-bootstrap';
     import { useNavigate } from 'react-router-dom';
 
-    const JandelStudentNavbar = () => {
+    const UserNavbar = () => {
         const navigate = useNavigate();
         const [showDropdown, setShowDropdown] = useState(false);
         const handleProfile = () => {
@@ -17,9 +17,7 @@
         const handleLogout = () => {
             console.log("User logged out"); 
             localStorage.removeItem('user');
-            document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname; 
-            window.history.replaceState(null, null, '/login'); 
-            window.location.href = '/login'; 
+            window.location.reload();
         };
     
         const handleProfileToggle = () => {
@@ -64,4 +62,4 @@
         );
     }
 
-    export default JandelStudentNavbar;
+    export default UserNavbar;

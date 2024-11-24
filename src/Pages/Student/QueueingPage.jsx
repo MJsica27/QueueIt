@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import JandelStudentNavbar from '../../Components/Navbar/JandelStudentNavbar';
+import JandelStudentNavbar from '../../Components/Navbar/UserNavbar';
 import '../../Static/QueueingPage.css';
 import AdviserQueueingCard from '../../Components/Card/AdviserQueueingCard';
 import { useEffect, useState } from 'react';

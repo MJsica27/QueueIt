@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import AdviserNavbar from '../../Components/Navbar/AdviserNavbar'; 
 import AdviserSetQueue from '../../Components/Adviser/AdviserSetQueue'; 
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 
 export default function AdviserQueuePage() {
@@ -9,7 +9,7 @@ export default function AdviserQueuePage() {
   
   return (
     <div className="m-0 vh-100" style={{ background: '#b9ff66', color: '#333333'  }}>
-      <AdviserNavbar />
+      <UserNavbar/>
         <div style={{ background: '#fff', height: '90vh',  padding: '20px',  display: 'flex', justifyContent: 'center'}}> 
           
           {/*<<<<<left side-----<<<<<*/}

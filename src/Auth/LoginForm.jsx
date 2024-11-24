@@ -45,28 +45,13 @@ export default function LoginForm () {
             switch(response.status){
                 case (200):
                     const data = await response.json();
-                    console.log('Login successful:', data);
+                    // console.log('Login successful:', data);
                     toast.success('Login successful');
         
                     localStorage.setItem('user', JSON.stringify(data.user));
                     localStorage.setItem('token', data.token);   
         
-                    const userRole = data.user.role;
-        
-                    switch (userRole) {
-                        case 'ADMIN':
-                            navigate('/adminhomepage');
-                            break;
-                        case 'ADVISER':
-                            navigate('/adviserhomepage');
-                            break;
-                        case 'STUDENT':
-                            navigate('/studenthomepage');
-                            break;
-                        default:
-                            navigate('/');
-                            break;
-                    }
+                    window.location.reload();
                     break;
                 case (404):
                     response.text().then(bodyMessage =>{

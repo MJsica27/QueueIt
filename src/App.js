@@ -23,6 +23,8 @@ import { ToastContainer } from 'react-toastify';
 import QueueingPage from './Pages/Student/QueueingPage';
 import OnQueuePage from './Pages/Student/OnQueuePage';
 import { WebSocketProvider } from './Components/User/WebSocketContext';
+import HomePage from './Pages/HomePage';
+import NotFound404Page from './Pages/NotFound404Page';
 
 
 export default function App() {
@@ -33,7 +35,6 @@ export default function App() {
                     <Router> 
                         <ToastContainer />
                         <Routes>
-                            <Route path="/login" element={<LoginForm />} />
                             <Route path="/register" element={<RegistrationForm />} />
                             {/* admin */}
                             <Route path="/adminhomepage" element={<AdminHomePage />} />
@@ -48,13 +49,13 @@ export default function App() {
                             <Route path="/adviserclassroompage" element={<AdviserClassroomPage />} />
                             <Route path="/group" element={<AdviserGroupPage />} /> 
                             {/* student */}
-                            <Route path="/studenthomepage" element={<StudentHomePage />} />
+                            {/* <Route path="/studenthomepage" element={<StudentHomePage />} /> */}
                             <Route path='/queuePage' element={<QueueingPage/>} />
                             <Route path='/onQueuePage' element={<OnQueuePage/>} />
                             {/* user */}
                             <Route path="/profile" element={<ProfilePage />} />
-                            <Route path="/" element={<LoginForm />} />
-                            <Route path="*" element={<h1>404 Not Found</h1>} />
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="*" element={<NotFound404Page/>}/>
                         </Routes>
                     </Router>
                 </WebSocketProvider>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
 import { Stack, Modal, Button, Form } from 'react-bootstrap'; 
-import AdviserNavbar from '../../Components/Navbar/AdviserNavbar';
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';  
 import { useNavigate } from 'react-router-dom'; 
@@ -9,6 +8,7 @@ import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
 import { toast } from 'react-toastify';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import BackButton from '../../Components/Buttons/BackButton';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -126,7 +126,7 @@ const AdviserClassroomPage = () => {
 
     return (
         <div className="m-0 vh-100" style={{ backgroundColor: '#fff', height: '95vh' }} >
-            <AdviserNavbar />
+            <UserNavbar/>
             <div className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
                 <div 
                     style={{  

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
-import AdminNavbar from '../Components/Navbar/AdminNavbar';
-import AdviserNavbar from '../Components/Navbar/AdviserNavbar';
-import StudentNavbar from '../Components/Navbar/StudentNavbar';
+import UserNavbar from '../Components/Navbar/UserNavbar';
 
 export default function ProfilePage() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
@@ -151,19 +149,6 @@ export default function ProfilePage() {
     setShowResultPopup(false);
   }
 
-  const renderNavbar = () => {
-    switch (user.role) {
-      case 'ADMIN':
-        return <AdminNavbar />;
-      case 'ADVISER':
-        return <AdviserNavbar />;
-      case 'STUDENT':
-        return <StudentNavbar />;
-      default:
-        return null;
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>; 
   }
@@ -178,7 +163,7 @@ export default function ProfilePage() {
         background: '#FCFFF8',
         color: '#333333', 
       }}>
-      {renderNavbar()}
+      <UserNavbar/>
 
       <div className="container"
         style={{
