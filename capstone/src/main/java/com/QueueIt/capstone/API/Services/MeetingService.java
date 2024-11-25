@@ -12,7 +12,7 @@ public class MeetingService {
     @Autowired
     private MeetingRepository meetingRepository;
 
-    public ResponseEntity<Object> getMeetingCount(Long classID, Long groupID) {
-        return ResponseEntity.ok(meetingRepository.countMeetingsByClassIdAndGroupId(classID,groupID));
-    }
+//    public ResponseEntity<Object> getMeetingCount(Long classID, Long groupID) {
+//        return ResponseEntity.ok(meetingRepository.countMeetingsByClassIdAndGroupId(classID,groupID));
+//    }
 }

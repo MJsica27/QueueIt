@@ -8,7 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
-
-    @Query("SELECT COUNT(m) FROM Meeting m WHERE m.group.classID = :classID AND m.group.groupID = :groupID")
-    long countMeetingsByClassIdAndGroupId(@Param("classID") Long classID, @Param("groupID") Long groupID);
 }
