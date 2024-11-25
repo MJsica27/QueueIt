@@ -24,7 +24,7 @@ const OnQueuePage = () => {
     const [message, setMessage] = useState("");
     const containerRef = useRef(null)
     const [time, setTime] = useState("");
-
+    const [myAdviser, setAdviser] = useState(adviser);
     useEffect(() => {
 
         if(user){
@@ -34,6 +34,7 @@ const OnQueuePage = () => {
              const clockInterval = setInterval(updateClock, 1000);
  
              fetchTeams();
+             fetchAdviser();
              // console.log("this useeffect reran after receiving subscription message")
              return ()=>{
                 clearInterval(clockInterval);
@@ -46,6 +47,33 @@ const OnQueuePage = () => {
             navigate("/")
         }
     }, []);
+
+    const fetchAdviser = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${adviser.user.userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            switch (response.status) {
+                case 200:
+                    const data = await response.json();
+                    setAdviser(data); // Update the adviser state
+                
+                    break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    toast.error("Something went wrong while fetching adviser details.");
+            }
+        } catch (error) {
+            // toast.error("An error occurred: " + error.message);
+        }
+    };
 
     const fetchTeams = async ()=>{
         try {
@@ -218,7 +246,21 @@ const OnQueuePage = () => {
             const subscription = client.subscribe(`/topic/queueingTeamsStatus/student/enqueue/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 // console.log(receivedMessage)
-                setTeams((prevTeams) => [...prevTeams, receivedMessage]);
+                setTeams((prevTeams) => {
+                    // Combine previous teams and receivedMessage
+                    const combinedTeams = [...prevTeams, receivedMessage];
+                
+                    // Sort the combined array based on queueingTimeStart
+                    return combinedTeams.sort((a, b) => {
+                        const timeA = a.queueingTimeStart.split(':').map(Number);
+                        const timeB = b.queueingTimeStart.split(':').map(Number);
+                
+                        const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
+                        const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
+                
+                        return totalSecondsA - totalSecondsB; // Ascending order
+                    });
+                });
             })
 
             const subscription2 = client.subscribe(`/topic/queueingTeamsStatus/student/dequeue/${adviser.user.userID}`,(message)=>{
@@ -272,10 +314,34 @@ const OnQueuePage = () => {
                 setOnHoldTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
             })
 
+            const adviserSubscription = client.subscribe(`/topic/queueStatus/adviser/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                // console.log(receivedMessage)
+                setAdviser(receivedMessage);
+            })
+
             const chatSubscription = client.subscribe(`/topic/chat/adviser/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 // console.log(receivedMessage)
                 setChats((prevMessages)=>[...prevMessages, receivedMessage]);
+            })
+
+            const tendingTeamSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/tendingTeam/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                console.log(receivedMessage)
+                if (receivedMessage){
+                    setTendingTeam(receivedMessage);
+                }else{
+                    setTendingTeam(null)
+                }
+            })
+
+            const concludeMeetingSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/concludeMeeting/${adviser.user.userID}`,(message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                // console.log(receivedMessage)
+                if(receivedMessage){
+                    setTendingTeam(null);
+                }
             })
 
             // Cleanup subscription on unmount
@@ -285,6 +351,9 @@ const OnQueuePage = () => {
                 subscription3.unsubscribe();
                 subscription4.unsubscribe();
                 chatSubscription.unsubscribe();
+                adviserSubscription.unsubscribe();
+                tendingTeamSubscription.unsubscribe();
+                concludeMeetingSubscription.unsubscribe();
             };
         }
     }, [client]);
@@ -328,7 +397,8 @@ const OnQueuePage = () => {
                                 <div style={{display:'flex', justifyContent:'space-between'}}>
                                     <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
                                     {
-                                        teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID) ?<></>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>
+                                        myAdviser.ready?  tendingTeam && tendingTeam.groupID == groupID?<></>:(teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID))?<></>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
+                                        // myAdviser.ready?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
                                     }
                                     
                                 </div>

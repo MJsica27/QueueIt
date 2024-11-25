@@ -45,7 +45,6 @@ const AdviserQueueingCard = ({adviserID, groupID}) => {
             const subscription = client.subscribe(`/topic/queueStatus/adviser/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 setAdviser(receivedMessage);
-                console.log("na connect na")
             })
 
             // Cleanup subscription on unmount

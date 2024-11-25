@@ -30,10 +30,12 @@ export default function AdviserSetQueue() {
   const [minTime, setMinTime] = useState('');
   const [classID,setClassID] = useState(-1);
   const [message,setMessage] = useState("")
-  const [queueing, setQueueing] = useState(false)
+  const [adviser,setAdviser] = useState(null)
   useEffect(() => {
     if(user){
       fetchClassrooms();
+      fetchAdviser();
+      console.log(adviser)
     }
     // Function to get the current time in HH:MM format
     const getCurrentTime = () => {
@@ -47,7 +49,32 @@ export default function AdviserSetQueue() {
     setMinTime(getCurrentTime());
   }, []);
 
+  const fetchAdviser = async () => {
+    try {
+        const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${user.userID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        switch (response.status) {
+            case 200:
+                const data = await response.json();
+                setAdviser(data); // Update the adviser state
+            
+                break;
+            case 404:
+                const message = await response.text();
+                toast.error(message);
+                break;
+            default:
+                toast.error("Something went wrong while fetching adviser details.");
+        }
+    } catch (error) {
+        toast.error("An error occurred: " + error.message);
+    }
+  };
   const fetchClassrooms = async ()=>{
     try{
       const response = await fetch(`http://localhost:8080/classroom/ClassroomsByAdviser?userID=${user.userID}`)
@@ -119,7 +146,10 @@ export default function AdviserSetQueue() {
         })
   
         if (response.ok){          
-          setQueueing(true)
+          setAdviser({
+            ...adviser,
+            ready: true
+          })
         }
       }catch(err){
         console.log(err)
@@ -143,7 +173,10 @@ export default function AdviserSetQueue() {
         })
   
         if (response.ok){          
-          setQueueing(false)
+          setAdviser({
+            ...adviser,
+            ready: false
+          })
         }
       }catch(err){
         console.log(err)
@@ -193,20 +226,22 @@ export default function AdviserSetQueue() {
 
       {/* Button aligned to the right */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-        <Button    
-        // onClick={handleOnClick} 
-          variant="contained" 
-          style={{ 
-            background: queueing?'rgba(255,0,0,0.7)':'#b9ff66', 
-            color: queueing?'white':'#000', 
-            textTransform: 'none', 
-            fontWeight: 'bold'
-          }}
-
-          onClick={queueing?closeQueueing:openQueueing}
-        > 
-          {queueing?<>Close</>:<>Open</>}
-        </Button>
+        {adviser?
+          <Button    
+          // onClick={handleOnClick} 
+            variant="contained" 
+            style={{ 
+              background: adviser.ready?'rgba(255,0,0,0.7)':'#b9ff66', 
+              color: adviser.ready?'white':'#000', 
+              textTransform: 'none', 
+              fontWeight: 'bold'
+            }}
+  
+            onClick={adviser.ready?closeQueueing:openQueueing}
+          > 
+            {adviser.ready?<>Close</>:<>Open</>}
+          </Button>:<></>
+        }
       </div> 
     </div>
   );

@@ -20,6 +20,7 @@ export default function AdviserQueuePage() {
   const client = useWebSocket();
   const [message, setMessage] = useState("");
   const containerRef = useRef(null)
+  const [meeting, setMeeting] = useState(null)
 
   useEffect(() => {
 
@@ -32,35 +33,37 @@ export default function AdviserQueuePage() {
     }else{
         navigate("/")
     }
-  }, []);
+  }, [user]);
 
   const fetchTeams = async ()=>{
-    try {
-        const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${user.userID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
+    if(user){
+        try {
+            const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${user.userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            switch (response.status) {
+                case 200:
+                    const data = await response.json();
+                    // console.log(data.groups)
+                    let temp = [...data.groups, ...data.onHoldGroups]
+                    setTeams([...teams, ...temp])
+                    setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups])
+                    setTendingTeam(data.tendingGroup)
+                    break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    // toast.error("Something went wrong while fetching teams.");
             }
-        });
-
-        switch (response.status) {
-            case 200:
-                const data = await response.json();
-                // console.log(data.groups)
-                let temp = [...data.groups, ...data.onHoldGroups]
-                setTeams([...teams, ...temp])
-                setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups])
-                setTendingTeam(data.tendingGroup)
-                break;
-            case 404:
-                const message = await response.text();
-                toast.error(message);
-                break;
-            default:
-                // toast.error("Something went wrong while fetching teams.");
+        } catch (error) {
+            // toast.error("An error occurred: " + error.message);
         }
-    } catch (error) {
-        // toast.error("An error occurred: " + error.message);
     }
   }
 
@@ -86,6 +89,63 @@ export default function AdviserQueuePage() {
         }
     }
   }
+
+  const admitTeam = async (groupID)=>{
+    if(user){
+        try {
+            const response = await fetch(`http://localhost:8080/queue/adviser/admit?adviserID=${user.userID}&groupID=${groupID}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            switch (response.status) {
+                case 200:
+                    const data = await response.json();
+                    setMeeting(data)
+                    break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    // toast.error("Something went wrong while fetching teams.");
+            }
+        } catch (error) {
+            // toast.error("An error occurred: " + error.message);
+        }
+    }
+  }
+
+  const concludeMeeting = async ()=>{
+    if(user){
+        try {
+            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            switch (response.status) {
+                case 200:
+                    {console.log("2000000")}
+                    setMeeting(null)
+                    break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    // toast.error("Something went wrong while fetching teams.");
+            }
+        } catch (error) {
+            // toast.error("An error occurred: " + error.message);
+        }
+    }
+  }
+
 
   useEffect(()=>{ 
     if(containerRef.current){
@@ -159,6 +219,22 @@ export default function AdviserQueuePage() {
             setChats((prevMessages)=>[...prevMessages, receivedMessage]);
         })
 
+        const tendingTeamSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/tendingTeam/${user.userID}`,(message)=>{
+            const receivedMessage = JSON.parse(message.body);
+            console.log(receivedMessage)
+            if (receivedMessage){
+                setTendingTeam(receivedMessage);
+            }else{
+                setTendingTeam(null)
+            }
+        })
+
+        const concludeMeetingSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/concludeMeeting/${user.userID}`,(message)=>{
+            const receivedMessage = JSON.parse(message.body);
+            if(receivedMessage){
+                setTendingTeam(null);
+            }
+        })
         // Cleanup subscription on unmount
         return () => {
             subscription.unsubscribe();
@@ -166,6 +242,8 @@ export default function AdviserQueuePage() {
             subscription3.unsubscribe();
             subscription4.unsubscribe();
             chatSubscription.unsubscribe();
+            tendingTeamSubscription.unsubscribe();
+            concludeMeetingSubscription.unsubscribe();
         };
     }
   }, [client]);
@@ -173,7 +251,6 @@ export default function AdviserQueuePage() {
   return (
     
     <div id='mainContainer'>
-      {console.log(onHoldTeams)}
       <UserNavbar/>
       <div id="QueuePageSecondRowContainer">
         <div id="leftContainer" style={{flex:0.5}}>
@@ -192,7 +269,7 @@ export default function AdviserQueuePage() {
                           <div id="queueingTeamInformationLive">
                               <div id='queueingTeamNameLive'>{team.groupName}</div>
                               <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                              {onHoldTeams.find(onHoldTeam=>onHoldTeam.groupID===team.groupID)?<Typography variant='caption' fontStyle='poppins' fontSize='1dvw' fontWeight='bold' color='white' style={{alignSelf:'end', justifySelf:'end'}}>On Hold</Typography>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom'>Admit</Button>}
+                              {onHoldTeams.find(onHoldTeam=>onHoldTeam.groupID===team.groupID)?<Typography variant='caption' fontStyle='poppins' fontSize='1dvw' fontWeight='bold' color='white' style={{alignSelf:'end', justifySelf:'end'}}>On Hold</Typography>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={()=>{admitTeam(team.groupID)}}>Admit</Button>}
                           </div>
                       </div>
                   ))}
@@ -201,7 +278,7 @@ export default function AdviserQueuePage() {
               <>
                   <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                       <CategoryIcon style={{fontSize:'15dvw', color:'gray'}}/>
-                      <Typography style={{fontSize:'2.5dvw', color:'gray'}}>Awaiting queueing teams.</Typography>
+                      <Typography style={{fontSize:'2.5dvw', color:'gray', textAlign:'center'}}>Awaiting queueing teams.</Typography>
                   </div>
               </>
             }
@@ -209,9 +286,9 @@ export default function AdviserQueuePage() {
           </div>
         </div>
         <div id="rightContainer" style={{flex:1}}>
-            <div id="currentlyTendingContainer" style={{flex:'0.35'}}>
+            <div id="currentlyTendingContainer" style={{flex:'0.335'}}>
               <div style={{display:'flex', height:'100%'}}>
-                <div id="currentlyTendingContainer" style={{flex:1}}>
+                <div id="currentlyTendingContainer" style={{flex:1, backgroundColor:'transparent'}}>
                     <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
                     <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
                         {tendingTeam?
@@ -228,7 +305,7 @@ export default function AdviserQueuePage() {
                         }
                     </div>
                 </div>
-                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom'>Conclude</Button>:<></>}</div>
+                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<></>}</div>
               </div>
             </div>
             <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none'}}>
