@@ -6,6 +6,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function CreateClassroomDialog({
   open,
@@ -51,6 +53,17 @@ export default function CreateClassroomDialog({
           fullWidth
           value={formData.classCode}
           InputProps={{ readOnly: true }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="requiresMentor"
+              checked={formData.requiresMentor}
+              onChange={onChange}
+              color="primary"
+            />
+          }
+          label="Requires Mentor"
         />
       </DialogContent>
       <DialogActions>

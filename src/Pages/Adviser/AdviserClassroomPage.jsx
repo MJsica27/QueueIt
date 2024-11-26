@@ -31,22 +31,39 @@ const AdviserClassroomPage = () => {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            if (classroom && classroom.classID) {
-                try {
-                    const response = await fetch(`http://localhost:8080/group/getAllGivenClassroom?classroomID=${classroom.classID}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setGroups(data);
-                    } else {
-                        console.error('Failed to fetch groups:', response.statusText);
-                    }
-                } catch (error) {
-                    console.error('Error fetching groups:', error);
+          const user = JSON.parse(localStorage.getItem('user'));
+          const token = localStorage.getItem('token');
+          
+          if (!user || !token) {
+            navigate('/'); 
+            return;
+          }
+    
+          if (classroom && classroom.classID) {
+            try {
+              const response = await fetch(
+                `http://localhost:8080/group/getAllGivenClassroom?classroomID=${classroom.classID}`,
+                {
+                  headers: {
+                    'Authorization': `Bearer ${token}`,  
+                  },
                 }
+              );
+              
+              if (response.ok) {
+                const data = await response.json();
+                setGroups(data);
+              } else {
+                console.error('Failed to fetch groups:', response.statusText);
+              }
+            } catch (error) {
+              console.error('Error fetching groups:', error);
             }
+          }
         };
+    
         fetchGroups();
-    }, [classroom]);
+      }, [classroom, navigate, setGroups]);
 
     const handleAction = async (action) => {
         if (action === 'View Enrolled Students') {

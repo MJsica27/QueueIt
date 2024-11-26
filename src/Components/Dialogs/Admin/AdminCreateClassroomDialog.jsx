@@ -5,8 +5,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
-export default function AdminCreateClassroomDialog({ open, onClose, onCreate, formData, handleInputChange, generateClassCode }) {
+export default function AdminCreateClassroomDialog({ open, onChange, onClose, onCreate, formData, handleInputChange, generateClassCode }) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create Classroom</DialogTitle>
@@ -51,6 +53,17 @@ export default function AdminCreateClassroomDialog({ open, onClose, onCreate, fo
           fullWidth
           value={formData.classCode || generateClassCode()}
           InputProps={{ readOnly: true }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="requiresMentor"
+              checked={formData.requiresMentor}
+              onChange={onChange}
+              color="primary"
+            />
+          }
+          label="Requires Mentor"
         />
       </DialogContent>
       <DialogActions>

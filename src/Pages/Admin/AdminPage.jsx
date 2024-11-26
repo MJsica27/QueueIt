@@ -26,10 +26,9 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    
+    const user = JSON.parse(localStorage.getItem('user')); 
     if (!user) {
-      navigate('/login');  
+      navigate('/');  
     } else {
       setUserID(user.userID);  
       const fetchClassrooms = async () => {
@@ -125,7 +124,8 @@ export default function AdminPage() {
       subjectCode: formData.subjectCode,
       section: formData.section,
       adviserID: formData.adviserID,
-      classCode: formData.classCode
+      classCode: formData.classCode,
+      requiresMentor: formData.requiresMentor,
     };
   
     try {

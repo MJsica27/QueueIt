@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import UserNavbar from '../Components/Navbar/UserNavbar';
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
   const [editable, setEditable] = useState(false);
   const [newFirstName, setNewFirstName] = useState(user.firstname || '');
@@ -13,23 +15,25 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [showSavePopup, setShowSavePopup] = useState(false);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);  
   const [successfulSave, setSuccessfulSave] = useState(null);
   const [showResultPopup, setShowResultPopup] = useState(false);
   const [saveResult, setSaveResult] = useState(null);
-  const [passwordError, setPasswordError] = useState(''); // Error message state
+  const [passwordError, setPasswordError] = useState('');  
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    const token = localStorage.getItem('token');
+    const storedUser = JSON.parse(localStorage.getItem('user')); 
     if (storedUser) {
       console.log('User is logged in:', storedUser);
       setUser(storedUser);
+    } else {
+      console.log('No user is logged in');
+      navigate('/');
     }
     setLoading(false); 
-  }, []);
-
+  }, [navigate]); 
+  
   const handleEditClick = () => {
     setEditable(true);
     setNewFirstName(user.firstname);

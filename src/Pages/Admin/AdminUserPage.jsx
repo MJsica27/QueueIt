@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CreateUserAccount from '../../Components/Dialogs/Admin/AdminCreateUserAccountDialog';
 import Button from '@mui/material/Button';  
 import { toast } from 'react-toastify';
@@ -7,7 +8,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 
 export default function AdminUserPage() {
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);  
+  const [open, setOpen] = useState(false); 
   const [formData, setFormData] = useState({
     username: '',
     firstname: '',
@@ -15,7 +18,13 @@ export default function AdminUserPage() {
     password: '',
     role: 'Adviser', 
   });
-  const [loading, setLoading] = useState(false);  
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user')); 
+    if (!user) {
+      navigate('/');  
+    }   
+  }, [navigate]);
 
   const handleClickOpen = () => {
     setOpen(true);

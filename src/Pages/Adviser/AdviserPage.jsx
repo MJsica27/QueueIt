@@ -29,7 +29,7 @@ export default function AdviserPage() {
       setUser(storedUser);
     } else {
       console.log('No user is logged in');
-      navigate('/login');
+      navigate('/');
     }
   }, [navigate]);
 
@@ -75,11 +75,14 @@ export default function AdviserPage() {
     setFormData({ subjectName: '', subjectCode: '', section: '', classCode: '' }); 
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevValues => ({ ...prevValues, [name]: value }));
+  const handleInputChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
-
+  
   const generateClassCode = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -96,7 +99,8 @@ export default function AdviserPage() {
       subjectCode: formData.subjectCode,
       section: formData.section,
       classCode: formData.classCode,  
-      adviserID: user ? user.userID : undefined
+      adviserID: user ? user.userID : undefined,
+      requiresMentor: formData.requiresMentor,
     };
 
     try {

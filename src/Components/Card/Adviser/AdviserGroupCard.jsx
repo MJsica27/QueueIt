@@ -3,7 +3,8 @@ import { Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 export default function AdviserGroupCard({ group }) {
-    return (
+    return (            
+    <NavLink to={`/group`} state={group} style={{ textDecoration: 'none' }}>
         <div className="navlinkcustom"
             style={{   
                 padding: '15px',
@@ -17,13 +18,13 @@ export default function AdviserGroupCard({ group }) {
                 justifyContent: 'center',
                 margin: '10px', 
             }}>
-            <NavLink to={`/group`} state={group} style={{ textDecoration: 'none' }}>
+
                 <Typography
                     variant="caption"
                     style={{ fontWeight: 'bold', fontSize: '15px', color: 'black' }} >  
                   {group.groupName || "Unnamed Group"} 
                 </Typography>
-            </NavLink>
-        </div>
+                </div>
+    </NavLink> 
     );
 }
