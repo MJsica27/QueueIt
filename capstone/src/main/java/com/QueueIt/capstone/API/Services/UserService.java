@@ -4,11 +4,14 @@ import com.QueueIt.capstone.API.Config.JWTService;
 import com.QueueIt.capstone.API.Entities.*;
 //import com.QueueIt.capstone.API.Entities.Student;
 import com.QueueIt.capstone.API.Repository.*;
+import com.QueueIt.capstone.API.Requests.AvailabilityRequest;
 import com.QueueIt.capstone.API.Requests.LoginRequest;
 //import com.QueueIt.capstone.API.Repository.StudentRepository;
 
 import com.QueueIt.capstone.API.Requests.StudentRegistrationRequest;
 import com.QueueIt.capstone.API.Returns.AuthenticationResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +116,7 @@ public class UserService {
             return ResponseEntity.status(400).body("Invalid role provided.");
         }
 
+
         User user = new User(
                 studentRegistrationRequest.getUsername(),
                 passwordEncoder.encode(studentRegistrationRequest.getPassword()),
@@ -214,7 +218,7 @@ public class UserService {
     }
 
     public Boolean modifyAdviserProfile(Long userID, String currentPassword, User userUpdateData,
-            List<Time> availableTime, List<String> expertise) {
+            String availableTime, List<String> expertise) {
 
         if (modifyUserProfile(userID, currentPassword, userUpdateData)) {
             Optional<Adviser> adviserOpt = adviserRepository.findById(userID);
@@ -276,6 +280,32 @@ public class UserService {
         classroomRepository.save(currentClass);
 
         return true;
+    }
+
+    public Boolean setAdviserAvailability(Long userID, List<AvailabilityRequest.AvailabilitySlot> availableTime) {
+        Optional<Adviser> adviserOpt = adviserRepository.findById(userID);
+        if (adviserOpt.isPresent()) {
+            Adviser adviser = adviserOpt.get();
+
+            for (AvailabilityRequest.AvailabilitySlot slot : availableTime) {
+                if (!slot.isValid()) {
+                    throw new IllegalArgumentException("Each slot must have either a week or a date, not both.");
+                }
+            }
+
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonAvailability = objectMapper.writeValueAsString(availableTime);
+                adviser.setAvailableTime(jsonAvailability);
+                adviserRepository.save(adviser);
+                return true;
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        return false;
     }
 
 }

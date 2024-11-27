@@ -111,4 +111,18 @@ public class UserController {
         }
     }
 
+    @PutMapping("/setAdviserAvailability")
+    public ResponseEntity<Boolean> setAdviserAvailability(
+            @RequestParam Long userID,
+            @RequestBody AvailabilityRequest availabilityRequest) {
+
+        boolean isSet = userService.setAdviserAvailability(userID, availabilityRequest.getAvailableTime());
+
+        if (isSet) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
+        }
+    }
+
 }

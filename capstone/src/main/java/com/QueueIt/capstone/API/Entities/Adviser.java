@@ -15,7 +15,7 @@ public class Adviser{
     @JoinColumn(name = "fk_user_id")
     @MapsId
     private User user;
-    private List<Time> availableTime;
+    private String availableTime;
     private List<String> expertise;
     private Boolean isReady;
     private Long cateringClassID;
@@ -40,11 +40,11 @@ public class Adviser{
         this.user = user;
     }
 
-    public List<Time> getAvailableTime() {
+    public String getAvailableTime() {
         return availableTime;
     }
 
-    public void setAvailableTime(List<Time> availableTime) {
+    public void setAvailableTime(String availableTime) {
         this.availableTime = availableTime;
     }
 
