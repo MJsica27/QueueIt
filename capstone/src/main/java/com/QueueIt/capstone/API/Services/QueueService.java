@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 @Service
 public class QueueService {
@@ -96,42 +97,64 @@ public class QueueService {
         }
     }
 
-    public ResponseEntity<Object> adviserAdmitQueueingTeam(Meeting meeting) {
+    public ResponseEntity<Object> adviserAdmitQueueingTeam(Long adviserID, Long groupID) {
         try{
-            Group group = groupRepository.findById(meeting.getGroup().getGroupID()).orElseThrow();
-            Adviser adviser = adviserRepository.findById(meeting.getAdviser().getUser().getUserID()).orElseThrow();
+            //get the group
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            //get the adviser
+            Adviser adviser = adviserRepository.findById(adviserID).orElseThrow();
+            //get the queueing groups for manipulation
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
 
-            //set tending group to broadcast to recent subscribers
+            //if si team nga gi admit is onHold, then return bad request [for double security]
+            if(queueingGroups.getOnHoldGroups().contains(group)){
+                return ResponseEntity.badRequest().build();
+            }
+            //set si group to tending team
             queueingGroups.setTendingGroup(group);
+            //ibot si group sa queueing groups
             queueingGroups.getGroups().remove(group);
             queueingGroupsRepository.save(queueingGroups);
 
             //set meeting starting date/time to now.
-            meeting.setStart(LocalDateTime.now());
+            Meeting meeting = new Meeting(adviserID,groupID);
+            meeting.setStart(new Time(System.currentTimeMillis()));
 
             //save
             meetingRepository.save(meeting);
 
             simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/tendingTeam/"+adviser.getUser().getUserID(),group);
-            return ResponseEntity.ok("Meeting started.");
-        }catch (Exception e){
-            return ResponseEntity.status(500).body("Something went wrong.");
+            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/dequeue/"+adviser.getUser().getUserID(),group);
+
+            //i return si meeting para inig conclude sa meeting, ma manipulate ang time end.
+            return ResponseEntity.ok(meeting);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
         }
     }
 
-    public ResponseEntity<Object> adviserConcludeMeeting(Long meetingID, HttpServletRequest request) {
+    public ResponseEntity<Object> adviserConcludeMeeting(Long meetingID) {
         try{
             //get meeting or throw exception if wala
             Meeting meeting = meetingRepository.findById(meetingID).orElseThrow();
+            //get adviser
+            Adviser adviser = adviserRepository.findById(meeting.getAdviserID()).orElseThrow();
+            //get queueing groups to manipulate tending groups
+            QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
             //set meeting end date/time to now
-            meeting.setEnd(LocalDateTime.now());
-            //save
+            meeting.setEnd(new Time(System.currentTimeMillis()));
+            //set queueing groups tending group to null;
+            queueingGroups.setTendingGroup(null);
+            //save queueing groups
+            queueingGroupsRepository.save(queueingGroups);
+            //save meeting
             meetingRepository.save(meeting);
+            //returnan lang nako ug true, sa frontend lang nako i set ang tending team to null para gamay ra bandwidth kaunon;
+            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/concludeMeeting/"+adviser.getUser().getUserID(),Boolean.TRUE);
+            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/tendingTeam/"+adviser.getUser().getUserID(),Boolean.FALSE);
             return ResponseEntity.ok("Meeting concluded.");
-
-        }catch (Exception e){
-            return ResponseEntity.status(500).body("Something went wrong.");
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Entities;
 
 import jakarta.persistence.*;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,22 +11,17 @@ public class Meeting {
     @Id
     @GeneratedValue
     private Long meetingID;
-    @OneToOne
-    @JoinColumn(name = "adviser_id")
-    private Adviser adviser;
-    @OneToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private Long adviserID;
+    private Long groupID;
+    private Time start;
+    private Time end;
 
     public Meeting() {
     }
 
-    public Meeting(Adviser adviser, Group group, LocalDateTime start) {
-        this.adviser = adviser;
-        this.group = group;
-        this.start = start;
+    public Meeting(Long adviserID, Long groupID) {
+        this.adviserID = adviserID;
+        this.groupID = groupID;
     }
 
     public Long getMeetingID() {
@@ -36,35 +32,35 @@ public class Meeting {
         this.meetingID = meetingID;
     }
 
-    public Adviser getAdviser() {
-        return adviser;
+    public Long getAdviserID() {
+        return adviserID;
     }
 
-    public void setAdviser(Adviser adviser) {
-        this.adviser = adviser;
+    public void setAdviserID(Long adviserID) {
+        this.adviserID = adviserID;
     }
 
-    public Group getGroup() {
-        return group;
+    public Long getGroupID() {
+        return groupID;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupID(Long groupID) {
+        this.groupID = groupID;
     }
 
-    public LocalDateTime getStart() {
+    public Time getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(Time start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public Time getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Time end) {
         this.end = end;
     }
 }
