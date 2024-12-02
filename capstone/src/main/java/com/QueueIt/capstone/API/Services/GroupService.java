@@ -102,4 +102,17 @@ public class GroupService {
             return ResponseEntity.status(404).body("Group does not exist.");
         }
     }
+
+    public Boolean studentExistInGroup(Long studentID, Long groupID){
+        try{
+            Group group = groupRepository.findById(groupID).orElseThrow();
+            User student = userRepository.findById(studentID).orElseThrow();
+            if (group.getStudents().contains(student)){
+                return Boolean.TRUE;
+            }
+            return Boolean.FALSE;
+        }catch (NoSuchElementException e){
+            return Boolean.FALSE;
+        }
+    }
 }
