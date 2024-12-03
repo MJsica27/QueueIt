@@ -135,6 +135,7 @@ public class UserService {
                 case ADVISER:
                     Adviser adviser = new Adviser(user);
                     adviserRepository.save(adviser);
+                    queueingGroupsRepository.save(new QueueingGroups(adviser.getUser().getUserID()));
                     break;
                 case ADMIN:
                     Admin admin = new Admin(user);
