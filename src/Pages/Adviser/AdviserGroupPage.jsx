@@ -12,7 +12,7 @@ export default function AdviserGroupPage() {
     const group = location.state;
     const [members, setMembers] = useState([]);  // State to store group members 
 
-    // Fetch the user from localStorage to verify login
+    // Fetch the user from localStorage to verify login sample nga bago nga code
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
