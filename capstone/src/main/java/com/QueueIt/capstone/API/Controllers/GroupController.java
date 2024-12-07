@@ -44,4 +44,9 @@ public class GroupController {
         return groupService.assignMentor(groupID, adviserID);
     }
 
+    @GetMapping("/getGroupMembers")
+    public ResponseEntity<Object> getGroupMembers(@RequestParam Long groupID ){
+        return groupService.getGroupMembers(groupID);
+    }
+
 }

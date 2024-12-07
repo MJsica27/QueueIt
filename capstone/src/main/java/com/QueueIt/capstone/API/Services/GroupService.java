@@ -115,4 +115,19 @@ public class GroupService {
             return Boolean.FALSE;
         }
     }
+
+    public ResponseEntity<Object> getGroupMembers(Long groupID) {
+        try {
+            Group group = groupRepository.findById(groupID).orElseThrow(() -> new NoSuchElementException("Group not found"));
+            List<User> groupMembers = group.getStudents();
+
+            if (groupMembers == null || groupMembers.isEmpty()) {
+                return ResponseEntity.status(404).body("No members found in the group.");
+            }
+
+            return ResponseEntity.ok(groupMembers);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 }
