@@ -35,6 +35,38 @@ export default function AdviserQueuePage() {
     }
   }, [user]);
 
+  useEffect(()=>{
+    if(!meeting && tendingTeam){
+        getActiveMeeting();
+    }
+  },[tendingTeam])
+
+  const getActiveMeeting = async ()=>{
+    try{
+
+        const response = await fetch(`http://localhost:8080/meeting/getActive?groupID=${tendingTeam.groupID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        switch(response.status){
+            case 200:
+                const data = await response.json()
+                setMeeting(data)
+                break;
+            case 404:
+                toast.error("Meeting not found.")
+                break;
+            default:
+                toast.error("Server error.")
+        }
+    }catch (err){
+        console.log(err)
+    }
+  }
+
   const fetchTeams = async ()=>{
     if(user){
         try {
