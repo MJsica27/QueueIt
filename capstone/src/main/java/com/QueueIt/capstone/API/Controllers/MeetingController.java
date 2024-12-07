@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
+import com.QueueIt.capstone.API.Entities.Meeting;
 import com.QueueIt.capstone.API.Services.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,4 +18,13 @@ public class MeetingController {
 //    public ResponseEntity<Object> getMeetingCount(@RequestParam Long classID, @RequestParam Long groupID){
 //        return meetingService.getMeetingCount(classID,groupID);
 //    }
+
+    @GetMapping("/getActive")
+    public ResponseEntity<Object> getActiveMeeting(@RequestParam Long groupID){
+        Meeting meeting = meetingService.getActiveMeeting(groupID);
+        if (meeting != null){
+            return ResponseEntity.ok(meeting);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
