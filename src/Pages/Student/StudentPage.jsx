@@ -35,7 +35,7 @@ export default function StudentPage() {
     const fetchClassrooms = async () => {
       if (user && user.userID) {
         try {
-          const response = await fetch(`http://localhost:8080/classroom/getClassroomsOfStudent?studentID=${user.userID}`,{
+          const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`,{
             method:'GET', 
           } );
           if (response.ok) {

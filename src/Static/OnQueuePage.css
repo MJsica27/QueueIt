@@ -14,19 +14,23 @@
     padding: 1em+5dvw;
     max-height: calc(100vh - 100px);
     gap: 10px;
+    max-width: 100%;
 }
 
 #leftContainer{
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 #rightContainer{
-    flex: 0.5;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .adviserProfilePhoto{
@@ -45,53 +49,7 @@
     gap: 10px;
     padding-inline:1dvw;
     padding-block: 10px;
-    height: fit-content;
-}
-
-#QueueingInformationContainer{
-    display: flex;
-    flex-grow: 1;
-    gap: 10px;
-    padding-top: 10px;
-    overflow: hidden;
-}
-
-#nextToUpNextContainer{
-    flex: 0.5;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#timeContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    flex: 0.25;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: clamp(1rem, 2vw + 0.8rem, 3rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#onHoldContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    flex: 1;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#upNextContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    flex: 1;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding: 20px;
-    overflow: auto;
+    height: 15%;
 }
 
 #queueingTeamContainer{
@@ -99,6 +57,20 @@
     gap: 30px;
     align-items: center;
     padding: 10px;
+}
+
+.timeText{
+    font-size: calc(1em + 2dvw);
+    font-weight: 500;
+}
+
+.queueingTeamsContainer{
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    flex-grow: 1;
+    padding-inline:1dvw;
+    padding-block: 10px;
+    overflow-y: auto;
 }
 
 
@@ -178,21 +150,26 @@
     aspect-ratio: 1;
     clip-path: circle();
 }
+#savedNotesContainer{
+    max-height: 100%;
+}
 
 @media (max-width: 850px){
     #QueuePageSecondRowContainer{
         flex-direction: column;
+        max-height: calc(100%);
+        overflow: hidden;
     }
     #leftContainer{
-        order: 1;
+        order: 0;
     }
     #rightContainer{
-        order: 0;
+        order: 1;
         /* flex-basis: 1; */
     }
     #ChatBoxContainer{
-        max-height: 80vh;
-        /* flex-wrap: wrap; */
+        max-height: 100vh !important;
+        flex-wrap: wrap;
     }
     #chatBoxFeed{
         height: 80vh;

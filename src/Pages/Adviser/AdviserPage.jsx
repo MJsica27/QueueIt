@@ -45,7 +45,7 @@ export default function AdviserPage() {
     const fetchClassrooms = async () => {
       if (user && user.userID) {
         try {
-          const response = await fetch(`http://localhost:8080/classroom/ClassroomsByAdviser?userID=${user.userID}`);
+          const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`);
           if (response.ok) {
             const data = await response.json();
             console.log('Fetched classrooms:', data);
@@ -94,27 +94,31 @@ export default function AdviserPage() {
 
   const handleCreateClassroom = async () => {
     setLoading(true);
+    
     const classroomData = {
       subjectName: formData.subjectName,
       subjectCode: formData.subjectCode,
       section: formData.section,
       classCode: formData.classCode,  
       adviserID: user ? user.userID : undefined,
-      requiresMentor: formData.requiresMentor,
+      mentorable: formData.requiresMentor,
     };
+
+    console.log("Classroom Data to be sent:", classroomData);
+    
 
     try {
       const response = await fetch('http://localhost:8080/classroom/create', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(classroomData),
       });
 
       if (response.ok) {
         toast.success('Classroom created successfully!');
+        console.log(response)
         setClassrooms(prev => [...prev, classroomData]);  
         handleClose();
       } else {

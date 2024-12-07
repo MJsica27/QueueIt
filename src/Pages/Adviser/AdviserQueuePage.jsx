@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import CategoryIcon from '@mui/icons-material/Category';
 import { Button } from 'react-bootstrap';
 import SendIcon from '@mui/icons-material/Send';
+import Note from '../../Components/Card/Note';
+import MyModal from '../../Components/Modal/Modal';
+import RichTextEditor from '../../Components/Utils/RichTextEditor';
+import Queue from '../../Components/Queue';
 
 export default function AdviserQueuePage() {
   const navigate = useNavigate();
@@ -20,10 +24,20 @@ export default function AdviserQueuePage() {
   const client = useWebSocket();
   const [message, setMessage] = useState("");
   const containerRef = useRef(null)
-  const [meeting, setMeeting] = useState(null)
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [notes, setNotes] = useState([]);
+  const [noteToggle, setNoteToggle]= useState(false);
+  const [note, setNote] = useState(null);
+
+  useEffect(()=>{
+    if(tendingTeam){
+        console.log("ning fetch")
+        fetchNotes(tendingTeam.groupID)
+    }
+  },[tendingTeam])
 
   useEffect(() => {
-
     if(user){
       if(user.role === "ADVISER"){
         fetchTeams();
@@ -80,7 +94,6 @@ export default function AdviserQueuePage() {
             switch (response.status) {
                 case 200:
                     const data = await response.json();
-                    // console.log(data.groups)
                     let temp = [...data.groups, ...data.onHoldGroups]
                     setTeams([...teams, ...temp])
                     setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups])
@@ -122,6 +135,38 @@ export default function AdviserQueuePage() {
     }
   }
 
+  const fetchNotes = async (groupID) =>{
+    if(user){
+        try {
+            const response = await fetch(`http://localhost:8080/note/getAllByGroupAndAdviser?groupID=${groupID}&adviserID=${user.userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            switch (response.status) {
+                case 200:
+                    const data = await response.json();
+                     // Sort the notes by dateTaken in descending order
+                     const sortedNotes = data.sort((a, b) => new Date(b.dateTaken) - new Date(a.dateTaken));
+
+                     // Update the state with the sorted notes
+                     setNotes([...notes, ...sortedNotes]);
+                     break;
+                case 404:
+                    const message = await response.text();
+                    toast.error(message);
+                    break;
+                default:
+                    // toast.error("Something went wrong while fetching teams.");
+            }
+        } catch (error) {
+            toast.error("An error occurred: " + error.message);
+        }
+    }
+  }
+
   const admitTeam = async (groupID)=>{
     if(user){
         try {
@@ -135,7 +180,11 @@ export default function AdviserQueuePage() {
             switch (response.status) {
                 case 200:
                     const data = await response.json();
-                    setMeeting(data)
+                    // console.log(data)
+                    localStorage.setItem("meetingID",data)
+                    console.log(teams)
+                    setTendingTeam(teams.find((team)=>team.groupID === groupID))
+                    fetchNotes(groupID)
                     break;
                 case 404:
                     const message = await response.text();
@@ -145,7 +194,7 @@ export default function AdviserQueuePage() {
                     // toast.error("Something went wrong while fetching teams.");
             }
         } catch (error) {
-            // toast.error("An error occurred: " + error.message);
+            toast.error("An error occurred: " + error.message);
         }
     }
   }
@@ -153,7 +202,7 @@ export default function AdviserQueuePage() {
   const concludeMeeting = async ()=>{
     if(user){
         try {
-            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`, {
+            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${localStorage.getItem("meetingID")}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,8 +211,8 @@ export default function AdviserQueuePage() {
     
             switch (response.status) {
                 case 200:
-                    {console.log("2000000")}
-                    setMeeting(null)
+                    setTendingTeam(null)
+                    localStorage.removeItem("meetingID");
                     break;
                 case 404:
                     const message = await response.text();
@@ -171,6 +220,45 @@ export default function AdviserQueuePage() {
                     break;
                 default:
                     // toast.error("Something went wrong while fetching teams.");
+            }
+        } catch (error) {
+            toast.error("An error occurred: " + error.message);
+        }
+    }
+  }
+
+  const createNote = async ()=>{
+    if(user){
+        try {
+            if(subject && body){
+                const response = await fetch(`http://localhost:8080/note/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "groupID":tendingTeam.groupID,
+                        "adviserID":user.userID,
+                        "noteTakerUserID":user.userID,
+                        "subject":subject,
+                        "body":body
+                    })
+                });
+        
+                switch (response.status) {
+                    case 200:
+                        const note = await response.json()
+                        setNotes([...notes, note])
+                        setSubject("")
+                        setBody("")
+                        break;
+                    default:
+                        response.text().then(bodyMessage =>{
+                            toast.error(bodyMessage)
+                        })
+                }
+            }else{
+                toast.error("Note must not be empty in subject nor body.")
             }
         } catch (error) {
             // toast.error("An error occurred: " + error.message);
@@ -183,7 +271,6 @@ export default function AdviserQueuePage() {
     if(containerRef.current){
         containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-    // console.log("nidagan")
   },[chats])
   useEffect(() => {
     if (client && user) {
@@ -250,23 +337,6 @@ export default function AdviserQueuePage() {
             // console.log(receivedMessage)
             setChats((prevMessages)=>[...prevMessages, receivedMessage]);
         })
-
-        const tendingTeamSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/tendingTeam/${user.userID}`,(message)=>{
-            const receivedMessage = JSON.parse(message.body);
-            console.log(receivedMessage)
-            if (receivedMessage){
-                setTendingTeam(receivedMessage);
-            }else{
-                setTendingTeam(null)
-            }
-        })
-
-        const concludeMeetingSubscription = client.subscribe(`/topic/queueingTeamsStatus/student/concludeMeeting/${user.userID}`,(message)=>{
-            const receivedMessage = JSON.parse(message.body);
-            if(receivedMessage){
-                setTendingTeam(null);
-            }
-        })
         // Cleanup subscription on unmount
         return () => {
             subscription.unsubscribe();
@@ -274,8 +344,6 @@ export default function AdviserQueuePage() {
             subscription3.unsubscribe();
             subscription4.unsubscribe();
             chatSubscription.unsubscribe();
-            tendingTeamSubscription.unsubscribe();
-            concludeMeetingSubscription.unsubscribe();
         };
     }
   }, [client]);
@@ -285,26 +353,16 @@ export default function AdviserQueuePage() {
     <div id='mainContainer'>
       <UserNavbar/>
       <div id="QueuePageSecondRowContainer">
-        <div id="leftContainer" style={{flex:0.5}}>
+        <div id="leftContainer" style={{flex:1}}>
           <div id="adviserInfoContainer">
             <AdviserSetQueue/>
           </div>
           <div id="QueueingInformationContainer">
             <div id="upNextContainer">
-            {teams.length > 0?
+            {teams.length > 0 || onHoldTeams.length > 0?
                                     
               <>
-                  {teams.map((team,index)=>(
-                      <div id='queueingTeamContainer' key={index} style={{backgroundColor:onHoldTeams.find(onHoldTeam => onHoldTeam.groupID === team.groupID)?'rgba(255,165,0,0.3)':'transparent'}}>
-                          <div id='indexNumber'>{index+1}</div>
-                          <div id="queueingTeamMiniProfile"></div>
-                          <div id="queueingTeamInformationLive">
-                              <div id='queueingTeamNameLive'>{team.groupName}</div>
-                              <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                              {onHoldTeams.find(onHoldTeam=>onHoldTeam.groupID===team.groupID)?<Typography variant='caption' fontStyle='poppins' fontSize='1dvw' fontWeight='bold' color='white' style={{alignSelf:'end', justifySelf:'end'}}>On Hold</Typography>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={()=>{admitTeam(team.groupID)}}>Admit</Button>}
-                          </div>
-                      </div>
-                  ))}
+                  <Queue teams={teams} onHoldTeams={onHoldTeams} admitTeam={admitTeam}/>
               </>
               :
               <>
@@ -317,7 +375,7 @@ export default function AdviserQueuePage() {
             </div>
           </div>
         </div>
-        <div id="rightContainer" style={{flex:1}}>
+        <div id="rightContainer" style={{flexGrow:1}}>
             <div id="currentlyTendingContainer" style={{flex:'0.335'}}>
               <div style={{display:'flex', height:'100%'}}>
                 <div id="currentlyTendingContainer" style={{flex:1, backgroundColor:'transparent'}}>
@@ -337,20 +395,21 @@ export default function AdviserQueuePage() {
                         }
                     </div>
                 </div>
-                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<></>}</div>
+                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'end'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<></>}</div>
               </div>
             </div>
-            <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none'}}>
-                <div id="NotesContainer" style={{flex:1.7, backgroundColor:'white', borderRadius:'5px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%'}}>
+            <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none', maxWidth:'100%'}}>
+                <div id="NotesContainer" style={{flex:1.7, backgroundColor:'white', borderRadius:'5px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%', maxWidth:'100%', overflow:'hidden'}}>
                     {tendingTeam?
                       <>
                         <div id="noteTitle">
-                          <input type="text" placeholder='Note Title' style={{width:'100%', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0'}} />
+                          <input type="text" placeholder='Note Title' style={{width:'100%', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0'}} value={subject} onChange={(e)=>{setSubject(e.target.value)}} />
                         </div>
-                        <div id="note" style={{flexGrow:1}}>
-                        <textarea
-                            style={{ width: '100%', height: '100%', resize: 'none', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0' }}
-                        ></textarea>
+                        <div id="note" style={{flexGrow:1, maxWidth:'100%', display:'flex', flexDirection:'column', gap:'10px', overflow:'hidden'}}>
+                            <RichTextEditor createNote={createNote} body={body} setBody={setBody}/>
+                        </div>
+                        <div style={{display:'flex', justifyContent:'end'}}>
+                            
                         </div>
                       </>
                       :
@@ -375,7 +434,7 @@ export default function AdviserQueuePage() {
                           
                         </div>
                         <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                          <input style={{flexGrow:1, paddingInline:'1em'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); console.log(e.target.value)}} value={message}/>
+                          <input style={{flexGrow:1, paddingInline:'1em'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); }} value={message}/>
                           <IconButton onClick={sendMessage}>
                               <SendIcon style={{color:'black'}}/>
                           </IconButton>
@@ -383,9 +442,19 @@ export default function AdviserQueuePage() {
                       </>
                     }
                 </div>
-                {tendingTeam?<div id="savedNotesContainer" style={{maxHeight:'none',backgroundColor:'white', borderRadius:'5px'}}>
-                    <Typography>No saved notes.</Typography>
+                {tendingTeam?
+                <div id="savedNotesContainer" style={{backgroundColor:'white', overflowY:'auto' }}>
+                    {notes.length>0?
+                        <div style={{display:'flex', flexDirection:'column', gap:'15px', flex:1, overflowY:'auto', maxHeight:'100%'}}>
+                        {notes.map((singlenote)=>(
+                            <Note note={singlenote} setNoteToggle={setNoteToggle} setNote={setNote} />
+                        ))}
+                        </div>
+                        :
+                        <Typography>No saved notes.</Typography>
+                    }
                 </div>:<></>}
+                <MyModal open={noteToggle} setOpen={setNoteToggle} note={note}/>
             </div>
         </div>
       </div>

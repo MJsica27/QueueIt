@@ -11,6 +11,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'; 
 import BackButton from '../../Components/Buttons/BackButton';
 import { UserContext } from '../../Components/User/UserContext';
+import { capitalizeFirstLetter, capitalizeText } from '../../Components/Utils/Utils';
 
 const QueueingPage = () => {
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ const QueueingPage = () => {
                     gap:10,
                 }}
             >
-                {/* Team information container kanang gray first row */}
+                {/* Classroom information container kanang gray first row */}
                 <div
                     style={{
                         height:'11dvh',
@@ -87,19 +88,9 @@ const QueueingPage = () => {
                             flex:1
                         }}
                     >
-                        <Typography variant='h6' fontWeight='bold'>{classroom?classroom.subjectName:<></>}</Typography>
-                        <Typography variant='caption' color='gray'>{classroom?classroom.section:<></>}</Typography>
+                        <Typography variant='h6' fontWeight='bold'>{classroom?capitalizeFirstLetter(classroom.subjectName):<></>}</Typography>
+                        <Typography variant='caption' color='gray'>{classroom?capitalizeText(classroom.section):<></>}</Typography>
                     </div>
-
-                    {/* si MJ ang nag tangtang ani, if okay lang akoa ge butang sa left most */}
-                    {/* All Teams */}
-                    
-                    {/* <div
-                        style={{
-                        }}
-                    >
-                        <a href='studentHomePage' style={{textDecoration:'none', color:'inherit'}}><Typography variant='subtitle2' fontWeight='bold'>{`< All Teams`}</Typography></a>
-                    </div> */}
                 </div>
 
                 {/* ------------------- end of first row  ----------------- */}
@@ -109,29 +100,35 @@ const QueueingPage = () => {
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
                         {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""}/>:<></>}
                     </div>
-                    <div className='adviserQueueingCard'>
-                        <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>
-                        {group?
-                            group.mentorID?
-                            <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""}/></>
+                    {classroom.mentorable?
+                        <div className='adviserQueueingCard'>
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>
+                            {group?
+                                group.mentorID?
+                                <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""}/></>
+                                :
+                                //if wala pay mentor
+                                <>
+                                    <PersonPinCircleIcon style={{fontSize:'12em', alignSelf:'center',flex:2}}/>
+                                    <Typography style={{fontSize:'1.2em', color:'gray', flex:0.2, display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center'}}>Scout for potential mentors by clicking browse.</Typography>
+                                    <div style={{flex:1,display:'flex', alignItems:'center',justifyContent:'center'}}>
+                                        <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>Browse</Button>
+                                    </div>
+                                </>
                             :
-                            //if wala pay mentor
                             <>
-                                <PersonPinCircleIcon style={{fontSize:'12em', alignSelf:'center',flex:2}}/>
-                                <Typography style={{fontSize:'1.2em', color:'gray', flex:0.2, display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center'}}>Scout for potential mentors by clicking browse.</Typography>
-                                <div style={{flex:1,display:'flex', alignItems:'center',justifyContent:'center'}}>
-                                    <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>Browse</Button>
+                                {/* if wala pay group */}
+                                <div style={{flex:1, display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center', gap:'20px'}}>
+                                    <LockPersonIcon style={{fontSize:'12em'}}/>
+                                    <Typography variant='subtitle2' fontSize='1em' fontFamily='Poppins' textAlign='center' color='gray'>Find a group first to enable mentorship availability.</Typography>
                                 </div>
-                            </>
+                            </>}
+                        </div>    
                         :
                         <>
-                            {/* if wala pay group */}
-                            <div style={{flex:1, display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center', gap:'20px'}}>
-                                <LockPersonIcon style={{fontSize:'12em'}}/>
-                                <Typography variant='subtitle2' fontSize='1em' fontFamily='Poppins' textAlign='center' color='gray'>Find a group first to enable mentorship availability.</Typography>
-                            </div>
-                        </>}
-                    </div>
+                            {/* for journal component */}
+                        </>
+                    }
                     <div className='adviserQueueingCard' id='extraInfoCard'>
                         {/* group card */}
                         <div className='extraInfoSubCard'>

@@ -10,6 +10,8 @@ import { useWebSocket } from '../../Components/User/WebSocketContext';
 import CategoryIcon from '@mui/icons-material/Category';
 import { UserContext } from '../../Components/User/UserContext';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
+import { capitalizeFirstLetter } from '../../Components/Utils/Utils';
+import Queue from '../../Components/Queue';
 
 const OnQueuePage = () => {
     const location = useLocation()
@@ -25,6 +27,7 @@ const OnQueuePage = () => {
     const containerRef = useRef(null)
     const [time, setTime] = useState("");
     const [myAdviser, setAdviser] = useState(adviser);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
 
         if(user){
@@ -87,10 +90,23 @@ const OnQueuePage = () => {
             switch (response.status) {
                 case 200:
                     const data = await response.json();
-                    // console.log(data.groups)
-                    setTeams([...teams, ...data.groups])
-                    setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups])
-                    setTendingTeam(data.tendingGroup)
+                    const combinedTeams = [...data.groups, ...data.onHoldGroups];
+
+                    // Sort the combined array based on queueingTimeStart
+                    const sortedTeams = combinedTeams.slice().sort((a, b) => {
+                        const timeA = a.queueingTimeStart.split(':').map(Number);
+                        const timeB = b.queueingTimeStart.split(':').map(Number);
+
+                        const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
+                        const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
+
+                        return totalSecondsA - totalSecondsB; // Ascending order
+                    });
+
+                    // Update state with sorted teams
+                    setTeams(sortedTeams);
+                    setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups]);
+                    setTendingTeam(data.tendingGroup);
                     break;
                 case 404:
                     const message = await response.text();
@@ -106,6 +122,7 @@ const OnQueuePage = () => {
 
     const holdQueue = async ()=>{
         try {
+            setLoading(true);
             const response = await fetch(`http://localhost:8080/queue/student/holdQueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
@@ -128,6 +145,7 @@ const OnQueuePage = () => {
         } catch (error) {
             // toast.error("An error occurred: " + error.message);
         }
+        setLoading(false)
     }
 
     const cancelQueue = async ()=>{
@@ -158,6 +176,7 @@ const OnQueuePage = () => {
 
     const requeue = async ()=>{
         try {
+            setLoading(true)
             const response = await fetch(`http://localhost:8080/queue/student/requeue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
@@ -179,10 +198,12 @@ const OnQueuePage = () => {
         } catch (error) {
             // toast.error("An error occurred: " + error.message);
         }
+        setLoading(false)
     }
 
     const queue = async ()=>{
         try {
+            setLoading(true)
             const response = await fetch(`http://localhost:8080/queue/student/enqueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
@@ -204,6 +225,7 @@ const OnQueuePage = () => {
         } catch (error) {
             // toast.error("An error occurred: " + error.message);
         }
+        setLoading(false)
     }
 
     const sendMessage = async ()=>{
@@ -245,22 +267,7 @@ const OnQueuePage = () => {
         if (client && user) {
             const subscription = client.subscribe(`/topic/queueingTeamsStatus/student/enqueue/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
-                // console.log(receivedMessage)
-                setTeams((prevTeams) => {
-                    // Combine previous teams and receivedMessage
-                    const combinedTeams = [...prevTeams, receivedMessage];
-                
-                    // Sort the combined array based on queueingTimeStart
-                    return combinedTeams.sort((a, b) => {
-                        const timeA = a.queueingTimeStart.split(':').map(Number);
-                        const timeB = b.queueingTimeStart.split(':').map(Number);
-                
-                        const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
-                        const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
-                
-                        return totalSecondsA - totalSecondsB; // Ascending order
-                    });
-                });
+                setTeams(prevTeams => [...prevTeams, receivedMessage]);
             })
 
             const subscription2 = client.subscribe(`/topic/queueingTeamsStatus/student/dequeue/${adviser.user.userID}`,(message)=>{
@@ -290,27 +297,27 @@ const OnQueuePage = () => {
                     });
                 });
 
-                setTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
+                // setTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
             });
 
             const subscription4 = client.subscribe(`/topic/queueingTeamsStatus/student/requeue/${adviser.user.userID}`,(message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 // console.log(receivedMessage)
-                setTeams((prevTeams) => {
-                    // Combine previous teams and receivedMessage
-                    const combinedTeams = [...prevTeams, receivedMessage];
+                // setTeams((prevTeams) => {
+                //     // Combine previous teams and receivedMessage
+                //     const combinedTeams = [...prevTeams, receivedMessage];
                 
-                    // Sort the combined array based on queueingTimeStart
-                    return combinedTeams.sort((a, b) => {
-                        const timeA = a.queueingTimeStart.split(':').map(Number);
-                        const timeB = b.queueingTimeStart.split(':').map(Number);
+                //     // Sort the combined array based on queueingTimeStart
+                //     return combinedTeams.sort((a, b) => {
+                //         const timeA = a.queueingTimeStart.split(':').map(Number);
+                //         const timeB = b.queueingTimeStart.split(':').map(Number);
                 
-                        const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
-                        const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
+                //         const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
+                //         const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
                 
-                        return totalSecondsA - totalSecondsB; // Ascending order
-                    });
-                });
+                //         return totalSecondsA - totalSecondsB; // Ascending order
+                //     });
+                // });
                 setOnHoldTeams((prevTeams) => prevTeams.filter(team => team.groupID !== receivedMessage.groupID));
             })
 
@@ -387,93 +394,25 @@ const OnQueuePage = () => {
                         <div id="adviserInfoContainer">
                             <AccountCircleIcon className='adviserProfilePhoto'/>
                             <div style={{display:'flex', flexDirection:'column',justifyItems:'center'}}>
-                                {adviser?<span id='adviserName'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</span>:<></>}
+                                {adviser?<span id='adviserName'>{capitalizeFirstLetter(adviser.user.firstname)+" "+capitalizeFirstLetter(adviser.user.lastname)}</span>:<></>}
                                 <a href='/' style={{color:'#6ABf05'}}>View Profile</a>
                             </div>
-                            <span style={{flex:1, display:'flex',justifyContent:'end', paddingInlineEnd:'2em'}}>Queueing ends 3:00 pm</span>
+                            <span style={{flex:1, display:'flex',justifyContent:'end'}}>Queueing ends 3:00 pm</span>
                         </div>
-                        <div id="QueueingInformationContainer">
-                            <div id="upNextContainer">
-                                <div style={{display:'flex', justifyContent:'space-between'}}>
-                                    <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
-                                    {
-                                        myAdviser.ready?  tendingTeam && tendingTeam.groupID == groupID?<></>:(teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID))?<></>:<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
-                                        // myAdviser.ready?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
-                                    }
-                                    
-                                </div>
-                                    {teams.length > 0?
-                                    
-                                        <>
-                                            {teams.map((team,index)=>(
-                                                groupID == team.groupID?
-
-                                                <>
-                                                <div id='queueingTeamContainer' style={{backgroundColor:'rgba(185,255,102,0.22)'}} key={index}>
-                                                    <div id='indexNumber'>{index+1}</div>
-                                                    <div id="queueingTeamMiniProfile"></div>
-                                                    <div id="queueingTeamInformationLive">
-                                                        <div id='queueingTeamNameLive'>{team.groupName}</div>
-                                                        <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                                                        <Button size='sm' style={{paddingInline:'1.5em', backgroundColor:'#FFD466', border:'none'}} className='buttonCustom' onClick={holdQueue}>Hold</Button>
-                                                        <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
-                                                    </div>
-                                                    
-                                                </div>
-                                                </>
-                                                :
-                                                <div id='queueingTeamContainer' key={index}>
-                                                    <div id='indexNumber'>{index+1}</div>
-                                                    <div id="queueingTeamMiniProfile"></div>
-                                                    <div id="queueingTeamInformationLive">
-                                                        <div id='queueingTeamNameLive'>{team.groupName}</div>
-                                                        <div id='queueingTeamSectionLive'>{`${team.subjectCode} - ${team.section}`}</div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </>
-                                        :
-                                        <>
-                                            <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                                                <CategoryIcon style={{fontSize:'15dvw', color:'gray'}}/>
-                                                <Typography style={{fontSize:'2.5dvw', color:'gray'}}>Awaiting queueing teams.</Typography>
-                                            </div>
-                                        </>
-                                    }
+                        <div id='adviserInfoContainer' style={{display:'flex', justifyContent:'space-between'}}>
+                            <Typography variant='h6' color='gray'>Current Time:</Typography>
+                            <span className='timeText'>{time}</span>
+                        </div>
+                        <div className='queueingTeamsContainer'>
+                            <div style={{display:'flex', justifyContent:'space-between'}}>
+                                <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
+                                {
+                                    myAdviser.ready?  tendingTeam && tendingTeam.groupID == groupID?<></>:(teams.some(team => team.groupID === groupID) || onHoldTeams.some(team => team.groupID === groupID))?<></>:<Button disabled={loading} size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
+                                    // myAdviser.ready?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={queue} >Queue</Button>:<><Typography variant='subtitle1' color='red'>Adviser terminated queueing.</Typography></>
+                                }
+                                
                             </div>
-                            <div id="nextToUpNextContainer">
-                                <div id="timeContainer">
-                                    {time}
-                                </div>
-                                <div id="onHoldContainer">
-                                    {onHoldTeams.map((team,index)=>(
-                                        team.groupID == groupID?
-                                            <>
-                                                <div id='queueingTeamContainer' style={{flexDirection:'column'}}>
-                                                    <div id='queueingTeamContainer'>
-                                                        <div id='indexNumber' style={{backgroundColor:'#FFD466'}}>{index+1}</div>
-                                                        <Tooltip title={team.groupName}>
-                                                            <div id="queueingTeamMiniProfile"></div>
-                                                        </Tooltip>
-                                                    </div>
-                                                    <div>
-                                                        <Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={requeue}>Requeue</Button>
-                                                        <Button size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
-                                                    </div>
-                                                </div>
-                                            </>
-                                            :
-                                            <>
-                                                <div id='queueingTeamContainer'>
-                                                    <div id='indexNumber' style={{backgroundColor:'#FFD466'}}>{index+1}</div>
-                                                    <Tooltip title={team.groupName}>
-                                                        <div id="queueingTeamMiniProfile"></div>
-                                                    </Tooltip>
-                                                </div>
-                                            </>
-                                    ))}
-                                </div>
-                            </div>
+                            <Queue teams={teams} groupID={groupID} holdQueue={holdQueue} cancelQueue={cancelQueue} onHoldTeams={onHoldTeams} requeue={requeue} loading={loading}/>
                         </div>
                     </div>
 
