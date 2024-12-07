@@ -2,7 +2,7 @@ import React, { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import vector from '../Assets/Vector.png'
-import image1 from '../Assets/test1.png';
+import image1 from '../Assets/illustration.png';
 import openEye from '../Assets/password/eye.png';
 import closeEye from '../Assets/password/invisible.png';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
