@@ -37,12 +37,16 @@ export default function StudentPage() {
         try {
           const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`,{
             method:'GET', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
           } );
           if (response.ok) {
             const data = await response.json();
+            console.log(data)
             setClassrooms(data);
           } else {
-            console.error('Failed to fetch classrooms:', response.statusText);
+            toast.error("No classrooms found.")
           }
         } catch (error) {
           console.error('Error fetching classrooms:', error);
@@ -97,7 +101,7 @@ export default function StudentPage() {
   };
 
   return ( 
-      <div className="m-0 vh-100" style={{ backgroundColor:'#fff', height:'95vh' }}>  
+      <div className="m-0 vh-100" style={{ backgroundColor:'#fff', height:'95vh'}}>  
         <UserNavbar/>
         <div  
           style={{    
@@ -106,6 +110,7 @@ export default function StudentPage() {
             width: 'auto', 
             overflow: 'hidden',
             height: '90vh',  
+            overflowY:'auto'
           }}
         > 
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
@@ -147,30 +152,28 @@ export default function StudentPage() {
           <div
             className="d-flex justify-content-between"
             style={{
-              margin: '20px 20px 10px 20px', 
-              backgroundColor:'rgba(0,0,0,0.03)',
+              margin: '20px 20px 10px 20px',
               borderRadius: '5px',
               fontWeight: 'bold',
               fontSize: '22px', 
-              height: '500px',
               padding: '0 20px',
               width: '1400px',
             }}
           >
             
-          <div style={{ overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px ' }}> 
+          <div style={{ width: '100%', border:'solid 1px red'}}> 
             <h2>Classroom</h2>
             {classrooms.length === 0 ? (
               <p>No active classrooms found.</p>
             ) : (
               
-                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', justifyContent:'start'}}>
+                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap'}}>
                   {classrooms.map((classroom) => (
-                      <ClassroomCard 
+                      <ClassroomCard
                         key={classroom.classId}
                         classroom={classroom}
                         style={{ margin: '0px' }} 
-                        />
+                      />
                   ))}
                 </div>
               

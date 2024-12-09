@@ -184,17 +184,18 @@ export default function AdviserPage() {
             className="d-flex justify-content-between"
             style={{
               margin: '20px 20px 10px 20px', 
-              backgroundColor:'rgba(0,0,0,0.03)',
+              // backgroundColor:'rgba(0,0,0,0.03)',
               borderRadius: '5px',
               fontWeight: 'bold',
               fontSize: '22px', 
               height: '500px',
               padding: '0 20px',
               width: '1400px',
+              overflowY:'auto'
             }}
           >
             
-            <div style={{ overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 20px ' }}> <h2>Advisory</h2>
+            <div style={{ width: '100%', margin: '20px 0px 0px 20px ' }}> <h2>Advisory</h2>
               {classrooms.length === 0 ? (
                 <p className="text-center mt-4">No active classrooms found.</p>
               ) : (
