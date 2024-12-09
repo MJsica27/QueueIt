@@ -125,4 +125,9 @@ public class UserController {
         }
     }
 
+    @GetMapping("/userDetails")
+    public ResponseEntity<Object> getUserDetails(@RequestParam Long userID){
+        return userService.getUserDetails(userID);
+    }
+
 }

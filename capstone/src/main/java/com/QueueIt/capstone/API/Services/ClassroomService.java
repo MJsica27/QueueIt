@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ClassroomService {
@@ -111,26 +112,35 @@ public class ClassroomService {
         }
     }
 
-    public ResponseEntity<List<Classroom>> viewUserClassrooms(Long userID){
-        List<Classroom> classrooms = classroomRepository.findByAdviserID(userID);
-        return ResponseEntity.ok(classrooms);
-    }
-
     public List<Student> getStudentsGivenClassroom(Long classID){
         Classroom classroom = classroomRepository.getReferenceById(classID);
         return classroom.getStudents();
     }
 
-    public ResponseEntity<Object> getClassroomGivenStudent(Long studentID){
-        try{
-            Student student = studentRepository.findById(studentID).orElseThrow();
-            return ResponseEntity.ok(classroomRepository.findByStudentsContaining(student));
-        }catch (Exception e){
-            return ResponseEntity.status(404).body(e.toString());
-        }
-    }
-
     public List<Classroom> getAllClassrooms() {
         return classroomRepository.findAll();
+    }
+
+    public List<Classroom> getClassrooms(Long userID) {
+        try{
+            User user = userRepository.findById(userID).orElseThrow();
+            if (user.getRole().equals(Role.ADVISER)){
+                List<Classroom> classrooms = classroomRepository.findByAdviserID(userID);
+                if (classrooms.isEmpty()){
+                    return null;
+                }
+                return classrooms;
+            } else if (user.getRole().equals(Role.STUDENT)) {
+                Student student = studentRepository.findById(userID).orElseThrow();
+                List<Classroom> classrooms = classroomRepository.findByStudentsContaining(student);
+                if (classrooms.isEmpty()){
+                    return null;
+                }
+                return classrooms;
+            }
+        }catch (NoSuchElementException e){
+            return null;
+        }
+        return null;
     }
 }

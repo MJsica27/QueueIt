@@ -23,18 +23,20 @@ public class Classroom {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<Student> students;
+    private Boolean mentorable;
 
 
 
     public Classroom() {
     }
 
-    public Classroom(String subjectName, String subjectCode, Long adviserID, String classCode, String section) {
+    public Classroom(String subjectName, String subjectCode, Long adviserID, String classCode, String section, Boolean mentorable) {
         this.subjectName = subjectName;
         this.subjectCode = subjectCode;
         this.adviserID = adviserID;
         this.classCode = classCode;
         this.section = section;
+        this.mentorable = mentorable;
     }
 
     public Long getClassID() {
@@ -84,4 +86,12 @@ public class Classroom {
     public String getSection() { return section; }
 
     public void setSection(String section) { this.section = section; }
+
+    public Boolean getMentorable() {
+        return mentorable;
+    }
+
+    public void setMentorable(Boolean mentorable) {
+        this.mentorable = mentorable;
+    }
 }

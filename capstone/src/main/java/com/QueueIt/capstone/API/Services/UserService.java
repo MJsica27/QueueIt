@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -309,4 +311,15 @@ public class UserService {
         return false;
     }
 
+    public ResponseEntity<Object> getUserDetails(Long userID) {
+        try{
+            User user = userRepository.findById(userID).orElseThrow();
+            HashMap<String, String> userDeets = new HashMap<String,String>();
+            userDeets.put("firstname",user.getFirstname());
+            userDeets.put("lastname",user.getLastname());
+            return ResponseEntity.ok(userDeets);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.Entities.Note;
+import com.QueueIt.capstone.API.Entities.User;
 import com.QueueIt.capstone.API.Repository.AdviserRepository;
 import com.QueueIt.capstone.API.Repository.GroupRepository;
 import com.QueueIt.capstone.API.Repository.NoteRepository;
@@ -38,7 +39,12 @@ public class NoteService {
     }
 
     public Note createNote(Note note) {
-        if (adviserRepository.findById(note.getAdviserID()).isPresent() && groupRepository.findById(note.getGroupID()).isPresent() && userRepository.findById(note.getNoteTakerUserID()).isPresent() && groupService.studentExistInGroup(note.getGroupID(), note.getNoteTakerUserID())){
+        if (adviserRepository.findById(note.getAdviserID()).isPresent() && groupRepository.findById(note.getGroupID()).isPresent() && userRepository.findById(note.getNoteTakerUserID()).isPresent()){
+            User user = userRepository.findById(note.getNoteTakerUserID()).orElseThrow();
+            //if user that created the note is a student, but is not part of the group, returns null.
+            if (user.getRole().equals("STUDENT") && !groupService.studentExistInGroup(note.getGroupID(), note.getNoteTakerUserID())){
+                return null;
+            }
             note.setDateTaken(Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             return noteRepository.save(note);
         }

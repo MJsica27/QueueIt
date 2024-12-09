@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/note")
 public class NoteController {
 
@@ -32,7 +33,7 @@ public class NoteController {
         if (myNote == null){
             return ResponseEntity.unprocessableEntity().body("Group or Adviser does not exist. Or student is not part of the group.");
         }
-        return ResponseEntity.ok("Note created.");
+        return ResponseEntity.ok(myNote);
     }
 
     @PostMapping("/update")

@@ -126,8 +126,8 @@ public class QueueService {
             simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/tendingTeam/"+adviser.getUser().getUserID(),group);
             simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/dequeue/"+adviser.getUser().getUserID(),group);
 
-            //i return si meeting para inig conclude sa meeting, ma manipulate ang time end.
-            return ResponseEntity.ok(meeting);
+            //i return si meetingID para inig conclude sa meeting, ma manipulate ang time end.
+            return ResponseEntity.ok(meeting.getMeetingID());
         }catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
         }
