@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreateClassroomDialog';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import img5 from '../../Assets/img/img5.png'; 
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -127,7 +128,7 @@ export default function AdviserPage() {
   return (
     <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">
       {/* Background Grid */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem]"></div> 
+      <AdviserBackgroundPage /> 
 
       <UserNavbar/> 
       
@@ -147,15 +148,14 @@ export default function AdviserPage() {
       </div>
 
 
-      <div style={{ margin: '5px', padding: '35px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
+      <div style={{ padding: '25px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
         <h2 style={{fontWeight: 'bold'}} >Advisory</h2>
 
-        <div style={{ margin: ' '}}>  
+        <div>  
           {classrooms.length === 0 ? (
             <p className="text-center ">No active classrooms found.</p>
           ) : (
-            <div style={{ backgroundColor:'#fff', display:'flex', flexWrap:'wrap', gap:'60px',  marginLeft: '50px',
-              maxHeight: '350px', overflowY: 'auto', padding: '10px',}}>
+            <div style={{ backgroundColor:'#fff', display:'flex', flexWrap:'wrap', rowGap: '0px', columnGap: '60px',   marginLeft: '50px', maxHeight: '350px', overflowY: 'auto', }}>
               {classrooms.map((classroom) => (
                 <ClassroomCard 
                   key={classroom.classId}

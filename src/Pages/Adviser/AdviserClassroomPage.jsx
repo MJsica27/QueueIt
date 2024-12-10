@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'; 
-import { Stack, Modal, Button, Form } from 'react-bootstrap'; 
+import { Container, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap'; 
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';  
 import { useNavigate } from 'react-router-dom'; 
 import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
 import { toast } from 'react-toastify';
+import img6 from '../../Assets/img/img6.png'; 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import BackButton from '../../Components/Buttons/BackButton';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -145,111 +148,65 @@ const AdviserClassroomPage = () => {
     return (
         <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">
 
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem]"></div> 
+            <AdviserBackgroundPage /> 
 
             <UserNavbar/>
 
             <div style={{ marginTop: '5px', height:'750px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px 15px 0 0',  }}>
  
-                <div
-                    style={{
-                    padding: '20px',
-                    height: '110px',
-                    width: 'auto',
-                    display: 'flex',
-                    flexDirection: 'row', 
-                    justifyContent: 'space-between',  
-                    alignItems: 'flex-start',  
-                    }}
-                >
-                    {/* Back Button Section */}
+                <div style={{ padding: '20px', height: '110px', width: 'auto', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',  }} >
+                     
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <BackButton />
+                        <BackButton />
                     </div>
-
-                    {/* Classroom Details Section */}
-                    <div
-                    style={{
-                        color: 'white',
-                        textAlign: 'center',
-                    }}
-                    >
-                    <div>{classroomDetails.subjectCode} - {classroomDetails.section}</div>
-                    <div className="text-3xl font-bold">{classroomDetails.subjectName}</div>
-                    <div>Classcode: {classroom.classCode}</div>
+ 
+                    <div style={{ color: 'white', textAlign: 'center', }} >
+                        <div>{classroomDetails.subjectCode} - {classroomDetails.section}</div>
+                        <div className="text-3xl font-bold">{classroomDetails.subjectName}</div>
+                        <div>Classcode: {classroom.classCode}</div>
                     </div>
-
-                    {/* Options Menu Section */}
+ 
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
-                        <div>
-                        <OptionsMenu onAction={handleAction} color="white" />
-                        </div>
-                    </OverlayTrigger>
-                    </div>
-                </div>
-                </div>
-
-                 
-
-            {/* <div className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
-                <div 
-                    style={{  
-                        margin: '20px 0 0 0',
-                        backgroundColor:'rgba(0,0,0,0.03)',
-                        borderRadius: '5px',
-                        color: '#000',  
-                        width: '1410px', 
-                        overflow: 'hidden',
-                        height: '616px',  
-                    }}
-                >  
-                    <div 
-                        style={{
-                            fontWeight: 'bold', 
-                            color: '#000',
-                            height: '50px', 
-                            fontSize: '20px',
-                            padding: '0 20px', 
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            marginTop: '15px'
-                        }}
-                    > 
-                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-                            <BackButton />
-                            {classroomDetails.subjectCode} | {classroomDetails.subjectName} | {classroomDetails.section}
-                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
-                                <div>
-                                    <OptionsMenu onAction={handleAction} color="black" /> 
-                                </div> 
-                            </OverlayTrigger>
-                        </span>
-
-                        <span>
-                            <span style={{ fontWeight: 'normal' }}>Classcode</span>: {classroom.classCode}
-                        </span>
-                    </div>
-
-                    <Stack direction="column" style={{  overflowY: 'auto', maxHeight: '80vh', width: '100%', margin: '20px 0px 0px 70px '  }} gap={3} >  
-                        {groups.length === 0 ? (
-                            <p>No active groups found.</p>
-                        ) : (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'start' }}>
-                                {groups.map((group) => (
-                                    <AdviserGroupCard
-                                        key={group.groupID}
-                                        group={group}
-                                    />
-                                ))}
+                        <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
+                            <div>
+                                <OptionsMenu onAction={handleAction} color="white" />
                             </div>
-                        )}
-                    </Stack>
-                </div>
-            </div> 
+                        </OverlayTrigger>
+                    </div>
+            </div>
 
-            Modal for displaying enrolled students
+            <Container>
+                <Row>
+                    <Col md={6}>
+                        <img src={img6} alt="illustration" style={{height:'600px', marginTop: '-50px', marginLeft: '' }} />   
+                    </Col>
+                    <Col md={6}>
+                        <div style={{  marginTop: '50px' }}>  
+                                {groups.length === 0 ? (
+                                    <p>No active groups found.</p>
+                                ) : (
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'start' }}>
+                                        {groups.map((group) => (
+                                            <AdviserGroupCard
+                                                key={group.groupID}
+                                                group={group}
+                                            />
+                                        ))}
+                                    </div>
+                                )} 
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+
+                
+
+            </div>
+
+            
+            
+
+
             <Modal show={showStudentsModal} onHide={handleCloseStudentsModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Enrolled Students</Modal.Title>
@@ -274,8 +231,7 @@ const AdviserClassroomPage = () => {
                     <Button variant="secondary" onClick={handleCloseStudentsModal}>Close</Button>
                 </Modal.Footer>
             </Modal>
-
-            Modal for editing classroom
+ 
             <Modal show={showEditModal} onHide={closeEditClassroomModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Classroom</Modal.Title>
@@ -313,8 +269,7 @@ const AdviserClassroomPage = () => {
                     <Button variant="primary" onClick={editClassroom}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
-
-            Modal for deleting classroom
+ 
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete Classroom</Modal.Title>
@@ -326,7 +281,12 @@ const AdviserClassroomPage = () => {
                     <Button variant="secondary" onClick={handleCloseDeleteModal}>Cancel</Button>
                     <Button variant="danger" onClick={handleDeleteClassroom}>Delete Classroom</Button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
+                 
+
+            {/* 
+            </div>  
+            */}
 
 
         </div>
