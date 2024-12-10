@@ -156,23 +156,21 @@ export default function StudentPage() {
               borderRadius: '5px',
               fontWeight: 'bold',
               fontSize: '22px', 
-              padding: '0 20px',
               width: '1400px',
             }}
           >
             
-          <div style={{ width: '100%', border:'solid 1px red'}}> 
+          <div style={{ width: '100%'}}> 
             <h2>Classroom</h2>
             {classrooms.length === 0 ? (
               <p>No active classrooms found.</p>
             ) : (
               
-                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap'}}>
+                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', gap:'5%'}}>
                   {classrooms.map((classroom) => (
                       <ClassroomCard
                         key={classroom.classId}
                         classroom={classroom}
-                        style={{ margin: '0px' }} 
                       />
                   ))}
                 </div>

@@ -142,6 +142,7 @@ export default function AdviserPage() {
             width: 'auto', 
             overflow: 'hidden',
             height: '90vh',  
+            overflowY:'auto'
           }}
         > 
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
@@ -183,15 +184,11 @@ export default function AdviserPage() {
           <div
             className="d-flex justify-content-between"
             style={{
-              margin: '20px 20px 10px 20px', 
-              // backgroundColor:'rgba(0,0,0,0.03)',
+              margin: '20px 20px 10px 20px',
               borderRadius: '5px',
               fontWeight: 'bold',
               fontSize: '22px', 
-              height: '500px',
-              padding: '0 20px',
               width: '1400px',
-              overflowY:'auto'
             }}
           >
             
@@ -199,7 +196,7 @@ export default function AdviserPage() {
               {classrooms.length === 0 ? (
                 <p className="text-center mt-4">No active classrooms found.</p>
               ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
+                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', gap:'5%'}}>
                   {classrooms.map((classroom) => (
                     <ClassroomCard 
                       key={classroom.classId}
