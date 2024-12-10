@@ -29,6 +29,7 @@ export default function AdviserQueuePage() {
   const [notes, setNotes] = useState([]);
   const [noteToggle, setNoteToggle]= useState(false);
   const [note, setNote] = useState(null);
+  const [meeting, setMeeting] = useState();
 
   useEffect(()=>{
     if(tendingTeam){

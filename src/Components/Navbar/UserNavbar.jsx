@@ -35,7 +35,7 @@ const UserNavbar = () => {
     return (
         <div
             style={{
-                backgroundColor:'#b9ff66',
+                backgroundColor:'#baff66',
                 height:'10dvh',
                 width:'100%',
                 display:'flex',

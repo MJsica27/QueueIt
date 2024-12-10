@@ -3,7 +3,7 @@ import { UserContext } from '../Components/User/UserContext';
 import StudentPage from './Student/StudentPage';
 import AdviserPage from './Adviser/AdviserPage';
 import AdminPage from './Admin/AdminPage';
-import LoginForm from '../Auth/LoginForm';
+import LandingPage from '../Pages/LandingPage';
 
 const HomePage = () => {
     const user = useContext(UserContext).user
@@ -15,7 +15,7 @@ const HomePage = () => {
                         user.role === "ADVISER"?
                             <AdviserPage/>:
                                 <AdminPage/>:
-            <LoginForm/>
+            <LandingPage/>
             }
         </>
     );

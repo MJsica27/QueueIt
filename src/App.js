@@ -22,7 +22,7 @@ import { UserProvider } from './Components/User/UserContext';
 import { ToastContainer } from 'react-toastify';
 import QueueingPage from './Pages/Student/QueueingPage';
 import OnQueuePage from './Pages/Student/OnQueuePage';
-import { WebSocketProvider } from './Components/User/WebSocketContext';
+import { WebSocketProvider } from './Components/User/WebSocketContext'; 
 import HomePage from './Pages/HomePage';
 import NotFound404Page from './Pages/NotFound404Page';
 
@@ -52,9 +52,10 @@ export default function App() {
                             {/* <Route path="/studenthomepage" element={<StudentHomePage />} /> */}
                             <Route path='/queuePage' element={<QueueingPage/>} />
                             <Route path='/onQueuePage' element={<OnQueuePage/>} />
-                            {/* user */}
-                            <Route path="/profile" element={<ProfilePage />} />
+                            {/* user */}  
                             <Route path="/" element={<HomePage />} />
+                            <Route path="/login" element={<LoginForm />} />
+                            <Route path="/profile" element={<ProfilePage />} />
                             <Route path="*" element={<NotFound404Page/>}/>
                         </Routes>
                     </Router>
