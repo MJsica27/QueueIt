@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { IconButton, TextField, Typography } from '@mui/material';
-import AdviserSetQueue from '../../Components/Adviser/AdviserSetQueue'; 
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import { useWebSocket } from '../../Components/User/WebSocketContext';
 import { UserContext } from '../../Components/User/UserContext';
@@ -13,6 +12,7 @@ import Note from '../../Components/Card/Note';
 import MyModal from '../../Components/Modal/Modal';
 import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Queue from '../../Components/Queue';
+import OpenQueueModal from '../../Components/Modal/OpenQueueModal';
 
 export default function AdviserQueuePage() {
   const navigate = useNavigate();
@@ -30,6 +30,8 @@ export default function AdviserQueuePage() {
   const [noteToggle, setNoteToggle]= useState(false);
   const [note, setNote] = useState(null);
   const [meeting, setMeeting] = useState(null)
+  const [open, setOpen] = useState(false);
+  const [adviser,setAdviser] = useState(null)
 
   useEffect(()=>{
     if(tendingTeam){
@@ -42,6 +44,7 @@ export default function AdviserQueuePage() {
     if(user){
       if(user.role === "ADVISER"){
         fetchTeams();
+        fetchAdviser();
       }else{
        navigate("*")
       }
@@ -55,6 +58,33 @@ export default function AdviserQueuePage() {
         getActiveMeeting();
     }
   },[tendingTeam])
+
+  const fetchAdviser = async () => {
+    try {
+        const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${user.userID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        switch (response.status) {
+            case 200:
+                const data = await response.json();
+                setAdviser(data); // Update the adviser state
+            
+                break;
+            case 404:
+                const message = await response.text();
+                toast.error(message);
+                break;
+            default:
+                toast.error("Something went wrong while fetching adviser details.");
+        }
+    } catch (error) {
+        toast.error("An error occurred: " + error.message);
+    }
+  };
 
   const getActiveMeeting = async ()=>{
     try{
@@ -267,6 +297,32 @@ export default function AdviserQueuePage() {
     }
   }
 
+  const closeQueueing = async () =>{
+    try{
+    const response = await fetch(`http://localhost:8080/queue/adviser/close`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            adviserID: user.userID,
+        }),
+    })
+
+    if (response.ok){          
+        setAdviser({
+        ...adviser,
+        ready: false
+        })
+    }
+    }catch(err){
+    console.log(err)
+    }
+  }
+
+  
+  const handleOpen = () => setOpen(true);
+
 
   useEffect(()=>{ 
     if(containerRef.current){
@@ -354,26 +410,31 @@ export default function AdviserQueuePage() {
     <div id='mainContainer'>
       <UserNavbar/>
       <div id="QueuePageSecondRowContainer">
-        <div id="leftContainer" style={{flex:1}}>
-          <div id="adviserInfoContainer">
-            <AdviserSetQueue/>
+        <div style={{flex:0.4}} id="leftContainer">
+          <div style={{backgroundColor: 'rgba(0, 0, 0, 0.03)', height:'15%', display:'flex'}}>
+            {adviser?!adviser.ready?<button style={{backgroundColor:'#baff66', flexGrow:1, fontWeight:'500', borderRadius:'5px'}} onClick={handleOpen}>Open Queueing</button>:
+            <><button style={{backgroundColor:'rgba(255,0,0,0.7)', flexGrow:1, fontWeight:'500', borderRadius:'5px', color:'white'}} onClick={closeQueueing}>Close Queueing</button></>:
+            <></>}
+            <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser}/>
           </div>
-          <div id="QueueingInformationContainer">
-            <div id="upNextContainer">
-            {teams.length > 0 || onHoldTeams.length > 0?
-                                    
-              <>
-                  <Queue teams={teams} onHoldTeams={onHoldTeams} admitTeam={admitTeam}/>
-              </>
-              :
-              <>
-                  <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                      <CategoryIcon style={{fontSize:'15dvw', color:'gray'}}/>
-                      <Typography style={{fontSize:'2.5dvw', color:'gray', textAlign:'center'}}>Awaiting queueing teams.</Typography>
-                  </div>
-              </>
-            }
-            </div>
+          <div style={{flexGrow:1, display:'flex'}}>
+            <div className='queueingTeamsContainer'>
+                {teams.length > 0 || onHoldTeams.length > 0?
+                    <>
+                        <div style={{display:'flex', justifyContent:'space-between'}}>
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
+                        </div>
+                        <Queue teams={teams} onHoldTeams={onHoldTeams} admitTeam={admitTeam}/>
+                    </>
+                :
+                <>
+                    <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                        <CategoryIcon style={{fontSize:'calc(2em + 5dvw)'}}/>
+                        <Typography style={{ color:'gray', textAlign:'center'}}>Awaiting queueing teams.</Typography>
+                    </div>
+                </>
+                }
+            </div>     
           </div>
         </div>
         <div id="rightContainer" style={{flexGrow:1}}>
