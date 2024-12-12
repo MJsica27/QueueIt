@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import img2 from '../Assets/img/img2.png';
+import img4 from '../Assets/img/img4.png';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Modal, Button, Form } from 'react-bootstrap';
@@ -75,15 +76,17 @@ export default function LoginForm() {
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem] fixed"></div>
       
       <div className="absolute">
-        <img src={img2} style={{ marginTop: '-200px', marginLeft: '-220px' }} />
+        <img src={img2} style={{ marginTop: '-220px', marginLeft: '-320px' }} />
         <img src={img2} style={{ marginTop: '-700px', marginLeft: '720px' }} />
+        <img src={img4} style={{height:'300px', marginTop: '-580px', marginLeft: '120px' }} />
+        <img src={img4} style={{height:'100px', marginTop: '-700px', marginLeft: '1020px' }} />
       </div>
 
       {/* Modal */}
       <Modal  centered show={show} >
         
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '20px' }}>
-            <Modal.Title style={{ marginBottom: '10px' }}>Login</Modal.Title>
+            <Modal.Title style={{ marginBottom: '10px' }}>Log in</Modal.Title>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <span style={{ color: 'gray' }}>New to QueueIt?</span>
                 <a 
@@ -102,8 +105,7 @@ export default function LoginForm() {
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
-                type="email"
-                placeholder="Enter email"
+                type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -133,8 +135,7 @@ export default function LoginForm() {
             </Form.Label>
             <Form.Control
                 type={showPassword ? 'text' : 'password'}
-                value={password}
-                placeholder="**********"
+                value={password} 
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />

@@ -4,10 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ClassroomCard from '../../Components/Card/Adviser/AdviserClassroomCard';
 import Button from '@mui/material/Button'; 
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';   
-import SearchIcon from '@mui/icons-material/Search'; 
+import 'react-toastify/dist/ReactToastify.css';    
 import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreateClassroomDialog';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
+import img5 from '../../Assets/img/img5.png'; 
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -31,15 +31,7 @@ export default function AdviserPage() {
       console.log('No user is logged in');
       navigate('/');
     }
-  }, [navigate]);
-
-  const userData = {
-    subjectName: formData.subjectName,
-    subjectCode: formData.subjectCode,
-    section: formData.section,
-    adviserID: user ? user.userID : undefined,
-    classCode: formData.classCode
-  };
+  }, [navigate]); 
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -133,66 +125,32 @@ export default function AdviserPage() {
   };
 
   return (
-    <div className="m-0 vh-100" style={{ background: '#fff', color: '#333333', height: '95vh' }}>
-      <UserNavbar/>
-        <div  
-          style={{    
-            background: '#fff', 
-            color: '#333', 
-            width: 'auto', 
-            overflow: 'hidden',
-            height: '90vh',  
-            overflowY:'auto'
-          }}
-        > 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-          <div
-            className="d-flex align-items-center justify-content-between"
-            style={{ 
-              margin: '20px 20px 10px 20px',
-              backgroundColor:'rgba(0,0,0,0.03)',
-              borderRadius: '5px',
-              fontWeight: 'bold',
-              height: '80px',
-              fontSize: '22px',
-              padding: '0 20px',
-              width: '1400px', 
-            }} >
-            <div style={{ position: 'relative', width: '70%' }}>
-              <input 
-                  type="text" 
-                  placeholder="Search Classrooms" 
-                  style={{ 
-                      width: '100%', 
-                      padding: '8px', 
-                      fontSize: '16px', 
-                      border: '1px solid #ccc', 
-                      borderRadius: '4px', 
-                      boxShadow: '0px 0px 10px rgba(182, 255, 102, 1)', 
-                      paddingRight: '30px'  
-                  }} 
-              />
-              <SearchIcon  style={{  position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',  color: '#ccc' }}  />
-            </div>
-            <Button  onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold'   }} > 
-              Create
-            </Button>
-          </div>
-        </div>
+    <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">
+      {/* Background Grid */}
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem]"></div> 
 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div
-            className="d-flex justify-content-between"
-            style={{
-              margin: '20px 20px 10px 20px',
-              borderRadius: '5px',
-              fontWeight: 'bold',
-              fontSize: '22px', 
-              width: '1400px',
-            }}
-          >
-            
-            <div style={{ width: '100%', margin: '20px 0px 0px 20px ' }}> <h2>Advisory</h2>
+      <UserNavbar/> 
+      
+
+      <div style={{ marginTop: '5px', height:'150px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px' }}>
+
+        <div style={{margin: '30px 0 0 50px', color: '#fff'}}>
+          <h1> Hello, Teacher {user ? user.firstname : 'Guest'}!!</h1>
+          <h6> It's nice to see you here..</h6>
+        </div>
+        
+        <Button className="createClassroomBtn" onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold', margin: '-150px 0 0 750px' }} > 
+          Create Classroom
+        </Button>
+        <img src={img5} alt="illustration" style={{height:'250px', marginTop: '-208px', marginLeft: '970px' }} />   
+
+      </div>
+
+
+      <div style={{ margin: '5px', padding: '25px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
+        <h2 style={{fontWeight: 'bold'}} >Advisory</h2>
+
+        <div style={{ width: '100%', margin: '20px 0px 0px 20px'}}>  
               {classrooms.length === 0 ? (
                 <p className="text-center mt-4">No active classrooms found.</p>
               ) : (
@@ -206,18 +164,18 @@ export default function AdviserPage() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-        
-        <CreateClassroomDialog
+      </div>
+
+ 
+
+      <CreateClassroomDialog
           open={open}
           formData={formData}
           loading={loading}
           onClose={handleClose}
           onChange={handleInputChange}
           onCreate={handleCreateClassroom}
-        />
-      </div> 
+        /> 
       </div> 
   );
 }

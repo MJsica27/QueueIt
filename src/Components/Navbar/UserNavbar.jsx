@@ -34,14 +34,14 @@ const UserNavbar = () => {
  
     return (
         <div
-            style={{
-                backgroundColor:'#baff66',
+            style={{ 
                 height:'10dvh',
                 width:'100%',
                 display:'flex',
                 justifyContent:'space-between',
                 alignItems:'center',
-                padding:'0px 6dvw 0px 6dvw'
+                padding:'0px 6dvw 0px 6dvw',
+                marginTop: '10px'
             }}
         >
             <img src={logo} alt='logo' style={{height:'75%'}}/>
@@ -72,12 +72,16 @@ const UserNavbar = () => {
                         </Nav.Link>
                     </Nav>
                 ) : user.role === "ADVISER" ? (
-                    <Nav className="d-flex gap-3">
+                    <Nav className="d-flex gap-3" style={{height:'45px', backgroundColor:'#f5f5f5', borderRadius:'15px'}}>
                         <Nav.Link
                             as={Link}
                             to="/adviserhomepage"
                             className={`nav-link-custom ${isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'active' : ''}`}
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'bold' : 'normal' }}
+                            style={{
+                                color: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#000' : '#666666',
+                                backgroundColor: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#b9ff66' : 'transparent', 
+                                borderRadius: '15px'  
+                            }}
                         >
                             Home
                         </Nav.Link>
@@ -85,7 +89,11 @@ const UserNavbar = () => {
                             as={Link}
                             to="/adviserqueuepage"
                             className={`nav-link-custom ${isActiveLink('/adviserqueuepage') ? 'active' : ''}`}
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adviserqueuepage') ? 'bold' : 'normal' }}
+                            style={{
+                                color: isActiveLink('/adviserqueuepage') ? '#000' : '#666666',
+                                backgroundColor: isActiveLink('/adviserqueuepage') ? '#b9ff66' : 'transparent', 
+                                borderRadius: '15px'  
+                            }}
                         >
                             Queue
                         </Nav.Link>
@@ -93,7 +101,11 @@ const UserNavbar = () => {
                             as={Link}
                             to="/adviseravailabilitypage"
                             className={`nav-link-custom ${isActiveLink('/adviseravailabilitypage') ? 'active' : ''}`}
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adviseravailabilitypage') ? 'bold' : 'normal' }}
+                            style={{
+                                color: isActiveLink('/adviseravailabilitypage') ? '#000' : '#666666',
+                                backgroundColor: isActiveLink('/adviseravailabilitypage') ? '#b9ff66' : 'transparent', 
+                                borderRadius: '15px'  
+                            }}
                         >
                             Availability
                         </Nav.Link>
@@ -101,7 +113,11 @@ const UserNavbar = () => {
                             as={Link}
                             to="/adviserlogpage"
                             className={`nav-link-custom ${isActiveLink('/adviserlogpage') ? 'active' : ''}`}
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adviserlogpage') ? 'bold' : 'normal' }}
+                            style={{
+                                color: isActiveLink('/adviserlogpage') ? '#000' : '#666666',
+                                backgroundColor: isActiveLink('/adviserlogpage') ? '#b9ff66' : 'transparent', 
+                                borderRadius: '15px'  
+                            }}
                         >
                             Logs
                         </Nav.Link>
