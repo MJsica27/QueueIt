@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../User/WebSocketContext';
 
-const AdviserQueueingCard = ({adviserID, groupID}) => {
+const AdviserQueueingCard = ({adviserID, groupID, classroom}) => {
     const [adviser,setAdviser] = useState(null);
     const client = useWebSocket();
     const fetchAdviser = async () => {
@@ -74,19 +74,28 @@ const AdviserQueueingCard = ({adviserID, groupID}) => {
                         <a href='/' style={{textDecorationColor:'#6abf05', width:'fit-content'}}><Typography variant='subtitle2' fontSize='0.9em' fontFamily='poppins' color='#6abf05'>View Profile</Typography></a>
                     </div>
                     <div style={{padding:'0em 2em 1em 2em', flex:1.3, display:'flex'}}>
-                        {adviser.ready?
+                        {adviser.ready && (adviser.cateringClasses.includes(classroom.classID) || adviser.cateringClasses.includes(0))?
                             <>
                                 <div style={{backgroundColor:'rgba(185,255,102,0.22)', flex:1,borderRadius:'3px', textAlign:'center', display:'flex',justifyContent:'center', flexDirection:'column', padding:'0px 1em 0px 1em'}}>
                                     <Typography style={{color:'#457B06'}} variant='h4' fontSize='3rem'>Available</Typography>
-                                    <Typography style={{color:'gray', fontSize:'0.8em'}}>x groups in queue.</Typography>
-                                    <NavLink 
-                                        size='lg'
-                                        style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold', width:'50%', alignSelf:'center', padding:'1%', fontSize:'1.5em', textDecoration:'none'}}
-                                        state={{adviser, groupID}}
-                                        to={'/onQueuePage'}
-                                        >
-                                        Queue
-                                    </NavLink>
+                                    
+                                    {
+
+                                        groupID?
+                                            <>
+                                                <Typography style={{color:'gray', fontSize:'0.8em'}}>x groups in queue.</Typography>
+                                                <NavLink 
+                                                    size='lg'
+                                                    style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold', width:'50%', alignSelf:'center', padding:'1%', fontSize:'1.5em', textDecoration:'none'}}
+                                                    state={{adviser, groupID}}
+                                                    to={'/onQueuePage'}
+                                                    >
+                                                    Queue
+                                                </NavLink>
+                                            </>
+                                            :
+                                            <Typography color='red'>Proceed to team formation first.</Typography>
+                                    }
                                 </div>
                             </>
                             :

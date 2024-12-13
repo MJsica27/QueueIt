@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Box, IconButton, TextField, Typography } from '@mui/material';
+import { IconButton, Skeleton, Stack, Typography } from '@mui/material';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import { useWebSocket } from '../../Components/User/WebSocketContext';
 import { UserContext } from '../../Components/User/UserContext';
@@ -13,6 +13,7 @@ import MyModal from '../../Components/Modal/Modal';
 import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Queue from '../../Components/Queue';
 import OpenQueueModal from '../../Components/Modal/OpenQueueModal';
+import { convertToTime, millisecondsToHMS } from '../../Components/Utils/Utils';
 
 export default function AdviserQueuePage() {
   const navigate = useNavigate();
@@ -32,6 +33,22 @@ export default function AdviserQueuePage() {
   const [meeting, setMeeting] = useState(null)
   const [open, setOpen] = useState(false);
   const [adviser,setAdviser] = useState(null)
+  const [queueingTimeExpiration, setQueueingTimeExpiration] = useState(null);
+  const [difference, setDifference] = useState(null);
+  const [limit, setLimit] = useState(-1);
+
+  useEffect(()=>{
+    const intervalID = setInterval(()=>{
+        millisecondsToHMS(queueingTimeExpiration,setDifference)
+        if (queueingTimeExpiration <= Date.now()){
+            clearInterval(intervalID);
+            closeQueueing();
+        }
+    },1000)
+    return ()=>{
+        clearInterval(intervalID)
+    }
+  },[queueingTimeExpiration])
 
   useEffect(()=>{
     if(tendingTeam){
@@ -129,6 +146,8 @@ export default function AdviserQueuePage() {
                     setTeams([...teams, ...temp])
                     setOnHoldTeams([...onHoldTeams, ...data.onHoldGroups])
                     setTendingTeam(data.tendingGroup)
+                    setQueueingTimeExpiration(convertToTime(data.timeEnds));
+                    setLimit(data.cateringLimit)
                     break;
                 case 404:
                     const message = await response.text();
@@ -210,10 +229,7 @@ export default function AdviserQueuePage() {
     
             switch (response.status) {
                 case 200:
-                    const data = await response.json();
-                    // console.log(data)
-                    localStorage.setItem("meetingID",data)
-                    console.log(teams)
+                    getActiveMeeting();
                     setTendingTeam(teams.find((team)=>team.groupID === groupID))
                     fetchNotes(groupID)
                     break;
@@ -233,7 +249,7 @@ export default function AdviserQueuePage() {
   const concludeMeeting = async ()=>{
     if(user){
         try {
-            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${localStorage.getItem("meetingID")}`, {
+            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -314,9 +330,12 @@ export default function AdviserQueuePage() {
         ...adviser,
         ready: false
         })
+        setQueueingTimeExpiration(null);
+        setOpen(false)
+        setLimit(null)
     }
     }catch(err){
-    console.log(err)
+        console.log(err)
     }
   }
 
@@ -413,9 +432,9 @@ export default function AdviserQueuePage() {
         <div style={{flex:0.4}} id="leftContainer">
           <div style={{backgroundColor: 'rgba(0, 0, 0, 0.03)', height:'15%', display:'flex'}}>
             {adviser?!adviser.ready?<button style={{backgroundColor:'#baff66', flexGrow:1, fontWeight:'500', borderRadius:'5px'}} onClick={handleOpen}>Open Queueing</button>:
-            <><button style={{backgroundColor:'rgba(255,0,0,0.7)', flexGrow:1, fontWeight:'500', borderRadius:'5px', color:'white'}} onClick={closeQueueing}>Close Queueing</button></>:
+            <><button style={{backgroundColor:'rgba(255,0,0,0.7)', flexGrow:1, fontWeight:'500', borderRadius:'5px', color:'white'}} onClick={closeQueueing}>{difference?<>{`Queueing ends in ${difference}`}</>:<>Close Queueing</>}</button></>:
             <></>}
-            <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser}/>
+            <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser} setQueueingTimeExpiration={setQueueingTimeExpiration} setLimit={setLimit}/>
           </div>
           <div style={{flexGrow:1, display:'flex'}}>
             <div className='queueingTeamsContainer'>
@@ -449,15 +468,24 @@ export default function AdviserQueuePage() {
                                 <div>
                                     <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
                                     <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
-                                    <div style={{color:'#6abf05'}}>Time elapsed: 23 minutes</div>
+                                    <div style={{color:'#6abf05'}}>{meeting?meeting.start:<></>}</div>
                                 </div>    
                             </>
                             :
-                            <Typography>Awaiting admission.</Typography>
+                            <>
+                                <Stack direction={'column'} sx={{width:'100%'}}>
+                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                </Stack>
+                                
+                            </>
                         }
                     </div>
                 </div>
-                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'end'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<></>}</div>
+                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:tendingTeam?'end':'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<>
+                <Typography sx={{color:'#73C314', fontWeight:'bold'}}>{limit && limit > 0?<>{`You'll be seeing ${limit} ${limit <= 1?'group':'groups'}.`}</>:limit == 0?<Typography sx={{textAlign:'center'}} variant='subtitle2'>You have set no limit on number of groups to cater.</Typography>:<></>}</Typography>
+                </>}</div>
               </div>
             </div>
             <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none', maxWidth:'100%'}}>
@@ -496,7 +524,7 @@ export default function AdviserQueuePage() {
                           
                         </div>
                         <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                          <input style={{flexGrow:1, paddingInline:'1em'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); }} value={message}/>
+                          <input style={{flexGrow:1, paddingInline:'1em', border:'solid 1px silver', borderRadius:'5px'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); }} value={message}/>
                           <IconButton onClick={sendMessage}>
                               <SendIcon style={{color:'black'}}/>
                           </IconButton>

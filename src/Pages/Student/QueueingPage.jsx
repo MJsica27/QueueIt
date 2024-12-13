@@ -98,14 +98,14 @@ const QueueingPage = () => {
                 <div id='SecondRowContainer'>
                     <div className='adviserQueueingCard'>
                         <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
-                        {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""}/>:<></>}
+                        {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""} classroom={classroom}/>:<></>}
                     </div>
                     {classroom.mentorable?
                         <div className='adviserQueueingCard'>
                             <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>
                             {group?
                                 group.mentorID?
-                                <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""}/></>
+                                <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""} classroom={classroom}/></>
                                 :
                                 //if wala pay mentor
                                 <>

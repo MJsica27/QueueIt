@@ -45,7 +45,8 @@ const AdviserClassroomPage = () => {
                 `http://localhost:8080/group/getAllGivenClassroom?classroomID=${classroom.classID}`,
                 {
                   headers: {
-                    'Authorization': `Bearer ${token}`,  
+                    // 'Authorization': `Bearer ${token}`,  
+                    'Content-Type': 'application/json' 
                   },
                 }
               );

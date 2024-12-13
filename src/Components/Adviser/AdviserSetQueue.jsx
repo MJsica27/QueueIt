@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Typography } from '@mui/material';
 import { Col, Container, Row } from 'react-bootstrap';
+import { convertToTime } from '../Utils/Utils';
 
 // Function to get the current date
 function getDate() {
@@ -23,13 +24,15 @@ function getDate() {
 
 
 
-export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
+export default function AdviserSetQueue({handleClose,adviser,setAdviser,setQueueingTimeExpiration, setLimit}) {
   const [currentDate, setCurrentDate] = useState(getDate());
   const [classroomOptions, setClassroomOptions] = useState([]);
   const [time, setTime] = useState(null)
   const user = useContext(UserContext).user;
   const [minTime, setMinTime] = useState('');
-  const [classID,setClassID] = useState(-1);
+  const [classID,setClassID] = useState([]);
+  const [classFilter, setClassFilter] = useState([]);
+  const [cateringLimit, setCateringLimit] = useState(0);
   useEffect(() => {
     if(user){
       fetchClassrooms();
@@ -45,6 +48,13 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
     // Set the minimum time to the current time
     setMinTime(getCurrentTime());
   }, []);
+
+  useEffect(()=>{
+    if(classID.length){
+      console.log(classID)
+      setClassFilter(classID.map(item => item.value))
+    }
+  },[classID])
   const fetchClassrooms = async ()=>{
     try{
       const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`)
@@ -65,7 +75,7 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
   
 
   const options = [
-    { value: -1, label: 'All Classrooms' },
+    { value: 0, label: 'All Classrooms' },
     {
       label: 'Your Classrooms',
       options:classroomOptions
@@ -93,28 +103,56 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
     if(time < minTime){
       toast.error("Please select valid time.")
     }else{
-      try{
-        const response = await fetch(`http://localhost:8080/queue/adviser/open`,{
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              adviserID: user.userID,
-              timeEnds: time,
-              classID: classID,
-          }),
-        })
-  
-        if (response.ok){          
-          setAdviser({
-            ...adviser,
-            ready: true
+      if(classID.length == 0){
+        toast.error("Please select valid classroom filter.")
+      }else{
+        console.log(classFilter)
+        try{
+          const response = await fetch(`http://localhost:8080/queue/adviser/open`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                adviserID: user.userID,
+                timeEnds: time,
+                cateringClasses: classFilter,
+                cateringLimit:cateringLimit,
+                message:"default message lang sa"
+            }),
           })
-          handleClose()
+    
+          if (response.ok){          
+            setAdviser({
+              ...adviser,
+              ready: true
+            })
+            handleClose()
+            if(time){
+              //get queueing expiration time ends in milliseconds
+              const myTime = time.split(':').map(Number);
+              
+              const date = new Date();
+              date.setHours(0);
+              date.setMinutes(0);
+              date.setSeconds(0);
+              date.setMilliseconds(0);
+              const baseTimestamp = date.getTime();
+              const hours = myTime[0] || 0;
+              const minutes = myTime[1] || 0;
+              const seconds = myTime[2] || 0;
+              const mills = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000);
+              
+              const expirationTimestamp = baseTimestamp + mills;
+              
+              setQueueingTimeExpiration(expirationTimestamp);
+              console.log(cateringLimit)
+            }
+            setLimit(cateringLimit)
+          }
+        }catch(err){
+          console.log(err)
         }
-      }catch(err){
-        console.log(err)
       }
     }
   }
@@ -133,18 +171,36 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
             </Col>
             <Col sm={12} md={6} style={{display:'flex', alignItems:'center'}}>
               {/* Time Picker */}
-              <input style={{border:'solid 1px silver', padding:'5px 10px', borderRadius:'5px', width:'100%'}} type="time" min={minTime} onChange={(e)=>{console.log(e.target.value)}}/>
+              <input style={{border:'solid 1px silver', padding:'5px 10px', borderRadius:'5px', width:'100%'}} type="time" min={minTime} onChange={(e)=>{setTime(e.target.value)}}/>
             </Col>
           </Row>
           <Row className='mt-2'>
+            {/* classroom filter for eligible queueing groups */}
             <Col>
-              <Select
-                options={options}
-                defaultValue={options[0]}
-                label="Framework"
-                styles={customStyles}
-                onChange={(e)=>{setClassID(e.value)}}
-              />
+            <Select
+              isMulti
+              options={options}
+              label="Framework"
+              styles={customStyles}
+              value={classID}
+              placeholder="Filter classrooms eligible for queueing"
+              onChange={(e) => {
+                // Check if options[0] is included in the selected options
+                if (e.some(option => option.value === options[0].value)) {
+                  if(e.length === 1 || e[e.length-1].value === options[0].value){
+                    setClassID([options[0]]);
+                  }else{
+                    toast.error("Please remove All Classrooms filter to continue filtering.1");
+                  }
+                } else {
+                  if (e.some(option => option.value === options[0].value)) {
+                    toast.error("Please remove All Classrooms filter to continue filtering.");
+                  } else {
+                    setClassID(e);
+                  }
+                }
+              }}
+            />
             </Col>
           </Row>
           <Row className='mt-2'>
@@ -152,7 +208,8 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser}) {
             <Typography variant='caption' fontSize={'10px'}>Enter maximum number of groups for consultation</Typography>
             </Col>
             <Col sm={12} md={6} style={{display:'flex', alignItems:'center'}}>
-              <input style={{border:'solid 1px silver', padding:'5px 10px', borderRadius:'5px', width:'100%'}} type='number' defaultValue={0}/>
+              {/* queueing groups limit input */}
+              <input style={{border:'solid 1px silver', padding:'5px 10px', borderRadius:'5px', width:'100%'}} type='number' defaultValue={0} onChange={(e)=>{setCateringLimit(e.target.value)}}/>
             </Col>
           </Row>
           <Row className='mt-5 d-flex justify-content-center gap-5'>

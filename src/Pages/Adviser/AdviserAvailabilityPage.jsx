@@ -46,7 +46,7 @@ export default function AdviserAvailabilityPage() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
       });
  
@@ -173,7 +173,7 @@ export default function AdviserAvailabilityPage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ availableTime: combinedData }),
       });
