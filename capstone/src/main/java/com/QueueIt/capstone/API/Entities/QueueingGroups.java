@@ -19,7 +19,7 @@ public class QueueingGroups {
     private Group tendingGroup;
     private Time timeEnds;
     private Boolean isActive;
-
+    private Long cateringLimit;
 
     public QueueingGroups() {
     }
@@ -74,5 +74,13 @@ public class QueueingGroups {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Long getCateringLimit() {
+        return cateringLimit;
+    }
+
+    public void setCateringLimit(Long cateringLimit) {
+        this.cateringLimit = cateringLimit;
     }
 }

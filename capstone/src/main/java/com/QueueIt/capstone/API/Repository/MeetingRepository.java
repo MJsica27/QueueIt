@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
-    @Query("SELECT m FROM Meeting m WHERE m.groupID = :groupID AND m.end IS NULL")
+    @Query("SELECT m FROM Meeting m WHERE m.groupID = :groupID AND m.end IS NULL ORDER BY m.start DESC")
     public Optional<Meeting> getActiveMeeting(@Param("groupID") Long groupID);
 }

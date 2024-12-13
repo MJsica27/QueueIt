@@ -3,6 +3,7 @@ package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.Entities.Meeting;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,7 @@ public class MeetingService {
 //        return ResponseEntity.ok(meetingRepository.countMeetingsByClassIdAndGroupId(classID,groupID));
 //    }
 
-    public Meeting getActiveMeeting(Long groupID){
-        try{
-            return meetingRepository.getActiveMeeting(groupID).orElseThrow();
-        }catch (NoSuchElementException e){
-            return null;
-        }
+    public Meeting getActiveMeeting(Long groupID) throws Exception{
+        return meetingRepository.getActiveMeeting(groupID).orElseThrow();
     }
 }

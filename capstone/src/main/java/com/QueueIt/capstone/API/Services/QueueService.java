@@ -1,20 +1,17 @@
 package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.Entities.*;
+import com.QueueIt.capstone.API.Misc.TimeFormatter;
 import com.QueueIt.capstone.API.Repository.*;
 import com.QueueIt.capstone.API.Requests.AdviserOpenCloseQueueRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Queue;
 
 @Service
 public class QueueService {
@@ -37,12 +34,22 @@ public class QueueService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TimeFormatter timeFormatter;
+
+    @Autowired
+    private ClassroomRepository classroomRepository;
+
     public ResponseEntity<Object> adviserOpenQueue(AdviserOpenCloseQueueRequest adviserOpenCloseQueueRequest) {
         try{
             //update adviser queueing status
             Adviser adviser = adviserRepository.findById(adviserOpenCloseQueueRequest.getAdviserID()).orElseThrow();
             //set kung kinsa ang pwede mo queue nga classID
-            adviser.setCateringClassID(adviserOpenCloseQueueRequest.getClassID());
+            if (adviserOpenCloseQueueRequest.getCateringClasses().size() != 1 && adviserOpenCloseQueueRequest.getCateringClasses().contains((long) 0)){
+                return ResponseEntity.badRequest().body("All classrooms filter must not be included");
+            }else{
+                adviser.setCateringClasses(adviserOpenCloseQueueRequest.getCateringClasses());
+            }
             //set nga ready na ang adviser for queueing
             adviser.setReady(Boolean.TRUE);
             //set ang intro message nga mo gawas sa chat feed inig sulod ni student sa queueing page
@@ -52,7 +59,11 @@ public class QueueService {
             //update queueing groups object
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
             //set kanus-a kutob ang queueing
-            queueingGroups.setTimeEnds(adviserOpenCloseQueueRequest.getTimeEnds());
+            if(adviserOpenCloseQueueRequest.getTimeEnds() != null){
+                queueingGroups.setTimeEnds(timeFormatter.parseStringToTimeHoursAndMinutesInputOnly(adviserOpenCloseQueueRequest.getTimeEnds()));
+            }
+            //set pila ra kabuok limit sa linya for today.
+            queueingGroups.setCateringLimit(adviserOpenCloseQueueRequest.getCateringLimit());
             //set is active kay if dili active, palayason tanan users nga nag access sa queueing page.
             queueingGroups.setActive(Boolean.TRUE);
             queueingGroupsRepository.save(queueingGroups);
@@ -60,8 +71,8 @@ public class QueueService {
             //broadcast to subscribers after saving
             simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/"+adviser.getUser().getUserID(),adviser);
             return ResponseEntity.ok("Successfully opened queueing.");
-        }catch (Exception e){
-            return ResponseEntity.status(401).body(e.toString());
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(404).body("Queueing groups or adviser does not exist. Please contact administrator.");
         }
     }
     public ResponseEntity<Object> adviserCloseQueue(AdviserOpenCloseQueueRequest adviserOpenCloseQueueRequest) {
@@ -70,8 +81,10 @@ public class QueueService {
             Adviser adviser = adviserRepository.findById(adviserOpenCloseQueueRequest.getAdviserID()).orElseThrow();
             //set nga dili na siya ready for queueing
             adviser.setReady(Boolean.FALSE);
-            //set to default -1, meaning mo cater siya tanan classes / groups
-            adviser.setCateringClassID((long) -1);
+            //clear, meaning mo cater siya tanan classes / groups
+            if(adviser.getCateringClasses() != null){
+                adviser.getCateringClasses().clear();
+            }
             //reset ang intro message
             adviser.setIntroMessage(null);
             adviserRepository.save(adviser);
@@ -80,9 +93,10 @@ public class QueueService {
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviser.getUser().getUserID());
             //clear ang queueing time range
             queueingGroups.setTimeEnds(null);
+            //set catering limit to 0
+            queueingGroups.setCateringLimit((long) -1);
             //set is active kay if dili active, palayason tanan users nga nag access sa queueing page.
             queueingGroups.setActive(Boolean.FALSE);
-
 
             //katong logic nga ang mga naka onhold or wala ma cater ni adviser nga naka queue, i cater next open.
 
@@ -92,8 +106,8 @@ public class QueueService {
             //broadcast after saving
             simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/"+adviser.getUser().getUserID(),adviser);
             return ResponseEntity.ok("Successfully terminated queueing.");
-        }catch (Exception e){
-            return ResponseEntity.status(401).body("Adviser not found.");
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(404).body("Adviser not found or QueueingGroup not found. Please contact administrator.");
         }
     }
 
@@ -114,6 +128,10 @@ public class QueueService {
             queueingGroups.setTendingGroup(group);
             //ibot si group sa queueing groups
             queueingGroups.getGroups().remove(group);
+            //minusan ang catering limit
+            if (queueingGroups.getCateringLimit() > 1){
+                queueingGroups.setCateringLimit(queueingGroups.getCateringLimit()-1);
+            }
             queueingGroupsRepository.save(queueingGroups);
 
             //set meeting starting date/time to now.
@@ -174,22 +192,47 @@ public class QueueService {
 
     public ResponseEntity<Object> studentEnqueue(Long adviserID, Long groupID) {
         try{
+            //first gipangita nako ang adviser
+            Adviser adviser = adviserRepository.findById(adviserID).orElseThrow();
+
+            //cateringClasses is array, so di mahitabo nga null siya, so if empty siya, wala ma tarong ug filter sa frontend, or naay ni try ug access via backdoor sa API
+            if (adviser.getCateringClasses().isEmpty()){
+                return ResponseEntity.unprocessableEntity().body("Class filter is empty.");
+            }
+
+            //if nakalahos, kuha sa queueing groups ug group entities.
             QueueingGroups queueingGroups = queueingGroupsRepository.findByAdviserID(adviserID);
             Group group = groupRepository.findById(groupID).orElseThrow();
+
+            //if galinya na daan ang group, so of course, return nata.
             if (queueingGroups.getGroups().contains(group)){
                 return ResponseEntity.badRequest().body("Group already in queue");
             }
-            group.setQueueingTimeStart(new Time(System.currentTimeMillis()));
-            group.setQueueing(Boolean.TRUE);
-            groupRepository.save(group);
-            queueingGroups.getGroups().add(group);
-            queueingGroupsRepository.save(queueingGroups);
-            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/enqueue/"+adviserID,group);
-            group.getStudents().clear();
-            simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/enqueue/"+adviserID,group);
-            return ResponseEntity.ok("Group enqueued");
+
+            //if nakalusot, kuhaon ang classroom
+            Classroom classroom = classroomRepository.findById(group.getClassID()).orElseThrow();
+            //i check if naapil siya sa filter or ang filter sa adviser kay All Classroom which is ang value kay 0
+            if ((adviser.getCateringClasses().contains(classroom.getClassID()) || adviser.getCateringClasses().contains((long) 0)) && (queueingGroups.getCateringLimit() == 0 || queueingGroups.getCateringLimit() - (queueingGroups.getGroups().size()+queueingGroups.getOnHoldGroups().size()) > 0)){
+                group.setQueueingTimeStart(new Time(System.currentTimeMillis()));
+                group.setQueueing(Boolean.TRUE);
+                groupRepository.save(group);
+                queueingGroups.getGroups().add(group);
+//                ako sa i comment ang pag set sa catering limit, kay sa admit button rako mag minus sa catering limit, para mag agad nalang sa adviser, dili sa linya
+//                queueingGroups.setCateringLimit(queueingGroups.getCateringLimit()-1);
+                queueingGroupsRepository.save(queueingGroups);
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/adviser/enqueue/"+adviserID,group);
+                group.getStudents().clear();
+                simpMessageSendingOperations.convertAndSend("/topic/queueingTeamsStatus/student/enqueue/"+adviserID,group);
+                return ResponseEntity.ok("Group enqueued");
+            }
+            //then queueing limit exceeded if naka lapos
+            if (queueingGroups.getCateringLimit() - (queueingGroups.getGroups().size()+queueingGroups.getOnHoldGroups().size()) == 0){
+                return ResponseEntity.unprocessableEntity().body("Queueing limit exceeded");
+            }
+            //if nakalapos, then something went wrong.
+            return ResponseEntity.badRequest().body("Something went wrong");
         }catch (NoSuchElementException e){
-            return ResponseEntity.status(404).body("Student not found");
+            return ResponseEntity.notFound().build();
         }
     }
 

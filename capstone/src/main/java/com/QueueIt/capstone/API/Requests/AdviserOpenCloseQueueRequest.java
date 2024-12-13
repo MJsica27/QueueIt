@@ -1,22 +1,27 @@
 package com.QueueIt.capstone.API.Requests;
 
+import com.QueueIt.capstone.API.Entities.Classroom;
+
 import java.sql.Time;
+import java.util.List;
 
 public class AdviserOpenCloseQueueRequest {
     private Long adviserID;
     private Boolean queueStatus;
-    private Time timeEnds;
-    private Long classID;
+    private String timeEnds;
+    private List<Long> cateringClasses;
     private String message;
+    private Long cateringLimit;
 
     public AdviserOpenCloseQueueRequest() {
     }
 
-    public AdviserOpenCloseQueueRequest(Long adviserID, Time timeEnds, Long classID, String message) {
+    public AdviserOpenCloseQueueRequest(Long adviserID, String timeEnds, List<Long> cateringClasses, String message, Long cateringLimit) {
         this.adviserID = adviserID;
         this.timeEnds = timeEnds;
-        this.classID = classID;
+        this.cateringClasses = cateringClasses;
         this.message = message;
+        this.cateringLimit = cateringLimit;
     }
 
     public AdviserOpenCloseQueueRequest(Long adviserID) {
@@ -39,20 +44,20 @@ public class AdviserOpenCloseQueueRequest {
         this.queueStatus = queueStatus;
     }
 
-    public Time getTimeEnds() {
+    public String getTimeEnds() {
         return timeEnds;
     }
 
-    public void setTimeEnds(Time timeEnds) {
+    public void setTimeEnds(String timeEnds) {
         this.timeEnds = timeEnds;
     }
 
-    public Long getClassID() {
-        return classID;
+    public List<Long> getCateringClasses() {
+        return cateringClasses;
     }
 
-    public void setClassID(Long classID) {
-        this.classID = classID;
+    public void setCateringClasses(List<Long> cateringClasses) {
+        this.cateringClasses = cateringClasses;
     }
 
     public String getMessage() {
@@ -61,5 +66,13 @@ public class AdviserOpenCloseQueueRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getCateringLimit() {
+        return cateringLimit;
+    }
+
+    public void setCateringLimit(Long cateringLimit) {
+        this.cateringLimit = cateringLimit;
     }
 }
