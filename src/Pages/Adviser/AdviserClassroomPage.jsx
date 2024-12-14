@@ -143,9 +143,56 @@ const AdviserClassroomPage = () => {
     };
 
     return (
-        <div className="m-0 vh-100" style={{ backgroundColor: '#fff', height: '95vh' }} >
+        <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">
+
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem]"></div> 
+
             <UserNavbar/>
-            <div className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+
+            <div style={{ marginTop: '5px', height:'750px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px 15px 0 0',  }}>
+ 
+                <div
+                    style={{
+                    padding: '20px',
+                    height: '110px',
+                    width: 'auto',
+                    display: 'flex',
+                    flexDirection: 'row', 
+                    justifyContent: 'space-between',  
+                    alignItems: 'flex-start',  
+                    }}
+                >
+                    {/* Back Button Section */}
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <BackButton />
+                    </div>
+
+                    {/* Classroom Details Section */}
+                    <div
+                    style={{
+                        color: 'white',
+                        textAlign: 'center',
+                    }}
+                    >
+                    <div>{classroomDetails.subjectCode} - {classroomDetails.section}</div>
+                    <div className="text-3xl font-bold">{classroomDetails.subjectName}</div>
+                    <div>Classcode: {classroom.classCode}</div>
+                    </div>
+
+                    {/* Options Menu Section */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="profile-tooltip">More options</Tooltip>}>
+                        <div>
+                        <OptionsMenu onAction={handleAction} color="white" />
+                        </div>
+                    </OverlayTrigger>
+                    </div>
+                </div>
+                </div>
+
+                 
+
+            {/* <div className="d-flex align-items-center justify-content-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
                 <div 
                     style={{  
                         margin: '20px 0 0 0',
@@ -202,7 +249,7 @@ const AdviserClassroomPage = () => {
                 </div>
             </div> 
 
-            {/* Modal for displaying enrolled students */}
+            Modal for displaying enrolled students
             <Modal show={showStudentsModal} onHide={handleCloseStudentsModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Enrolled Students</Modal.Title>
@@ -228,7 +275,7 @@ const AdviserClassroomPage = () => {
                 </Modal.Footer>
             </Modal>
 
-            {/* Modal for editing classroom */}
+            Modal for editing classroom
             <Modal show={showEditModal} onHide={closeEditClassroomModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Classroom</Modal.Title>
@@ -267,7 +314,7 @@ const AdviserClassroomPage = () => {
                 </Modal.Footer>
             </Modal>
 
-            {/* Modal for deleting classroom */}
+            Modal for deleting classroom
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete Classroom</Modal.Title>
@@ -279,7 +326,9 @@ const AdviserClassroomPage = () => {
                     <Button variant="secondary" onClick={handleCloseDeleteModal}>Cancel</Button>
                     <Button variant="danger" onClick={handleDeleteClassroom}>Delete Classroom</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
+
+
         </div>
     );
 };

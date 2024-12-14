@@ -1,40 +1,42 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
-import '../../../Static/ClassroomCard.css'; 
-import { NavLink } from 'react-router-dom';  
+import { NavLink } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
 
 export default function AdviserClassroomCard({ classroom }) {
-  
+  return (
+    <NavLink
+      to={`/adviserclassroompage`}
+      state={classroom}
+      style={{ textDecoration: 'none', color: 'black' }}
+    >
+      <div
+        className="navlinkcustom"
+        style={{
+          height: '215px',
+          width: '350px',
+          border: '1px solid black',
+          boxShadow: '8px 8px 0px rgba(0, 0, 0, 1)',
+          borderRadius: '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '15px',
+        }}
+      >
+        {/* Title Section */}
+        <div className="mt-4 text-3xl font-bold">
+          {classroom ? classroom.subjectName : 'Classroom Name'}
+        </div>
 
-  return ( 
-    <div className="navlinkcustom">
-      <NavLink to={`/adviserclassroompage`} state={classroom} style={{ textDecoration: 'none'}}>
-        <Row  style={{ paddingLeft:'20px'}}>
-          <Col xs={9} >    
-            <Row className="align-items-center" style={{ width: '100%' }}>  
-              {/* Image placeholder */}
-              <Col xs={4} style={{ backgroundColor: '#b9ff66', borderRadius: '5px', height: '85px', display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
-                <Typography variant="h6" style={{ color: '#fff', fontWeight: 'bold' }}>IMG</Typography>
-              </Col>
-              {/* Classroom info */}
-              <Col xs={8} className="d-flex align-items-center" style={{ overflow: 'hidden', paddingLeft: '10px' }}>
-                <Typography variant="subtitle1" style={{ fontWeight: 'bold', fontSize: '16px', color: '#333', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', }}>
-                  {classroom ? classroom.subjectName : 'Classroom Name'}
-                </Typography>
-              </Col>
-              <div>
-                <GroupIcon style={{color:'black'}}/>
-                {/* show how many student enrolled this classroom */}
-              </div>
-            </Row> 
-          
-          </Col>
-        </Row> 
-      </NavLink> 
-    </div>
-      
- 
+        {/* Enrollees Section (Bottom Part) */}
+        <div className="d-flex align-items-center" style={{ marginTop: 'auto' }}>
+          <GroupIcon style={{ color: 'black' }} />
+          <Typography style={{ marginLeft: '5px', color: '#333' }}>
+            6 Enrollees
+          </Typography>
+        </div>
+      </div>
+    </NavLink>
   );
 }

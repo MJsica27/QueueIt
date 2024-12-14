@@ -135,7 +135,7 @@ export default function AdviserPage() {
       <div style={{ marginTop: '5px', height:'150px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px' }}>
 
         <div style={{margin: '30px 0 0 50px', color: '#fff'}}>
-          <h1> Hello, Teacher {user ? user.firstname : 'Guest'}!!</h1>
+          <h1> Hello, Teacher {user ? user.firstname : 'Guest'} !</h1>
           <h6> It's nice to see you here..</h6>
         </div>
         
@@ -147,23 +147,24 @@ export default function AdviserPage() {
       </div>
 
 
-      <div style={{ margin: '5px', padding: '25px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
+      <div style={{ margin: '5px', padding: '35px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
         <h2 style={{fontWeight: 'bold'}} >Advisory</h2>
 
-        <div style={{ width: '100%', margin: '20px 0px 0px 20px'}}>  
-              {classrooms.length === 0 ? (
-                <p className="text-center mt-4">No active classrooms found.</p>
-              ) : (
-                <div style={{ backgroundColor:'#ff000', display:'flex', flexWrap:'wrap', gap:'5%'}}>
-                  {classrooms.map((classroom) => (
-                    <ClassroomCard 
-                      key={classroom.classId}
-                      classroom={classroom}
-                    />
-                  ))}
-                </div>
-              )}
+        <div style={{ margin: ' '}}>  
+          {classrooms.length === 0 ? (
+            <p className="text-center ">No active classrooms found.</p>
+          ) : (
+            <div style={{ backgroundColor:'#fff', display:'flex', flexWrap:'wrap', gap:'60px',  marginLeft: '50px',
+              maxHeight: '350px', overflowY: 'auto', padding: '10px',}}>
+              {classrooms.map((classroom) => (
+                <ClassroomCard 
+                  key={classroom.classId}
+                  classroom={classroom}
+                />
+              ))}
             </div>
+          )}
+        </div>
       </div>
 
  

@@ -10,17 +10,15 @@ export default function AdviserGroupPage() {
     const [user] = useState();
     const location = useLocation();
     const group = location.state;
-    const [members, setMembers] = useState([]);  // State to store group members 
-
-    // Fetch the user from localStorage to verify login sample nga bago nga code
+    const [members, setMembers] = useState([]);  
+ 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             navigate('/');  
         }   
     }, [navigate]);
-
-    // Fetch group members when the component mounts
+ 
     useEffect(() => {
         if (group && group.groupID) {
             axios.get(`http://localhost:8080/group/getGroupMembers?groupID=${group.groupID}`)
@@ -37,7 +35,7 @@ export default function AdviserGroupPage() {
     return ( 
         <div className="m-0 vh-100" style={{ backgroundPosition: 'center', backgroundSize: 'cover', backgroundColor: '#fff', height: '95vh' }}>
             <UserNavbar />
-
+{/* 
             <div className="d-flex align-items-center justify-content-center"> 
                 <div style={{
                     backgroundColor: 'rgba(0,0,0,0.03)', 
@@ -50,7 +48,7 @@ export default function AdviserGroupPage() {
                     display: 'flex', 
                     flexDirection: 'column'
                 }}>
-                    {/* Header Section */}
+                    Header Section
                     <div style={{
                         fontWeight: 'bold',   
                         height: '50px', 
@@ -67,9 +65,9 @@ export default function AdviserGroupPage() {
                         </span> 
                     </div>
 
-                    {/* Main Content Section */}
+                    Main Content Section
                     <div className="d-flex" style={{ flex: 1, padding: '20px', gap: '20px', overflowY: 'auto' }}>
-                        {/* Left Column */}
+                        Left Column
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             <div style={{
                                 backgroundColor: '#fff', 
@@ -89,7 +87,7 @@ export default function AdviserGroupPage() {
                             }}>
                                 <strong>Members:</strong>
                                 <div style={{ margin: '10px 0 0 5px' }}>
-                            {/* dli pani final na code */}
+                            dli pani final na code
                             {members.length > 0 ? (
                                 members.map((member, index) => (
                                     <div
@@ -125,7 +123,7 @@ export default function AdviserGroupPage() {
                             </div>
                         </div> 
 
-                        {/* Mid Column */}
+                        Mid Column
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             <div style={{
                                 backgroundColor: '#fff', 
@@ -138,7 +136,7 @@ export default function AdviserGroupPage() {
                             </div> 
                         </div> 
                         
-                        {/* Right Column */}
+                        Right Column
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             <div style={{
                                 backgroundColor: '#fff', 
@@ -152,7 +150,7 @@ export default function AdviserGroupPage() {
                         </div> 
                     </div>  
                 </div> 
-            </div>  
+            </div>   */}
         </div>
     );
 }
