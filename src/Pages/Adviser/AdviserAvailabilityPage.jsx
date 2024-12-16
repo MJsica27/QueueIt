@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdviserNavbar from '../../Components/Navbar/UserNavbar';
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
 import { Box, Card, CardContent, Typography, Button, CardMedia, Modal, TextField, Fade } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import EditIcon from '@mui/icons-material/Edit';
@@ -9,7 +10,12 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
- 
+import illustration1 from '../../Assets/img/illustration1.png';
+import illustration2 from '../../Assets/img/illustration2.png';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
 export default function AdviserAvailabilityPage() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
   const [availableTime, setAvailableTime] = useState([]);
@@ -21,25 +27,48 @@ export default function AdviserAvailabilityPage() {
   const [isWeekly, setIsWeekly] = useState(true);
   const [editingEntryIndex, setEditingEntryIndex] = useState(null);
   const [fade, setFade] = useState(true);
-  const itemsPerPage = 4;
+  // const itemsPerPage = 4;
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [deleteIndex, setDeleteIndex] = useState(null); 
+  const [deleteIndex, setDeleteIndex] = useState(null);
   const [isWeeklyDelete, setIsWeeklyDelete] = useState(true);
   const navigate = useNavigate();
- 
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isDeletedSuccessfully, setIsDeletedSuccessfully] = useState(false);
+  const [isUpdatedSuccessfully, setIsUpdatedSuccessfully] = useState(false); // Track update success
+  const [isAddedSuccessfully, setIsAddedSuccessfully] = useState(false);
+  const [isAdding, setIsAdding] = useState(true);
+
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const userID = user.userID;
   const token = localStorage.getItem('token');
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        light: 'lightGray',
+        main: '#7D57FC',
+        dark: '#B1EC20',
+        contrastText: '#000',
+      },
+      secondary: {
+        light: '#9B7CFF',
+        main: '#7D57FC',
+        dark: '#5D32ED',
+        contrastText: '#fff',
+      },
+    },
+  });
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    
+
     if (!user) {
-      navigate('/');  
-    }   
+      navigate('/');
+    }
   }, [navigate]);
- 
+
   const fetchAdviserData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${userID}`, {
@@ -49,37 +78,47 @@ export default function AdviserAvailabilityPage() {
           // Authorization: `Bearer ${token}`,
         },
       });
- 
+
       const data = await response.json();
       const parsedAvailableTime = JSON.parse(data.availableTime || '[]');
- 
+
       setAvailableTime(parsedAvailableTime);
       splitData(parsedAvailableTime);
     } catch (error) {
       console.error('Error fetching adviser data:', error);
     }
   };
- 
+
   const splitData = (data) => {
     const weekly = data.filter((item) => item.week);
     const free = data.filter((item) => item.date);
- 
+
     const dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const sortedWeekly = weekly.sort((a, b) => dayOrder.indexOf(a.week) - dayOrder.indexOf(b.week));
- 
+
     const sortedFreeTime = free.sort((a, b) => new Date(a.date) - new Date(b.date));
- 
+
     setWeeklySchedule(sortedWeekly);
     setFreeTime(sortedFreeTime);
   };
- 
+
+  const openAddForm = () => {
+    setIsAdding(true); // Set to true for adding
+  };
+  const openUpdateForm = (index) => {
+    setIsAdding(false); // Set to false for updating
+    setEditingEntryIndex(index); // Set the index of the entry to update
+  };
+
   const handleAddEntry = async () => {
+    const isAdded = true;
     const formattedDate = formatDate(newEntry.date);
     const formattedStartTime = convertTo24HourFormat(newEntry.start);
     const formattedEndTime = convertTo24HourFormat(newEntry.end);
- 
+    // const isSuccess = true;
+
     let updatedData;
- 
+
     if (isWeekly) {
       if (editingEntryIndex !== null) {
         updatedData = weeklySchedule.map((entry, index) =>
@@ -103,18 +142,116 @@ export default function AdviserAvailabilityPage() {
       }
       setFreeTime(updatedData);
     }
- 
+
     setOpenModal(false);
     setNewEntry({ week: '', date: '', start: '', end: '' });
     setEditingEntryIndex(null);
+
+    if (isAdded) {
+      setSuccessMessage('Added Successfully');
+      setIsUpdatedSuccessfully(true);
+      setOpenSuccessModal(true);
+    } else {
+      setSuccessMessage('Adding of Schedule Failed');
+      setIsUpdatedSuccessfully(false);
+      setOpenSuccessModal(true);
+    }
   };
- 
+  const handleDeleteEntry = async (index) => {
+    // Your logic for deleting an entry
+    const isDeleted = true; // Replace with actual deletion logic
+
+    if (isDeleted) {
+      setSuccessMessage('Deleted Successfully');
+      setIsDeletedSuccessfully(true);
+    } else {
+      setSuccessMessage('Card Deletion Unsuccessfully');
+      setIsDeletedSuccessfully(false);
+    }
+    setOpenSuccessModal(true); // Open the modal after deletion attempt
+  };
+
+  const handleUpdateEntry = async (index) => {
+    // const isUpdated = true; // Replace with actual update logic
+    const isAdded = true;
+    const formattedDate = formatDate(newEntry.date);
+    const formattedStartTime = convertTo24HourFormat(newEntry.start);
+    const formattedEndTime = convertTo24HourFormat(newEntry.end);
+    // const isSuccess = true;
+
+    let updatedData;
+
+    if (isWeekly) {
+      if (editingEntryIndex !== null) {
+        updatedData = weeklySchedule.map((entry, index) =>
+          index === editingEntryIndex
+            ? { week: newEntry.week, start: formattedStartTime, end: formattedEndTime }
+            : entry
+        );
+      } else {
+        updatedData = [...weeklySchedule, { week: newEntry.week, start: formattedStartTime, end: formattedEndTime }];
+      }
+      setWeeklySchedule(updatedData);
+    } else {
+      if (editingEntryIndex !== null) {
+        updatedData = freeTime.map((entry, index) =>
+          index === editingEntryIndex
+            ? { date: formattedDate, start: formattedStartTime, end: formattedEndTime }
+            : entry
+        );
+      } else {
+        updatedData = [...freeTime, { date: formattedDate, start: formattedStartTime, end: formattedEndTime }];
+      }
+      setFreeTime(updatedData);
+    }
+
+    setOpenModal(false);
+    setNewEntry({ week: '', date: '', start: '', end: '' });
+    setEditingEntryIndex(null);
+
+    if (isAdded) {
+      setSuccessMessage('Updated Successfully');
+      setIsUpdatedSuccessfully(true);
+      setOpenSuccessModal(true);
+    } else {
+      setSuccessMessage('Card Update Unsuccessfully');
+      setIsUpdatedSuccessfully(false);
+      setOpenSuccessModal(true);
+    }
+
+    // if (isUpdated) {
+    //   setSuccessMessage('Updated Successfully');
+    //   setIsUpdatedSuccessfully(true); // Set to true for successful update
+    // } else {
+    //   setSuccessMessage('Card Update Unsuccessfully');
+    //   setIsUpdatedSuccessfully(false); // Set to false for unsuccessful update
+    // }
+    setOpenSuccessModal(true); // Open the modal after update attempt
+  };
+
+  const handleAction = () => {
+    if (isAdding && editingEntryIndex === null) {
+      console.log("Calling handleAddEntry");
+      handleAddEntry(); // Call add function if in add mode
+    } else {
+      console.log("Calling handleUpdateEntry with index:", editingEntryIndex);
+      handleUpdateEntry();
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setOpenSuccessModal(false);
+    setIsDeletedSuccessfully(false);
+    setIsUpdatedSuccessfully(false);
+    setIsAddedSuccessfully(false);
+  };
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
   };
- 
+
   const convertTo24HourFormat = (timeStr) => {
     const [time, modifier] = timeStr.split(' ');
     let [hours, minutes] = time.split(':');
@@ -123,9 +260,9 @@ export default function AdviserAvailabilityPage() {
     } else if (modifier === 'AM' && hours === '12') {
       hours = '00';
     }
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`; 
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   };
- 
+
   const formatTime = (timeStr) => {
     const [hours, minutes] = timeStr.split(':');
     const hour = parseInt(hours, 10);
@@ -133,41 +270,41 @@ export default function AdviserAvailabilityPage() {
     const formattedHour = hour % 12 || 12;
     return `${formattedHour}:${minutes} ${ampm}`;
   };
- 
+
   const convertToRawFormat = (formattedDate, formattedTime) => {
     const date = new Date(formattedDate);
     if (!formattedTime) {
       throw new Error("formattedTime is undefined");
     }
- 
+
     const [time, ampm] = formattedTime.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
     if (ampm === 'PM' && hours !== 12) hours += 12;
     if (ampm === 'AM' && hours === 12) hours = 0;
- 
+
     return {
-      date: date.toISOString().split('T')[0], 
-      time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`, 
+      date: date.toISOString().split('T')[0],
+      time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`,
     };
   };
- 
+
   const handleSaveAvailability = async () => {
     const combinedData = [
       ...weeklySchedule.map(entry => ({
         ...entry,
- 
+
         start: entry.start,
         end: entry.end,
       })),
       ...freeTime.map(entry => ({
         ...entry,
- 
+
         date: entry.date,
         start: entry.start,
         end: entry.end,
       })),
     ];
- 
+
     try {
       const response = await fetch(`http://localhost:8080/user/setAdviserAvailability?userID=${userID}`, {
         method: 'PUT',
@@ -177,7 +314,7 @@ export default function AdviserAvailabilityPage() {
         },
         body: JSON.stringify({ availableTime: combinedData }),
       });
- 
+
       if (response.ok) {
         setAvailableTime(combinedData);
         splitData(combinedData);
@@ -189,33 +326,34 @@ export default function AdviserAvailabilityPage() {
       console.error('Error saving availability:', error);
     }
   };
- 
+
   useEffect(() => {
     fetchAdviserData();
   }, []);
- 
+
   const handleOpenModal = (isWeekly) => {
     setIsWeekly(isWeekly);
     setOpenModal(true);
     setEditingEntryIndex(null);
     setNewEntry({ week: '', date: '', start: '', end: '' });
   };
- 
+
   const handleCloseModal = () => {
     setOpenModal(false);
+    setEditingEntryIndex(null);
     setNewEntry({ week: '', date: '', start: '', end: '' });
   };
- 
-  const nextGroup = () => {
-    setFade(false);
-    setTimeout(() => {
-      if (currentGroupIndex < Math.floor(weeklySchedule.length / itemsPerPage)) {
-        setCurrentGroupIndex(currentGroupIndex + 1);
-      }
-      setFade(true);
-    }, 500);
-  };
- 
+
+  // const nextGroup = () => {
+  //   setFade(false);
+  //   setTimeout(() => {
+  //     if (currentGroupIndex < Math.floor(weeklySchedule.length / itemsPerPage)) {
+  //       setCurrentGroupIndex(currentGroupIndex + 1);
+  //     }
+  //     setFade(true);
+  //   }, 500);
+  // };
+
   const prevGroup = () => {
     setFade(false);
     setTimeout(() => {
@@ -225,33 +363,33 @@ export default function AdviserAvailabilityPage() {
       setFade(true);
     }, 500);
   };
- 
-  const currentCards = weeklySchedule.slice(currentGroupIndex * itemsPerPage, (currentGroupIndex + 1) * itemsPerPage);
- 
+
+  const currentCards = weeklySchedule;
+
   const handleCardClick = (index, isWeekly, fromDeleteIcon = false) => {
-    if (!editMode || fromDeleteIcon) return; 
- 
+    if (!editMode || fromDeleteIcon) return;
+
     const timeSlot = isWeekly ? weeklySchedule[index] : freeTime[index];
     const startIn24Hour = convertTo24HourFormat(timeSlot.start);
     const endIn24Hour = convertTo24HourFormat(timeSlot.end);
- 
+
     setNewEntry({
       week: isWeekly ? timeSlot.week : '',
       date: isWeekly ? '' : formatDateToISO(timeSlot.date),
       start: startIn24Hour,
       end: endIn24Hour,
     });
- 
+
     setIsWeekly(isWeekly);
     setOpenModal(true);
     setEditingEntryIndex(index);
   };
- 
+
   const isFormValid = () => {
     const { week, date, start, end } = newEntry;
     return (isWeekly ? week : date) && start && end;
   };
- 
+
   const formatDateToISO = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -259,358 +397,671 @@ export default function AdviserAvailabilityPage() {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
- 
+
+  const [illustrationWidth, setIllustrationWidth] = useState(80);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [maxWidth, setMaxWidth] = useState(0);
+  const illustrationRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const handleImageLoad = () => {
+    if (illustrationRef.current) {
+      setIllustrationWidth(illustrationRef.current.offsetWidth);
+    }
+  };
+
+  useEffect(() => {
+    // Calculate the width of the illustration after it has loaded
+    const handleResize = () => {
+      if (illustrationRef.current || containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        setContainerWidth(containerWidth);
+        setIllustrationWidth(illustrationRef.current.offsetWidth);
+      }
+    };
+
+    handleImageLoad();
+    // Set the initial width
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
-    <div className="m-0 vh-100" style={{ color: '#000' }}>
-      <AdviserNavbar />
-      <div style={{ height: '100vh' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', padding: '45px 0 0 70px' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-            <Box sx={{ flex: '0 0 28%', padding: '80px 20px 50px 20px' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2">Plot your available time</Typography>
-                {!editMode && (
-                  <Button title="Edit" variant="none" sx={{ marginTop: '-10px', marginBottom: '0', borderRadius: '80px' }} onClick={() => setEditMode(true)}>
-                    <EditIcon fontSize="small" />
+    <ThemeProvider theme={theme}>
+      <div className="m-0 vh-100" style={{ color: '#000' }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: -1, // Ensure it stays behind other content
+          }}
+        >
+          <AdviserBackgroundPage />
+        </div>
+        <AdviserNavbar />
+        <div
+          style={{
+            backgroundColor: 'white',
+            borderStyle: 'solid',
+            borderColor: 'black',
+            borderWidth: '1px',
+            margin: '2% 6% 1% 6%', // Adjust margins as needed
+            borderRadius: '10px', // Optional: for rounded corners
+            padding: '2% 4% 2% 4%', // Optional: for inner spacing
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', // Optional: for a subtle shadow
+          }}
+        >
+          <div style={{ height: 'auto' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="body1" align="center">
+                Plot your available time
+              </Typography>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 'bold', marginTop: '20px', marginBottom: '10px' }}
+              >
+                Weekly Schedule
+              </Typography>
+
+              <Box
+                sx={{
+                  backgroundColor: '#7D57FC',
+                  width: '100%',
+                  borderRadius: '10px',
+                  padding: '20px',
+                  position: 'relative',
+                  overflow: 'visible',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                }}
+              >
+                {editMode ? (
+                  <Button
+                    title="Save Changes"
+                    variant="contained"
+                    sx={{ position: 'absolute', borderRadius: '10px', backgroundColor: '#CCFC57', color: 'black' }}
+                    onClick={handleSaveAvailability}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    title="Edit"
+                    variant="contained"
+                    sx={{ position: 'absolute', borderRadius: '10px', backgroundColor: '#CCFC57', color: 'black' }}
+                    onClick={() => setEditMode(true)}
+                  >
+                    Edit
+                  </Button>
+                )}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    overflowX: 'auto',
+                    whiteSpace: 'nowrap',
+                    padding: '0 10px',
+                    paddingTop: '50px', // Adjust padding to position cards below the button
+                    maxWidth: 'calc(100% - 400px)',
+                    '&::-webkit-scrollbar': {
+                      height: '8px', // Height of the scrollbar
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#9778FF',
+                      borderRadius: '10px', // Optional: rounded corners for the scrollbar thumb
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      background: 'transparent', // Background of the scrollbar track
+                    },
+                    scrollbarColor: '#9778FF',
+                  }}
+                >
+                  <Fade in={fade} timeout={500}>
+                    <Box sx={{ display: 'flex' }}>
+                      {currentCards.map((timeSlot, index) => {
+                        return (
+                          <Box key={index} sx={{ display: 'inline-block', width: '185px', padding: '10px 0' }}>
+                            <Card
+                              sx={{ textAlign: 'left', backgroundColor: '#FBFFF1', borderRadius: '10px', position: 'relative', width: '170px', height: '192px' }}
+                              onClick={() => handleCardClick(index, true)}
+                            >
+                              <Box
+                                component="img"
+                                src={require('../../Assets/img/img4.png')} // Adjust the path as necessary
+                                alt="Top Right Image"
+                                sx={{
+                                  position: 'absolute',
+                                  top: '15px',
+                                  right: '5px',
+                                  width: '55px', // Set the size of the image
+                                  height: 'auto', // Maintain aspect ratio
+                                }}
+                              />
+                              <CardContent sx={{ padding: '8px' }}>
+                                <Box
+                                  sx={{
+                                    position: 'absolute',
+                                    bottom: '10px', // Adjust as needed
+                                    left: '10px', // Adjust as needed
+                                    color: 'black', // Change text color if needed
+                                  }}
+                                >
+                                  <Typography variant="h5" sx={{ margin: '0px' }}>
+                                    {timeSlot.week}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}
+                                  </Typography>
+                                </Box>
+                              </CardContent>
+                              {editMode && (
+                                <Box title='Delete Schedule' sx={{ position: 'absolute', top: '5px' }}>
+                                  <Button
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent the click from bubbling up
+                                      setDeleteIndex(index); // Set the index to be deleted
+                                      setIsWeeklyDelete(true); // Set the delete type
+                                      setOpenDeleteModal(true); // Open the delete modal
+                                    }}
+                                    sx={{
+                                      cursor: 'pointer',
+                                      color: 'black',
+                                      fontSize: '0.75rem',
+                                      textDecoration: 'underline',
+                                      textTransform: 'none', // Prevent uppercase transformation
+                                      padding: '0', // Remove default padding
+                                      '&:hover': {
+                                        fontWeight: 'bold',
+                                        textDecoration: 'underline',
+                                      },
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                </Box>
+                              )}
+                            </Card>
+                          </Box>
+                        );
+                      })}
+                      {editMode && (
+                        <Box
+                          sx={{
+                            display: 'inline-block',
+                            width: '185px',
+                            padding: '10px 0',
+                          }}
+                        >
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              width: '170px',
+                              height: '192px',
+                              color: '#333333',
+                              borderColor: '#333333',
+                            }}
+                            onClick={() => handleOpenModal(true)}
+                          >
+                            <AddIcon />
+                          </Button>
+                        </Box>
+                      )}
+                    </Box>
+                  </Fade>
+                </Box>
+                {/* Add the illustration image on the right side */}
+                <Box
+                  sx={{
+                    position: 'absolute', // Use absolute positioning
+                    right: '-6%', // Move the image out of the box
+                    top: '50%', // Center vertically
+                    transform: 'translateY(-50%)', // Adjust for vertical centering
+                    zIndex: 3,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={illustration1} // Replace with the correct path to your image
+                    alt="Illustration"
+                    sx={{
+                      maxWidth: 'none', // Set the width of the illustration
+                      height: 'auto', // Maintain aspect ratio
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </div>
+
+
+          <Box
+            sx={{
+              marginTop: '20px',
+              backgroundColor: 'white',
+              borderRadius: '20px',
+              paddingTop: '30px',
+              position: 'relative',
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: 'bold', marginBottom: '35px' }}
+            >
+              Free Time
+
+            </Typography>
+
+            <Box
+              ref={containerRef}
+              sx={{
+                backgroundColor: '#CCFC57',
+                width: '100%',
+                borderRadius: '10px',
+                padding: '20px',
+                position: 'relative',
+                overflow: 'visible',
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexDirection: 'column',
+              }}
+            >
+              {/* This Box is for the Edit button */}
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                {editMode ? (
+                  <Button
+                    title="Save Changes"
+                    variant="none"
+                    sx={{ float: 'right', borderRadius: '10px', backgroundColor: '#7D57FC', color: 'white' }}
+                    onClick={handleSaveAvailability}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    title="Edit"
+                    variant="none"
+                    sx={{ float: 'right', borderRadius: '10px', backgroundColor: '#7D57FC', color: 'white' }}
+                    onClick={() => setEditMode(true)}
+                  >
+                    Edit
                   </Button>
                 )}
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', marginTop: '0px' }}>Weekly Schedule</Typography>
-              <Typography variant="body2" sx={{ marginTop: '5px', opacity: '0.3', marginTop: '0px' }}>Anyone can view your availability.</Typography>
- 
-              {editMode && (
-                <Box sx={{ marginTop: '20px' }}>
-                  <Button variant="outlined" onClick={() => handleOpenModal(true)} sx={{ color: 'black', borderColor: 'gray' }}>Add Time</Button>
-                  <Button title="Save Changes" variant="outlined" onClick={handleSaveAvailability} sx={{ marginLeft: '10px', color: 'black', borderColor: 'gray' }}>Done</Button>
+              <div>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: '-4%',
+                    top: '43%',
+                    transform: 'translateY(-50%)',
+                    zIndex: 3,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={illustration2}
+                    alt="Illustration"
+                    ref={illustrationRef}
+                    onLoad={handleImageLoad}
+                    sx={{
+                      maxWidth: 'none',
+                      height: 'auto',
+                    }}
+                  />
                 </Box>
-              )}
-              <Box sx={{ display: 'flex', justifyContent: 'left', marginTop: '100px' }}>
-                <Button disabled={currentGroupIndex === 0} onClick={prevGroup} sx={{ color: currentGroupIndex === 0 ? 'gray' : 'inherit' }}>
-                  <ArrowCircleLeftOutlinedIcon />
-                </Button>
-                <Button disabled={currentGroupIndex >= Math.floor(weeklySchedule.length / itemsPerPage)} onClick={nextGroup} sx={{ color: currentGroupIndex >= Math.floor(weeklySchedule.length / itemsPerPage) ? 'gray' : 'inherit' }} >
-                  <ArrowCircleRightOutlinedIcon />
-                </Button>
-              </Box>
-            </Box>
- 
-            <Box sx={{ flex: '1', padding: '20px 0 0 0', color: 'white', position: 'relative' }}>
-              <Box
-                sx={{
-                  backgroundColor: '#333333',
-                  position: 'absolute',
-                  top: 0,
-                  left: '10%',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '80px 0px 0px  0px',
-                  zIndex: -100,
-                }}
-              />
- 
-              <Box
-                sx={{
-                  display: 'flex',
-                  overflowX: 'auto',
-                  whiteSpace: 'nowrap',
-                  padding: '0 10px',
-                  gap: '10px',
-                  width: '100%',
-                  position: 'relative',
-                  zIndex: 1,
-                  paddingTop: '45px',
-                }}
-              >
-                <Fade in={fade} timeout={500}>
-                  <Box sx={{ display: 'flex', gap: '10px' }}>
-                    {currentCards.map((timeSlot, index) => {
-                      const dayAbbreviation = {
-                        Sunday: 'SUN',
-                        Monday: 'MON',
-                        Tuesday: 'TUE',
-                        Wednesday: 'WED',
-                        Thursday: 'THU',
-                        Friday: 'FRI',
-                        Saturday: 'SAT',
-                      }[timeSlot.week] || '';
- 
-                      return (
-                        <Box key={index} sx={{ display: 'inline-block', width: '200px', paddingTop: '10px' }}>
-                          <Card sx={{ textAlign: 'left', backgroundColor: '#fff', borderRadius: '10px', position: 'relative' }}
-                            onClick={() => handleCardClick(index, true)} >
-                            <CardMedia component="img" height="100" image="image.jpg" alt="Weekly Schedule" />
+                <Box
+                  sx={{
+                    display: 'relative',
+                    overflowX: 'auto',
+                    whiteSpace: 'nowrap',
+                    padding: '0 10px',
+                    marginLeft: `${illustrationWidth - 80}px`,
+                    maxWidth: `${containerWidth - illustrationWidth + 30}px`,
+                    '&::-webkit-scrollbar': { height: '8px' },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#E8FFAF',
+                      borderRadius: '10px',
+                    },
+                    '&::-webkit-scrollbar-track': { background: 'transparent' },
+                    scrollbarColor: '#9778FF',
+                  }}
+                >
+                  <Fade in={fade} timeout={500}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                      {freeTime.map((timeSlot, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: 'inline-block',
+                            width: '200px',
+                            padding: '10px 0',
+                          }}
+                        >
+                          <Card
+                            sx={{
+                              textAlign: 'left',
+                              backgroundColor: '#FBFFF1',
+                              borderRadius: '10px',
+                              position: 'relative',
+                              width: '185px',
+                              height: '192px',
+                              marginRight: '15px',
+                            }}
+                            onClick={() => handleCardClick(index, false)}
+                          >
                             <Box
+                              component="img"
+                              src={require('../../Assets/img/img4.png')}
+                              alt="Top Right Image"
                               sx={{
                                 position: 'absolute',
-                                top: '20%',
-                                right: '0%',
-                                color: 'white',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                cursor: editMode ? 'pointer' : 'default',
+                                top: '15px',
+                                right: '5px',
+                                width: '55px',
+                                height: 'auto',
                               }}
-                              title={editMode ? "Edit Card" : ""}
-                            >
-                              <Typography sx={{ margin: 0, fontSize: '64px', letterSpacing: '5px' }}>
-                                {dayAbbreviation}
-                              </Typography>
-                            </Box>
+                            />
                             <CardContent sx={{ padding: '8px' }}>
-                              <Typography variant="body1" sx={{ margin: '0px' }}>
-                                {timeSlot.week}
-                              </Typography>
-                              <Typography variant="body2">
-                                {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}
-                              </Typography>
+                              <Box
+                                sx={{
+                                  position: 'absolute',
+                                  bottom: '10px',
+                                  left: '10px',
+                                  color: 'black',
+                                }}
+                              >
+                                <Typography sx={{ margin: '0px', fontSize: '1.18em' }}>
+                                  {formatDate(timeSlot.date)}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}
+                                </Typography>
+                              </Box>
                             </CardContent>
-                            {editMode && ( 
-                              <Box title='Delete Schedule' sx={{ position: 'absolute', top: '5px', right: '5px' }}>
-                                <DeleteIcon
-                                  title='Delete Schedule'
-                                  fontSize='small'
+                            {editMode && (
+                              <Box
+                                title="Delete Schedule"
+                                sx={{ position: 'absolute', top: '5px' }}
+                              >
+                                <Button
                                   onClick={(e) => {
-                                    e.stopPropagation();
-                                    setDeleteIndex(index);
-                                    setIsWeeklyDelete(true); 
-                                    setOpenDeleteModal(true);
+                                    e.stopPropagation(); // Prevent the click from bubbling up
+                                    setDeleteIndex(index); // Set the index to be deleted
+                                    setIsWeeklyDelete(false); // Set the delete type
+                                    setOpenDeleteModal(true); // Open the delete modal
                                   }}
-                                  sx={{ cursor: 'pointer', color: 'white' }}
-                                />
+                                  sx={{
+                                    cursor: 'pointer',
+                                    color: 'black',
+                                    textDecoration: 'underline',
+                                    textTransform: 'none', // Prevent uppercase transformation
+                                    padding: '0', // Remove default padding
+                                    fontSize: '0.75rem', // Set the font size to a smaller value (e.g., 12px)
+                                    '&:hover': {
+                                      fontWeight: 'bold',
+                                      textDecoration: 'underline', // Optional: underline on hover
+                                    },
+                                  }}
+                                >
+                                  Remove
+                                </Button>
                               </Box>
                             )}
                           </Card>
                         </Box>
-                      );
-                    })}
-                  </Box>
-                </Fade>
-              </Box>
+                      ))}
+                      {editMode && (
+                        <Box
+                          sx={{
+                            display: 'inline-block',
+                            width: '185px',
+                            padding: '10px 0',
+                          }}
+                        >
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              width: '170px',
+                              height: '192px',
+                              color: '#333333',
+                              borderColor: '#333333',
+                            }}
+                            onClick={() => handleOpenModal(false)}
+                          >
+                            <AddIcon />
+                          </Button>
+                        </Box>
+                      )}
+                    </Box>
+                  </Fade>
+                </Box>
+              </div>
             </Box>
           </Box>
-        </Box>
- 
-        <Box sx={{ marginTop: '20px', backgroundColor: 'white', borderRadius: '20px', padding: '20px' }}>
-          <Typography variant="h4" align="center" sx={{ fontWeight: 'bold' }}>
-            Free Time
-            {editMode ? (
-              <Button title="Save Changes" variant="none" sx={{ float: 'right', borderRadius: '80px' }} onClick={handleSaveAvailability}>
-                <DoneIcon fontSize="small" />
-              </Button>
-            ) : (
-              <Button title="Edit" variant="none" sx={{ float: 'right', borderRadius: '80px' }} onClick={() => setEditMode(true)}>
-                <EditIcon fontSize="small" />
-              </Button>
-            )}
-          </Typography>
-          <Grid container spacing={3} sx={{ marginTop: '15px', justifyContent: 'center' }}>
-            {freeTime.map((timeSlot, index) => (
-              <Box key={index} sx={{ display: 'inline-block', position: 'relative' }}>
-                <Card
-                  sx={{
-                    width: '210px',
-                    height: "100px",
-                    textAlign: 'center',
-                    backgroundColor: 'transparent',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    cursor: editMode ? 'pointer' : 'default',
-                  }}
-                  onClick={() => handleCardClick(index, false)}
-                  title={editMode ? "Edit Card" : ""}
-                >
-                  <CardMedia
-                    component="img"
-                    height="100"
-                    image="image.jpg"
-                    alt="Free Time"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      opacity: 0.3
-                    }}
-                  />
-                  <CardContent sx={{
-                    position: 'relative',
-                    zIndex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%'
-                  }}>
-                    <Typography sx={{ fontWeight: 'bold', margin: 0, letterSpacing: '2px', fontSize: '16px' }}>
-                      {formatDate(timeSlot.date)}
-                    </Typography>
-                    <Typography variant="body2" sx={{ margin: 0, }}>
-                      {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}
-                    </Typography>
-                  </CardContent>
-                  {editMode && ( 
-                    <Box title='Delete Schedule' sx={{ position: 'absolute', top: '1px', right: '5px', zIndex: '5' }}>
-                      <DeleteIcon
-                        title='Delete Schedule'
-                        fontSize='small'
-                        onClick={(e) => {
-                          e.stopPropagation(); 
-                          setDeleteIndex(index);
-                          setIsWeeklyDelete(false); 
-                          setOpenDeleteModal(true);
-                        }}
-                        sx={{ cursor: 'pointer', color: 'white' }}
-                      />
-                    </Box>
-                  )}
-                </Card>
-              </Box>
-            ))}
-            {editMode && (
-              <Grid xs={12} sm={6} md={4}>
-                <Button variant="outlined" sx={{ width: '100%', height: '100px', color: '#333333', borderColor: '#333333' }} onClick={() => handleOpenModal(false)}>
-                  <AddIcon />
-                </Button>
-              </Grid>
-            )}
-          </Grid>
-        </Box>
- 
-        <Modal open={openModal} onClose={handleCloseModal}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              backgroundColor: '#fff',
-              boxShadow: 24,
-              p: 4,
-              borderRadius: '10px',
-            }}
-          >
-            <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-              {isWeekly ? 'Weekly Schedule' : 'Free Time'}
-            </Typography>
-            {isWeekly ? (
-              <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 2 }}>
-                {['S', 'M', 'T', 'W', 'TH', 'F', 'S'].map((day, index) => (
-                  <Button
-                    color="success"
-                    key={index}
-                    variant={newEntry.week === ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][index] ? 'contained' : 'outlined'}
-                    onClick={() => setNewEntry({ ...newEntry, week: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][index] })}
-                    sx={{
-                      borderRadius: '50%',
-                      minWidth: '40px',
-                      minHeight: '40px',
-                      padding: '0',
-                      fontSize: '16px',
-                    }}
-                  >
-                    {day}
-                  </Button>
-                ))}
-              </Box>
-            ) : (
+
+
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                backgroundColor: '#fff',
+                boxShadow: 24,
+                p: 4,
+                borderRadius: '10px',
+              }}
+            >
+              <Typography variant="h5" component="h2" sx={{ mb: 2, color: '#7D57FC', fontWeight: 'bold', textAlign: 'center' }}>
+                {isWeekly ? 'Weekly Schedule' : 'Free Time'}
+              </Typography>
+              {isWeekly ? (
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 2 }}>
+                  {['S', 'M', 'T', 'W', 'TH', 'F', 'S'].map((day, index) => (
+                    <Button
+                      //color="secondary"
+                      key={index}
+                      variant={newEntry.week === ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][index] ? 'contained' : 'outlined'}
+                      onClick={() => setNewEntry({ ...newEntry, week: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][index] })}
+                      sx={{
+                        borderRadius: '50%',
+                        minWidth: '40px',
+                        minHeight: '40px',
+                        padding: '0',
+                        fontSize: '16px',
+                        backgroundColor: 'secondary',
+                        borderColor: 'black',
+                        color: 'black'
+                      }}
+                    >
+                      {day}
+                    </Button>
+                  ))}
+                </Box>
+              ) : (
+                <TextField
+                  fullWidth
+                  label="Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={newEntry.date}
+                  onChange={(e) => setNewEntry({ ...newEntry, date: e.target.value })}
+                  sx={{ mb: 2 }}
+                  required
+                />
+              )}
               <TextField
                 fullWidth
-                label="Date"
-                type="date"
+                label="Start Time"
+                type="time"
                 InputLabelProps={{ shrink: true }}
-                value={newEntry.date}
-                onChange={(e) => setNewEntry({ ...newEntry, date: e.target.value })}
+                value={newEntry.start}
+                onChange={(e) => setNewEntry({ ...newEntry, start: e.target.value })}
                 sx={{ mb: 2 }}
                 required
               />
-            )}
-            <TextField
-              fullWidth
-              label="Start Time"
-              type="time"
-              InputLabelProps={{ shrink: true }}
-              value={newEntry.start}
-              onChange={(e) => setNewEntry({ ...newEntry, start: e.target.value })}
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              fullWidth
-              label="End Time"
-              type="time"
-              InputLabelProps={{ shrink: true }}
-              value={newEntry.end}
-              onChange={(e) => setNewEntry({ ...newEntry, end: e.target.value })}
-              sx={{ mb: 2 }}
-              required
-            />
-            <Box display="flex" justifyContent="space-between" mt={3}>
-              <Button variant="outlined" color="success" onClick={handleCloseModal}>
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={handleAddEntry}
-                disabled={!isFormValid()}
-              >
-                {editingEntryIndex !== null ? 'Update' : 'Add'}
-              </Button>
+              <TextField
+                fullWidth
+                label="End Time"
+                type="time"
+                InputLabelProps={{ shrink: true }}
+                value={newEntry.end}
+                onChange={(e) => setNewEntry({ ...newEntry, end: e.target.value })}
+                sx={{ mb: 2 }}
+                required
+              />
+              <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleCloseModal}
+                  sx={{
+                    backgroundColor: 'white',
+                    borderColor: 'white',
+                    color: 'black',
+                    '&:hover': {
+                      backgroundColor: '#AB92FF',
+                    },
+                  }}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  // color="secondary"
+                  onClick={handleAction}
+                  disabled={!isFormValid()}
+                  sx={{
+                    backgroundColor: '#7D57FC',
+                    marginLeft: '5px',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#AB92FF',
+                    },
+                  }}
+                >
+                  {editingEntryIndex !== null ? 'Update' : 'Add'}
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Modal>
-        <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 300,
-              backgroundColor: '#fff',
-              boxShadow: 24,
-              p: 4,
-              borderRadius: '10px',
-            }}
-          >
-            <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-              Delete Schedule
-            </Typography>
-            <Typography variant="body1">
-              Are you sure you want to delete this schedule?
-            </Typography>
-            <Box display="flex" justifyContent="space-between" mt={3}>
+          </Modal>
+
+          <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 430,
+                backgroundColor: '#fff',
+                boxShadow: 24,
+                p: 5,
+                borderRadius: '10px',
+                textAlign: 'center'
+              }}
+            >
+              <Typography variant="h5" component="h2" sx={{ mb: 2, fontWeight: 'bold', textAlign: 'center', marginBottom: '3px', color: 'secondary.main' }}>
+                Delete Schedule
+              </Typography>
+              <Typography variant="body1" sx={{ paddingBottom: '20px' }}>
+                Are you sure you want to delete this schedule?
+              </Typography>
+              <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                  variant="outlined"
+                  color="black"
+                  onClick={() => setOpenDeleteModal(false)}
+                  sx={{ borderColor: 'white', '&:hover': { backgroundColor: 'secondary.light', } }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ borderColor: 'secondary.main', marginLeft: '5px', color: 'white', '&:hover': { backgroundColor: 'secondary.light' } }}
+                  onClick={() => {
+                    let isDeleted = false;
+                    if (isWeeklyDelete) {
+                      const updatedWeeklySchedule = [...weeklySchedule];
+                      updatedWeeklySchedule.splice(deleteIndex, 1);
+                      setWeeklySchedule(updatedWeeklySchedule);
+                      isDeleted = true;
+                    } else {
+                      const updatedFreeTime = [...freeTime];
+                      updatedFreeTime.splice(deleteIndex, 1);
+                      setFreeTime(updatedFreeTime);
+                      isDeleted = true;
+                    }
+                    handleDeleteEntry(deleteIndex);
+                    setOpenDeleteModal(false);
+                    if (isDeleted) {
+                      setSuccessMessage('Deleted Successfully');
+                    } else {
+                      setSuccessMessage('Card Deletion Unsuccessfully');
+                    }
+                    setOpenSuccessModal(true);
+                  }}
+                >
+                  Delete
+                </Button>
+
+              </Box>
+            </Box>
+          </Modal>
+          {/* Success/Failure Modal */}
+          <Modal open={openSuccessModal} onClose={handleCloseSuccessModal}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                backgroundColor: '#fff',
+                boxShadow: 24,
+                p: 4,
+                borderRadius: '10px',
+                textAlign: 'center',
+              }}
+            >
+              {isDeletedSuccessfully || isUpdatedSuccessfully || isAddedSuccessfully ? (
+                <CheckCircleOutlineIcon sx={{ fontSize: '4rem', color: 'secondary.main' }} />
+              ) : (
+                <ErrorOutlineIcon sx={{ fontSize: '4rem', color: 'error.main' }} />
+              )}
+              <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+                {successMessage}
+              </Typography>
               <Button
                 variant="contained"
-                color="success"
-                onClick={() => {
-                  if (isWeeklyDelete) {
-                    const updatedWeeklySchedule = [...weeklySchedule];
-                    updatedWeeklySchedule.splice(deleteIndex, 1);
-                    setWeeklySchedule(updatedWeeklySchedule);
-                  } else {
-                    const updatedFreeTime = [...freeTime];
-                    updatedFreeTime.splice(deleteIndex, 1);
-                    setFreeTime(updatedFreeTime);
-                  }
-                  setOpenDeleteModal(false);
+                onClick={handleCloseSuccessModal}
+                sx={{
+                  backgroundColor: '#7D57FC',
+                  borderRadius: '10px',
+                  marginTop: '30px',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'secondary.light',
+                  },
                 }}
               >
-                Yes
-              </Button>
-              <Button
-                variant="outlined"
-                color="black"
-                onClick={() => setOpenDeleteModal(false)}
-              >
-                No
+                Close
               </Button>
             </Box>
-          </Box>
-        </Modal>
+          </Modal>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
