@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'; 
-import { Container, Row, Col } from 'react-bootstrap';
-import { Modal, Button, Form } from 'react-bootstrap'; 
+import { Container, Row, Col } from 'react-bootstrap'; 
 import AdviserGroupCard from '../../Components/Card/Adviser/AdviserGroupCard';
 import { useLocation } from 'react-router-dom';  
 import { useNavigate } from 'react-router-dom'; 
-import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
-import StudentsList from '../../Components/Card/Adviser/StudentsListCard';
+import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu';  
 import { toast } from 'react-toastify';
 import img6 from '../../Assets/img/img6.png'; 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import BackButton from '../../Components/Buttons/BackButton';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import StudentsModal from '../../Components/Modal/StudentsModal';
+import EditClassroomModal from '../../Components/Modal/EditClassroomModal';
+import DeleteClassroomModal from '../../Components/Modal/DeleteClassroomModal';
+
 
 const AdviserClassroomPage = () => {
     const location = useLocation();
@@ -91,7 +93,7 @@ const AdviserClassroomPage = () => {
     };
 
     const handleCloseStudentsModal = () => setShowStudentsModal(false);
-    const closeEditClassroomModal = () => setShowEditModal(false);
+    const handleCloseEditModal = () => setShowEditModal(false);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
     const editClassroom = async () => {
@@ -178,7 +180,7 @@ const AdviserClassroomPage = () => {
             <Container>
                 <Row>
                     <Col md={6}>
-                        <img src={img6} alt="illustration" style={{height:'600px', marginTop: '-50px', marginLeft: '' }} />   
+                        <img src={img6} alt="illustration" style={{height:'600px', marginTop: '-35px', marginLeft: '' }} />   
                     </Col>
                     <Col md={6}>
                         <div style={{  marginTop: '50px' }}>  
@@ -197,99 +199,27 @@ const AdviserClassroomPage = () => {
                         </div>
                     </Col>
                 </Row>
-            </Container>
-
-                
-
+            </Container> 
+            
             </div>
-
-            
-            
-
-
-            <Modal show={showStudentsModal} onHide={handleCloseStudentsModal} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Enrolled Students</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {students.length === 0 ? (
-                        <p>No students enrolled in this classroom.</p>
-                    ) : (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'start' }}>
-                            {students.map((student) => (
-                                <div key={student.userID} style={{ padding: '10px', borderRadius: '8px', margin: '10px' }}>
-                                    <StudentsList
-                                        fullName={`${student.user.firstname} ${student.user.lastname}`}  
-                                        userName={student.user.username}
-                                    /> 
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseStudentsModal}>Close</Button>
-                </Modal.Footer>
-            </Modal>
- 
-            <Modal show={showEditModal} onHide={closeEditClassroomModal} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Classroom</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="subjectCode">
-                            <Form.Label>Subject Code</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={classroomDetails.subjectCode}
-                                onChange={(e) => setClassroomDetails({ ...classroomDetails, subjectCode: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="subjectName">
-                            <Form.Label>Subject Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={classroomDetails.subjectName}
-                                onChange={(e) => setClassroomDetails({ ...classroomDetails, subjectName: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="section">
-                            <Form.Label>Section</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={classroomDetails.section}
-                                onChange={(e) => setClassroomDetails({ ...classroomDetails, section: e.target.value })}
-                            />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={closeEditClassroomModal}>Cancel</Button>
-                    <Button variant="primary" onClick={editClassroom}>Save Changes</Button>
-                </Modal.Footer>
-            </Modal>
- 
-            <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Delete Classroom</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Are you sure you want to delete this classroom?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDeleteModal}>Cancel</Button>
-                    <Button variant="danger" onClick={handleDeleteClassroom}>Delete Classroom</Button>
-                </Modal.Footer>
-            </Modal>
-                 
-
-            {/* 
-            </div>  
-            */}
- 
-
-        </div>
+            <StudentsModal
+                show={showStudentsModal}
+                handleClose={handleCloseStudentsModal}
+                students={students}
+            />
+            <EditClassroomModal
+                show={showEditModal}
+                handleClose={handleCloseEditModal}
+                classroomDetails={classroomDetails}
+                setClassroomDetails={setClassroomDetails}
+                saveChanges={editClassroom}
+            />
+            <DeleteClassroomModal
+                show={showDeleteModal}
+                handleClose={handleCloseDeleteModal}
+                handleDelete={handleDeleteClassroom}
+            />
+        </div> 
     );
 };
 

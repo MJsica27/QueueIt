@@ -1,15 +1,14 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import bin from '../../../Assets/icons/bin.png'
-import edit from '../../../Assets/icons/transfer-student.png' 
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function StudentList({ fullName, userName }) {
 
   
   return (
     <div>       
-    <Card className="m-0" style={{ width: 'auto', backgroundColor: '#eee', width: '430px' }}>
+    <Card className="m-0" style={{ backgroundColor: '#eee', width: '430px' }}>
       <Card.Body className="d-flex align-items-center justify-content-between">
         {/* Profile picture */}
         <div className="d-flex align-items-center">
@@ -21,15 +20,9 @@ export default function StudentList({ fullName, userName }) {
           </div>
         </div>
 
-        {/* Edit and Bin */}
-        <div className="ml-auto">
-          <img
-            src={edit}
-            alt="Edit Icon"
-            style={{ width: '25px', height: '25px', marginRight: '10px' }}
-          />
-          <img
-            src={bin}
+        {/* Bin */}
+        <div className="ml-auto"> 
+          <DeleteIcon 
             alt="Delete Icon"
             style={{ width: '25px', height: '25px' }}
           />

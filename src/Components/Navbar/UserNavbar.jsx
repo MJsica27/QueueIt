@@ -48,29 +48,7 @@ const UserNavbar = () => {
  
             {user ? (
                 user.role === "ADMIN" ? (
-                    <Nav style={{ display: 'flex', gap: '20px' }}>
-                        <Nav.Link
-                            className={`nav-link-custom ${isActiveLink('/adminhomepage') ? 'active' : ''}`}
-                            href="/adminhomepage"
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adminhomepage') ? 'bold' : 'normal' }}
-                        >
-                            Classrooms
-                        </Nav.Link>
-                        <Nav.Link
-                            className={`nav-link-custom ${isActiveLink('/adminuserpage') ? 'active' : ''}`}
-                            href="/adminuserpage"
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adminuserpage') ? 'bold' : 'normal' }}
-                        >
-                            Users
-                        </Nav.Link>
-                        <Nav.Link
-                            className={`nav-link-custom ${isActiveLink('/adminlogpage') ? 'active' : ''}`}
-                            href="/adminlogpage"
-                            style={{ color: '#666666', fontWeight: isActiveLink('/adminlogpage') ? 'bold' : 'normal' }}
-                        >
-                            Logs
-                        </Nav.Link>
-                    </Nav>
+                    <div></div>
                 ) : user.role === "ADVISER" ? (
                     <Nav className="d-flex gap-3" style={{height:'45px', backgroundColor:'#f5f5f5', borderRadius:'15px'}}>
                         <Nav.Link

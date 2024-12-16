@@ -26,11 +26,11 @@ export default function AdminUserPage() {
     }   
   }, [navigate]);
 
-  const handleClickOpen = () => {
+  const openCreateButton = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const cancelButton = () => {
     setOpen(false);
   };
 
@@ -42,7 +42,7 @@ export default function AdminUserPage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const createAccount = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -66,7 +66,7 @@ export default function AdminUserPage() {
 
       if (response.ok) {
         toast.success('User registered successfully!'); 
-        handleClose();
+        cancelButton();
       } else {
         toast.error('Registration failed. Please try again.');  
       }
@@ -94,7 +94,7 @@ export default function AdminUserPage() {
           </div>
 
           <Button  
-            onClick={handleClickOpen} 
+            onClick={openCreateButton} 
             variant="contained" 
             style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold' }} > 
             Create Account
@@ -115,10 +115,10 @@ export default function AdminUserPage() {
         {/* Form */}
         <CreateUserAccount 
           open={open}
-          handleClose={handleClose}
+          handleClose={cancelButton}
           formData={formData}
           handleChange={handleChange}
-          handleSubmit={handleSubmit}
+          handleSubmit={createAccount}
           loading={loading}
         />
       </div>
