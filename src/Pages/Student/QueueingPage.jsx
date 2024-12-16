@@ -1,17 +1,19 @@
 import { Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import JandelStudentNavbar from '../../Components/Navbar/UserNavbar';
+import UserNavbar from '../../Components/Navbar/UserNavbar';
 import '../../Static/QueueingPage.css';
-import AdviserQueueingCard from '../../Components/Card/AdviserQueueingCard';
+import AdviserQueueingCard from '../../Components/Card/Student/AdviserQueueingCard';
 import { useContext, useEffect, useState } from 'react';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
-import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
-import { Button } from 'react-bootstrap';
+import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact'; 
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'; 
 import BackButton from '../../Components/Buttons/BackButton';
 import { UserContext } from '../../Components/User/UserContext';
-import { capitalizeFirstLetter, capitalizeText } from '../../Components/Utils/Utils';
+import React from 'react';
+import { Col, Row, Button } from 'react-bootstrap'; 
+import { capitalizeFirstLetter, capitalizeText } from '../../Components/Utils/Utils'; 
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
 
 const QueueingPage = () => {
     const navigate = useNavigate();
@@ -43,9 +45,60 @@ const QueueingPage = () => {
     }, []);
     
     return (
-        <div>
-            <JandelStudentNavbar/>
-            {/* main container kanang puti */}
+        <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">  
+        
+            <AdviserBackgroundPage />
+
+            <UserNavbar/>
+
+            <Row>
+                <Col>
+                    <Row>
+                    <div
+                        style={{
+                            height:'20dvh',
+                            width:'200dvh',
+                            backgroundColor: '#7d57fc',
+                            borderRadius:'5px',
+                            display:'flex',
+                            padding:'0.8rem',
+                            gap:10,
+                            alignItems:'center',
+                        }}
+                    >
+                        <BackButton />  
+                        <div
+                            style={{
+                                display:'flex',
+                                flexDirection:'column',
+                                flex:1
+                            }}
+                        >
+                            <Typography variant='h4' fontWeight='bold' color='white'>{classroom?capitalizeFirstLetter(classroom.subjectName):<></>}</Typography>
+                            <Typography variant='h6' color='white'>{classroom?capitalizeText(classroom.section):<></>}</Typography>
+                        </div>
+                    </div>
+                    </Row>
+                    <Row>
+                        <Col>   
+                        <div className='adviserQueueingCard' style={{ backgroundColor: 'whtie', margin: '5px', border: '1px solid black'}} >
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
+                            {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""} classroom={classroom}/>:<></>}
+                        </div>
+                        </Col>
+
+                        <Col>
+                        </Col>     
+                    </Row>
+                </Col>
+                <Col>
+                </Col>
+            </Row>
+
+           
+            
+            {/* <JandelStudentNavbar/>
+            main container kanang puti
             <div 
                 style={{
                     maxWidth:'100dvw',
@@ -55,7 +108,7 @@ const QueueingPage = () => {
                     gap:10,
                 }}
             >
-                {/* Classroom information container kanang gray first row */}
+                Classroom information container kanang gray first row
                 <div
                     style={{
                         height:'11dvh',
@@ -68,7 +121,7 @@ const QueueingPage = () => {
                     }}
                 >
                     <BackButton />  
-                    {/* green box  */}
+                    green box 
                     <div
                         style={{
                             backgroundColor:'#b9ff66',
@@ -79,8 +132,7 @@ const QueueingPage = () => {
                     >
                     </div>
 
-
-                    {/* Team basic info title & section */}
+ 
                     <div
                         style={{
                             display:'flex',
@@ -93,7 +145,7 @@ const QueueingPage = () => {
                     </div>
                 </div>
 
-                {/* ------------------- end of first row  ----------------- */}
+                ------------------- end of first row  -----------------
 
                 <div id='SecondRowContainer'>
                     <div className='adviserQueueingCard'>
@@ -107,7 +159,7 @@ const QueueingPage = () => {
                                 group.mentorID?
                                 <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""} classroom={classroom}/></>
                                 :
-                                //if wala pay mentor
+                                if wala pay mentor
                                 <>
                                     <PersonPinCircleIcon style={{fontSize:'12em', alignSelf:'center',flex:2}}/>
                                     <Typography style={{fontSize:'1.2em', color:'gray', flex:0.2, display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center'}}>Scout for potential mentors by clicking browse.</Typography>
@@ -117,7 +169,7 @@ const QueueingPage = () => {
                                 </>
                             :
                             <>
-                                {/* if wala pay group */}
+                                if wala pay group
                                 <div style={{flex:1, display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center', gap:'20px'}}>
                                     <LockPersonIcon style={{fontSize:'12em'}}/>
                                     <Typography variant='subtitle2' fontSize='1em' fontFamily='Poppins' textAlign='center' color='gray'>Find a group first to enable mentorship availability.</Typography>
@@ -126,11 +178,11 @@ const QueueingPage = () => {
                         </div>    
                         :
                         <>
-                            {/* for journal component */}
+                            for journal component
                         </>
                     }
                     <div className='adviserQueueingCard' id='extraInfoCard'>
-                        {/* group card */}
+                        group card
                         <div className='extraInfoSubCard'>
                             <Typography variant='subtitle1' fontWeight='bold' color='gray'>Group</Typography>
                             {group?
@@ -159,7 +211,7 @@ const QueueingPage = () => {
                             }
                         </div>
 
-                        {/* consultations card */}
+                        consultations card
                         <div className='extraInfoSubCard'>
                             <Typography variant='subtitle1' fontWeight='bold' color='gray'>Consultation</Typography>
                             <div style={{flex:1,display:'flex',flexDirection:'column', textAlign:'center'}}>
@@ -174,7 +226,7 @@ const QueueingPage = () => {
                 </div>
             </div>
 
-            
+             */}
         </div>
     );
 }

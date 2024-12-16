@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import { useWebSocket } from '../User/WebSocketContext';
+import { useWebSocket } from '../../User/WebSocketContext';
 
 const AdviserQueueingCard = ({adviserID, groupID, classroom}) => {
     const [adviser,setAdviser] = useState(null);
@@ -56,22 +56,16 @@ const AdviserQueueingCard = ({adviserID, groupID, classroom}) => {
 
 
     return (
-        <div
-            style={{
-                display:'flex',
-                flexDirection:'column',
-                flex:1,
-            }}
-        >
+        <div style={{ display:'flex', flexDirection:'column', flex:1, display: 'flex', justifyContent: 'center', alignItems: 'center', }} >
             {adviser?
                 <>
-                    <div style={{justifyContent:'center', flex:2,alignItems:'center', display:'flex'}}>
+                    <div style={{justifyContent:'center', flex:2, alignItems:'center', display:'flex'}}>
                         <AccountCircleIcon style={{fontSize:'15em', color:'gray'}}/>
                     </div>
-                    <div style={{padding:'0px 2em 0px 2em', display:'flex', flexDirection:'column', flex:1}}>
+                    <div style={{padding:'0px 2em 0px 2em', display:'flex', flexDirection:'column', flex:1,  justifyContent: 'center', alignItems: 'center',}}>
                         <Typography style={{fontFamily:'poppins', fontSize:'1.5em'}} variant='h4'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</Typography>
                         <Typography variant='caption' fontFamily='poppins' color='gray' fontSize='0.9em'> Last seen x minutes ago.</Typography>
-                        <a href='/' style={{textDecorationColor:'#6abf05', width:'fit-content'}}><Typography variant='subtitle2' fontSize='0.9em' fontFamily='poppins' color='#6abf05'>View Profile</Typography></a>
+                        <a href='/' style={{textDecorationColor:'#000', width:'fit-content'}}><Typography variant='subtitle2' fontSize='0.9em' fontFamily='poppins' color='#000'>View Profile</Typography></a>
                     </div>
                     <div style={{padding:'0em 2em 1em 2em', flex:1.3, display:'flex'}}>
                         {adviser.ready && (adviser.cateringClasses.includes(classroom.classID) || adviser.cateringClasses.includes(0))?
