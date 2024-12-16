@@ -5,12 +5,12 @@ import { Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../../User/WebSocketContext';
 
-const AdviserQueueingCard = ({adviserID, groupID, classroom}) => {
+const AdviserQueueingCard = ({groupID, classroom}) => {
     const [adviser,setAdviser] = useState(null);
     const client = useWebSocket();
     const fetchAdviser = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${adviserID}`, {
+            const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${classroom.adviserID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,47 +56,49 @@ const AdviserQueueingCard = ({adviserID, groupID, classroom}) => {
 
 
     return (
-        <div style={{ display:'flex', flexDirection:'column', flex:1, display: 'flex', justifyContent: 'center', alignItems: 'center', }} >
+        <div style={{ border:'solid 1px black', flex:1, borderRadius:'15px', display:'flex', flexDirection:'column', alignItems:'center', padding:'1em 0.5em', backgroundColor:'white', height:'100%'}} >
             {adviser?
                 <>
-                    <div style={{justifyContent:'center', flex:2, alignItems:'center', display:'flex'}}>
-                        <AccountCircleIcon style={{fontSize:'15em', color:'gray'}}/>
+                    <div style={{justifyContent:'center', alignItems:'center', display:'flex', flexDirection:'column'}}>
+                        <Typography fontWeight='bold'>Adviser</Typography>
+                        <AccountCircleIcon style={{fontSize:'calc(6em + 1dvw)', color:'gray'}}/>
                     </div>
-                    <div style={{padding:'0px 2em 0px 2em', display:'flex', flexDirection:'column', flex:1,  justifyContent: 'center', alignItems: 'center',}}>
-                        <Typography style={{fontFamily:'poppins', fontSize:'1.5em'}} variant='h4'>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</Typography>
-                        <Typography variant='caption' fontFamily='poppins' color='gray' fontSize='0.9em'> Last seen x minutes ago.</Typography>
-                        <a href='/' style={{textDecorationColor:'#000', width:'fit-content'}}><Typography variant='subtitle2' fontSize='0.9em' fontFamily='poppins' color='#000'>View Profile</Typography></a>
+                    <div style={{display:'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center'}}>
+                        <Typography style={{fontFamily:'poppins', fontSize:'calc(1em + 1dvw)', fontWeight:'bold'}}>{adviser.user.firstname.charAt(0).toUpperCase()+adviser.user.firstname.slice(1)+" "+adviser.user.lastname.charAt(0).toUpperCase()+adviser.user.lastname.slice(1)}</Typography>
+                        <Typography variant='caption' fontFamily='poppins'> Last seen x minutes ago.</Typography>
+                        <a href='/' style={{textDecorationColor:'#000', width:'fit-content', marginTop:'10px'}}><Typography variant='subtitle2' fontFamily='poppins' color='#000'>View Profile</Typography></a>
                     </div>
-                    <div style={{padding:'0em 2em 1em 2em', flex:1.3, display:'flex'}}>
+                    <div style={{display:'flex', flexGrow:1, width:'100%', alignItems:'center', justifyContent:'center'}}>
                         {adviser.ready && (adviser.cateringClasses.includes(classroom.classID) || adviser.cateringClasses.includes(0))?
                             <>
-                                <div style={{backgroundColor:'rgba(185,255,102,0.22)', flex:1,borderRadius:'3px', textAlign:'center', display:'flex',justifyContent:'center', flexDirection:'column', padding:'0px 1em 0px 1em'}}>
-                                    <Typography style={{color:'#457B06'}} variant='h4' fontSize='3rem'>Available</Typography>
+                                <div style={{backgroundColor:'#CCBCFF', borderRadius:'15px', textAlign:'center', display:'flex',justifyContent:'center', flexDirection:'column', alignItems:'center', padding:'1em 2em'}}>
+                                <div style={{paddingInline:'10%', fontWeight:'bold', fontSize:'calc(1em + 1dvw)', color:'rgba(106,191,5,0.8)'}}>Available</div>
                                     
                                     {
 
                                         groupID?
                                             <>
-                                                <Typography style={{color:'gray', fontSize:'0.8em'}}>x groups in queue.</Typography>
+                                                <div style={{color:'gray', fontSize:'0.7em', paddingInline:'10%'}}>x groups in queue</div>
                                                 <NavLink 
-                                                    size='lg'
-                                                    style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold', width:'50%', alignSelf:'center', padding:'1%', fontSize:'1.5em', textDecoration:'none'}}
+                                                    style={{textDecoration:'none'}}
                                                     state={{adviser, groupID}}
                                                     to={'/onQueuePage'}
+                                                    className='primaryBTN'
                                                     >
                                                     Queue
                                                 </NavLink>
                                             </>
                                             :
-                                            <Typography color='red'>Proceed to team formation first.</Typography>
+                                            <div style={{color:'gray', fontSize:'0.7em', paddingInline:'10%'}}>Proceed to team formation first.</div>
+                                            
                                     }
                                 </div>
                             </>
                             :
                             <>
-                                <div style={{backgroundColor:'#FBD9d9', flex:1,borderRadius:'3px', textAlign:'center', display:'flex',justifyContent:'center', flexDirection:'column', padding:'0px 1em 0px 1em'}}>
-                                    <Typography style={{color:'rgba(255,0,0,0.5)'}} variant='h3'>Unavailable</Typography>
-                                    <Typography style={{color:'gray', fontSize:'0.8em'}}>View this person's profile for schedule details.</Typography>
+                                <div style={{backgroundColor:'#CCBCFF', borderRadius:'15px', textAlign:'center', display:'flex',justifyContent:'center', flexDirection:'column', alignItems:'center', padding:'1em 2em'}}>
+                                    <div style={{paddingInline:'10%', fontWeight:'bold', fontSize:'calc(1em + 1dvw)', color:'rgba(255,0,0,0.7)'}}>Unavailable</div>
+                                    <div style={{color:'gray', fontSize:'0.7em', paddingInline:'10%'}}>View this person's profile for schedule details.</div>
                                 </div>
                             </>
                         }

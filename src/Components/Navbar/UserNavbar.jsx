@@ -44,7 +44,7 @@ const UserNavbar = () => {
                 marginTop: '10px'
             }}
         >
-            <img src={logo} alt='logo' style={{height:'75%'}}/>
+            <img src={logo} alt='logo' style={{width:'calc(10em + 2dvw)',}}/>
  
             {user ? (
                 user.role === "ADMIN" ? (

@@ -1,123 +1,70 @@
 
 
-
-
-#SecondRowContainer{
-    display: flex;
-    gap: 20px;
-    min-height: 75dvh;
+.classroomInformation_QPS{
+    border-radius: 15px;
+    background-color: #7d57fc;
+    padding-inline: 1em;
+    height: 30%;
 }
 
-.adviserQueueingCard{
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
-    flex: 1;
-    padding: 1rem;
+.customClassRow_QPS{
+    border: solid 1px black;
     display: flex;
     flex-direction: column;
-}
-
-#extraInfoCard{
-    padding: 0em;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
     background-color: white;
-}
-
-.extraInfoSubCard{
-    height: fit-content;
+    flex: 1;
+    border-radius: 15px;
     padding: 1em;
-    flex: 1;
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-}
-
-#consul{
-    color: gray;
-    font-family: poppins;
-    flex: 1;
-    display: flex;
     align-items: center;
-    justify-content: center;
+    width: 100%;
 }
 
-#count{
-    font-size: 8em;
-    line-height: 1;
+.containerHeader_QPS{
+    text-align: center;
+    font-weight: bold;
 }
 
-.buttonCustom{
-    background-color: rgb(106, 191, 5);
-    font-size: clamp(0.20em + 0.8dvw, 0.5em + 1dvw, 0.20em + 0.8dvw);
-    border: transparent;
+.containerCaption_QPS{
+    font-size: calc(0.2em + 0.6dvw);
+    text-align: center;
+    color: #505050;
+    padding-inline: 10%;
 }
 
-.buttonCustom:hover{
-    background-color: #3e6a08;
+.primaryBTN{
+    border-radius: 10px;
+    background-color: #7d57fc;
+    font-size: calc(0.2em + 0.6dvw);
+    color: white;
+    padding: 1em 3em;
 }
 
 
-@media (max-width: 1200px){
-    #SecondRowContainer{
-        display: flex;
-        flex-wrap: wrap;
-    }
-    #consul{
-        font-size: 1.5em;
-    }
-
-    #extraInfoCard{
-        flex-basis: 100%;
-        flex-direction: row;
+@media (max-width: 927px) {
+    .classroomInformation_QPS{
         height: fit-content;
     }
-    .extraInfoSubCard{
-        height: 40dvh;
-    }
-    #consul{
-        font-size: 1.2em;
-        
-    }
-}
 
-@media (max-width: 850px){
-    #SecondRowContainer{
-        display: block;
+    .allTeamsBTN{
+        justify-content: start !important;
     }
-    .adviserQueueingCard{
-        margin-top: 20px;
-        height: 70dvh;
+
+    .customClassCol_QPS{
+        height: 400px;
+        margin-top: 10px;
     }
-    #extraInfoCard{
-        flex-basis: 0%;
-        flex-direction: row;
-        flex: 0;
-        height: fit-content;
+    .customClassRow_QPS{
+        max-height: fit-content !;
+        margin-top: 10px;
+        gap: 10px;
     }
-    .extraInfoSubCard{
-        height: 40dvh;
+    .primaryBTN{
+        font-size: 0.7em;
     }
-    #consul{
+    .containerCaption_QPS{
         font-size: 1em;
     }
-    .typoGname{
-        font-size: 1em !important;
-    }
-    #groupGreenBox{
-        width: 100% !important;
-    }
-    #leftContainer{
-        min-height: 100dvh;
-    }
-    #queueingTeamContainer{
-        flex-direction: row !important;
-        font-size: calc(0.35em + 1dvw);
-        gap: 10px !important;
-    }
-    #indexNumber{
-        font-size: calc(1em + 2dvw) !important;
+    #journalContainer_QPS{
+        min-height: 250px;
     }
 }

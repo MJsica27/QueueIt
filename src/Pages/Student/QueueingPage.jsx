@@ -1,26 +1,23 @@
-import { Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import '../../Static/QueueingPage.css';
 import AdviserQueueingCard from '../../Components/Card/Student/AdviserQueueingCard';
 import { useContext, useEffect, useState } from 'react';
-import LockPersonIcon from '@mui/icons-material/LockPerson';
-import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact'; 
-import GroupsIcon from '@mui/icons-material/Groups';
-import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'; 
 import BackButton from '../../Components/Buttons/BackButton';
 import { UserContext } from '../../Components/User/UserContext';
 import React from 'react';
-import { Col, Row, Button } from 'react-bootstrap'; 
 import { capitalizeFirstLetter, capitalizeText } from '../../Components/Utils/Utils'; 
 import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Typography } from '@mui/material';
+import LockedAdviser from '../../Components/Card/LockedAdviser';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
 const QueueingPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const classroom = location.state;
     const [group,setGroup] = useState(null);
-    const [count,setCount] = useState(0);
     const user = useContext(UserContext).user;
 
     const fetchGroup = async ()=>{
@@ -36,6 +33,7 @@ const QueueingPage = () => {
         if(user){
             if(user.role === "STUDENT"){
                 fetchGroup();
+                console.log(classroom.mentorable)
             }else{
                 navigate("*")
             }
@@ -45,188 +43,102 @@ const QueueingPage = () => {
     }, []);
     
     return (
-        <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">  
+        <div className="flex flex-col h-screen relative overflow-x-hidden overflow-y-auto items-center gap-4 pb-3">  
         
-            <AdviserBackgroundPage />
+            <AdviserBackgroundPage opac={0.5}/>
 
             <UserNavbar/>
 
-            <Row>
-                <Col>
-                    <Row>
-                    <div
-                        style={{
-                            height:'20dvh',
-                            width:'200dvh',
-                            backgroundColor: '#7d57fc',
-                            borderRadius:'5px',
-                            display:'flex',
-                            padding:'0.8rem',
-                            gap:10,
-                            alignItems:'center',
-                        }}
-                    >
-                        <BackButton />  
-                        <div
-                            style={{
-                                display:'flex',
-                                flexDirection:'column',
-                                flex:1
-                            }}
-                        >
-                            <Typography variant='h4' fontWeight='bold' color='white'>{classroom?capitalizeFirstLetter(classroom.subjectName):<></>}</Typography>
-                            <Typography variant='h6' color='white'>{classroom?capitalizeText(classroom.section):<></>}</Typography>
-                        </div>
-                    </div>
-                    </Row>
-                    <Row>
-                        <Col>   
-                        <div className='adviserQueueingCard' style={{ backgroundColor: 'whtie', margin: '5px', border: '1px solid black'}} >
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
-                            {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""} classroom={classroom}/>:<></>}
-                        </div>
+            <div style={{flexGrow:1, display:'flex', width:'90%', fontFamily:'poppins'}}>
+                <Container fluid style={{ flexGrow:1, display:'flex'}}>
+                    <Row style={{flexGrow:1}}>
+
+
+
+
+
+
+
+                        {/* left container */}
+                        <Col className='px-4' sm={12} md={9} style={{display:'flex', flexDirection:'column'}}>
+                                {/* classroom information + back button */}
+                                <Row className='classroomInformation_QPS'>
+                                    <Col style={{display:'flex'}}>
+                                        <div style={{display:'flex', flexDirection:'column', paddingBlock:'1em', flexGrow:1, overflow:'hidden'}}>
+                                            <div style={{display:'flex',overflowWrap:'break-word', flexGrow:1}}>
+                                                <Typography variant='h2' color='white' fontWeight='bold' style={{alignSelf:'center', fontSize:'calc(2.5em + 1dvw)'}}>{capitalizeFirstLetter(classroom.subjectName)}</Typography>
+                                            </div>
+                                            <Typography variant='h6' color='white' fontWeight='bold'>{classroom.section?capitalizeText(classroom.section):<>Section Undefined</>}</Typography>
+                                        </div>
+                                    </Col>
+                                    <Col className='allTeamsBTN' style={{display:'flex', alignItems:'center', justifyContent:'end'}}>
+                                        <div style={{display:'flex', gap:'10px', alignSelf:'center', paddingBlock:'1em', alignItems:'center'}}>
+                                            <BackButton/> <Typography variant='h6' color='white' fontWeight={100} style={{fontSize:'calc(0.5em + 1dvw)', textAlign:'center'}}>All Teams</Typography>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                {/* Adviser cards section */}
+                                <Row style={{flexGrow:1}} className='mt-2'>
+                                    <Col sm={12} md={classroom.mentorable?6:12} className='customClassCol_QPS' style={{padding:'0px',paddingRight:'5px'}}>
+                                        <AdviserQueueingCard classroom={classroom} groupID={group?.groupID}/>
+                                    </Col>
+                                    {
+                                        classroom.mentorable?
+                                            <Col sm={12} md={6} className='customClassCol_QPS' style={{padding:'0px', paddingLeft:'5px'}}>
+                                                {classroom.mentorable?
+                                                    group?
+                                                        <AdviserQueueingCard classroom={classroom} groupID={group?.groupID} title={"Mentor"}/>:<LockedAdviser/>:<></>}
+                                            </Col>
+                                            :
+                                            <>
+
+                                            </>
+                                    }
+                                    
+                                </Row>
                         </Col>
 
-                        <Col>
-                        </Col>     
+
+
+
+
+
+
+
+                        {/* right container */}
+                        <Col sm={12} md={3} style={{display:'flex', flexDirection:'column', gap:'10px', justifyContent:'space-between'}}>
+                            <div className='customClassRow_QPS'>
+                                <div className='containerHeader_QPS'>Groups</div>
+                                <PersonSearchIcon style={{fontSize:'calc(4em + 1dvw)'}}/>
+                                <Typography className='containerCaption_QPS'>You have yet to find any group. Connect with others</Typography>
+                                <button className='primaryBTN'>Connect</button>
+                            </div>
+                            <div id='journalContainer_QPS' className='customClassRow_QPS' style={{justifyContent:'space-between'}}>
+                                <div className='containerHeader_QPS'>Journal</div>
+                                <Typography className='containerCaption_QPS'>View journal entries.</Typography>
+                                <button className='primaryBTN'>Browse</button>
+                            </div>
+                            <div className='customClassRow_QPS'>
+                                <div className='containerHeader_QPS'>Consultation</div>
+                                <div style={{fontSize:'calc(4em + 1dvw)'}}>0</div>
+                                <Typography className='containerCaption_QPS'>Consultations conducted.</Typography>
+                                <button className='primaryBTN'>History</button>
+                            </div>
+                        </Col>
+
+
+
+
+
                     </Row>
-                </Col>
-                <Col>
-                </Col>
-            </Row>
+                </Container>
+            </div>
+
+            
 
            
             
-            {/* <JandelStudentNavbar/>
-            main container kanang puti
-            <div 
-                style={{
-                    maxWidth:'100dvw',
-                    padding:'1dvh 5dvw 1dvh 5dvw',
-                    display:'flex',
-                    flexDirection:'column',
-                    gap:10,
-                }}
-            >
-                Classroom information container kanang gray first row
-                <div
-                    style={{
-                        height:'11dvh',
-                        backgroundColor:'rgba(0,0,0,0.03)',
-                        borderRadius:'5px',
-                        display:'flex',
-                        padding:'0.8rem',
-                        gap:10,
-                        alignItems:'center',
-                    }}
-                >
-                    <BackButton />  
-                    green box 
-                    <div
-                        style={{
-                            backgroundColor:'#b9ff66',
-                            height:'100%',
-                            aspectRatio:1,
-                            borderRadius:'3px'
-                        }}
-                    >
-                    </div>
-
- 
-                    <div
-                        style={{
-                            display:'flex',
-                            flexDirection:'column',
-                            flex:1
-                        }}
-                    >
-                        <Typography variant='h6' fontWeight='bold'>{classroom?capitalizeFirstLetter(classroom.subjectName):<></>}</Typography>
-                        <Typography variant='caption' color='gray'>{classroom?capitalizeText(classroom.section):<></>}</Typography>
-                    </div>
-                </div>
-
-                ------------------- end of first row  -----------------
-
-                <div id='SecondRowContainer'>
-                    <div className='adviserQueueingCard'>
-                        <Typography variant='subtitle1' fontWeight='bold' color='gray'>Adviser</Typography>
-                        {classroom?<AdviserQueueingCard adviserID={classroom.adviserID} groupID={group?group.groupID:""} classroom={classroom}/>:<></>}
-                    </div>
-                    {classroom.mentorable?
-                        <div className='adviserQueueingCard'>
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Mentor</Typography>
-                            {group?
-                                group.mentorID?
-                                <><AdviserQueueingCard adviserID={group.mentorID} groupID={group?group.groupID:""} classroom={classroom}/></>
-                                :
-                                if wala pay mentor
-                                <>
-                                    <PersonPinCircleIcon style={{fontSize:'12em', alignSelf:'center',flex:2}}/>
-                                    <Typography style={{fontSize:'1.2em', color:'gray', flex:0.2, display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center'}}>Scout for potential mentors by clicking browse.</Typography>
-                                    <div style={{flex:1,display:'flex', alignItems:'center',justifyContent:'center'}}>
-                                        <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>Browse</Button>
-                                    </div>
-                                </>
-                            :
-                            <>
-                                if wala pay group
-                                <div style={{flex:1, display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center', gap:'20px'}}>
-                                    <LockPersonIcon style={{fontSize:'12em'}}/>
-                                    <Typography variant='subtitle2' fontSize='1em' fontFamily='Poppins' textAlign='center' color='gray'>Find a group first to enable mentorship availability.</Typography>
-                                </div>
-                            </>}
-                        </div>    
-                        :
-                        <>
-                            for journal component
-                        </>
-                    }
-                    <div className='adviserQueueingCard' id='extraInfoCard'>
-                        group card
-                        <div className='extraInfoSubCard'>
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Group</Typography>
-                            {group?
-                                <>
-                                    <div id='groupGreenBox' style={{flex:1, backgroundColor:'#b9ff66',borderRadius:'5px',width:'50%', alignSelf:'center'}}>
-
-                                    </div>
-                                    <div style={{flex:0.5, display:'flex', justifyContent:'center', alignItems:'center'}}>
-                                        <Typography className='typoGname' style={{fontFamily:'poppins',fontSize:'1.5em', textAlign:'center'}}>{group.groupName}</Typography>
-                                    </div>
-                                    <div style={{display:'flex',flex:0.2, justifyContent:'center', alignItems:'end', gap:'10px'}}>
-                                        <GroupsIcon style={{fontSize:'2em'}}/>
-                                        <Typography style={{color:'#6abf05', cursor:'pointer'}}>{group.students.length === 1? <>{group.students.length} Member</>: <>{group.students.length} Members</>}</Typography>
-                                    </div>
-                                </>
-                                :
-                                <>
-                                    <div style={{display:'flex',flex:1,flexDirection:'column'}}>
-                                        <ConnectWithoutContactIcon style={{fontSize:'clamp(5em, 8em, 12em)',alignSelf:'center', flex:1}}/>
-                                        <Typography style={{padding:'0px 0.8em 0px 0.8em',color:'gray', display:'flex',alignItems:'center', justifyContent:'center', textAlign:'center', flex:1 }}>You have yet to find any group. Connect with others</Typography>
-                                        <div style={{display:'flex', alignItems:'center',justifyContent:'center'}}>
-                                            <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>Connect</Button>
-                                        </div>
-                                    </div>
-                                </>
-                            }
-                        </div>
-
-                        consultations card
-                        <div className='extraInfoSubCard'>
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Consultation</Typography>
-                            <div style={{flex:1,display:'flex',flexDirection:'column', textAlign:'center'}}>
-                                <span id='count'>{count}</span>
-                                <span id='consul'>Consultations conducted.</span>
-                                <div style={{display:'flex', alignItems:'center',justifyContent:'center'}}>
-                                    <Button size='lg' style={{backgroundColor:'#b9ff66',color:'black',border:'none', fontWeight:'bold'}}>History</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             */}
+            
         </div>
     );
 }
