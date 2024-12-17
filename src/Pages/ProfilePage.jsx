@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import UserNavbar from '../Components/Navbar/UserNavbar';
+import Cropper from 'react-easy-crop';
+import AdviserBackgroundPage from '../Components/Backgound.jsx/AdviserBackgroundPage';
+
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -15,15 +18,62 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [showSavePopup, setShowSavePopup] = useState(false);
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(true);
   const [successfulSave, setSuccessfulSave] = useState(null);
   const [showResultPopup, setShowResultPopup] = useState(false);
   const [saveResult, setSaveResult] = useState(null);
-  const [passwordError, setPasswordError] = useState('');  
+  const [passwordError, setPasswordError] = useState('');
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
+  const [image, setImage] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [cropperOpen, setCropperOpen] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [aspect, setAspect] = useState(1); // 1:1 aspect ratio for profile picture
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+        setCropperOpen(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropComplete = (croppedArea, croppedAreaPixels) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = croppedAreaPixels.width;
+    canvas.height = croppedAreaPixels.height;
+    const ctx = canvas.getContext('2d');
+    const imageElement = new Image();
+    imageElement.src = image;
+    imageElement.onload = () => {
+      ctx.drawImage(
+        imageElement,
+        croppedAreaPixels.x,
+        croppedAreaPixels.y,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height,
+        0,
+        0,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height
+      );
+      canvas.toBlob((blob) => {
+        const croppedImageUrl = URL.createObjectURL(blob);
+        setCroppedImage(croppedImageUrl);
+        setUser(prev => ({ ...prev, photoURL: croppedImageUrl })); // Update user state with cropped image
+        setCropperOpen(false);
+      }, 'image/jpeg');
+    };
+  };
+
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user')); 
+    const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
       console.log('User is logged in:', storedUser);
       setUser(storedUser);
@@ -31,9 +81,9 @@ export default function ProfilePage() {
       console.log('No user is logged in');
       navigate('/');
     }
-    setLoading(false); 
-  }, [navigate]); 
-  
+    setLoading(false);
+  }, [navigate]);
+
   const handleEditClick = () => {
     setEditable(true);
     setNewFirstName(user.firstname);
@@ -118,17 +168,17 @@ export default function ProfilePage() {
           throw new Error('Failed to save changes.');
         }
 
-        const updatedUserData = await response.json(); 
+        const updatedUserData = await response.json();
 
         const updatedUser = {
-          ...user, 
-          firstname: updatedUserData.firstname || user.firstname, 
-          lastname: updatedUserData.lastname || user.lastname, 
+          ...user,
+          firstname: updatedUserData.firstname || user.firstname,
+          lastname: updatedUserData.lastname || user.lastname,
         };
 
-        localStorage.setItem('user', JSON.stringify(updatedUser)); 
+        localStorage.setItem('user', JSON.stringify(updatedUser));
         console.log('Updated user data in localStorage:', updatedUser);
-        setUser(updatedUser); 
+        setUser(updatedUser);
         setSaveResult('Profile updated successfully.');
         setSuccessfulSave(true);
         setEditable(false);
@@ -154,7 +204,7 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (!user) {
@@ -163,22 +213,35 @@ export default function ProfilePage() {
   return (
     <div className="m-0"
       style={{
-        minHeight: '100vh',
-        background: '#FCFFF8',
-        color: '#333333', 
+        color: '#333333',
       }}>
-      <UserNavbar/>
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1, // Ensure it stays behind other content
+        }}
+      >
+        <AdviserBackgroundPage />
+      </div>
+
+      <UserNavbar />
 
       <div className="container"
         style={{
-          background: '#FFFFFF',
+          background: 'rgba(255, 255, 255, 0.9)',
           borderRadius: '10px',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
           width: '85%',
           position: 'relative',
           marginBottom: '50px',
           marginTop: '50px',
-          padding: '20px 40px'
+          padding: '20px 40px',
+          borderColor:  'black',
+          borderWidth: '1px',
         }}>
         <h2>Personal Information</h2>
 
@@ -187,10 +250,16 @@ export default function ProfilePage() {
           <div className="row mb-4">
             <div className="col-md-6 mb-4 mt-5">
               <img
-                src={user.profilePicture || 'https://placehold.co/100x100'}
+                src={croppedImage || user.photoURL || 'https://placehold.co/100x100'}
                 alt={`${user.firstname}'s profile`}
                 className="img-fluid rounded-circle"
-                style={{ width: '100px', height: '100px' }}
+                style={{ width: '100px', height: '100px', cursor: editable ? 'pointer' : 'default' }}
+                onClick={() => editable && document.getElementById('fileInput').click()}
+              />
+              <input type="file" id="fileInput"
+                style={{ display: 'none' }}
+                accept="image/jpeg, image/png"
+                onChange={handleImageUpload}
               />
             </div>
             <div className="col-md-6 mb-5 mt-5" style={{ textAlign: 'right' }}>
@@ -199,18 +268,55 @@ export default function ProfilePage() {
                   borderRadius: '8px',
                   width: '93px',
                   height: '37px',
-                  backgroundColor: '#B9FF66',
+                  color: 'white',
+                  backgroundColor: editable ? '#CFC0FF' : '#7D57FC',
                   border: 'none',
                   transition: 'background-color 0.3s ease',
+                  // opacity: editable ? 0.7 : 1,
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#B9FF66'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = editable ? '#CFC0FF' : '#7D57FC'}
                 onClick={handleEditClick} // Handle Edit click
+                disabled={editable}
               >
                 Edit
               </button>
             </div>
           </div>
+          {cropperOpen && (
+            <div style={modalStyle}>
+              <div style={modalContentStyle}>
+                <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+                  <Cropper
+                    image={image}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={aspect}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                  />
+                </div>
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                  <button
+                  style={{color:'black', marginRight:'20px', width: '80px',  height: '37px', borderRadius:'10px'}}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                    onClick={() => setCropperOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    style={buttonStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#7D57FC'}
+                    onClick={() => handleCropComplete(crop, { x: crop.x, y: crop.y, width: 100, height: 100 })} // Adjust the width and height as needed
+                  >
+                    Crop
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Two columns for First Name and Last Name */}
           <div className="row mb-4">
@@ -313,7 +419,7 @@ export default function ProfilePage() {
               onClick={handleCancelClick}
               style={{
                 borderRadius: '8px',
-                width: '130px',
+                width: '100px',
                 height: '37px',
                 backgroundColor: 'white',
                 borderColor: 'lightGray',
@@ -330,16 +436,17 @@ export default function ProfilePage() {
               disabled={isSaveDisabled}
               style={{
                 borderRadius: '8px',
-                width: '130px',
+                width: '100px',
                 height: '37px',
-                backgroundColor: '#B9FF66',
+                color: 'white',
+                backgroundColor: '#7D57FC',
                 border: 'none',
                 transition: 'background-color 0.3s ease',
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#B9FF66'}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#7D57FC'}
             >
-              Save Changes
+              Save
             </button>
           </div>
         )}
@@ -355,11 +462,11 @@ export default function ProfilePage() {
               top: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
               justifyContent: 'center',
               alignItems: 'center',
               overflow: 'auto',
-              display: 'flex', 
+              display: 'flex',
             }}
           >
             <div
@@ -368,12 +475,12 @@ export default function ProfilePage() {
                 borderRadius: '5px',
                 padding: '20px',
                 paddingTop: '30px', paddingBottom: '30px',
-                width: '400px', 
+                width: '400px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 textAlign: 'center'
               }}
             >
-              <h4>Cancel Editing</h4><hr />
+              <h4 style={{ color: '#7D57FC', fontWeight:'bold' }}>Cancel Editing</h4>
               <p>Are you sure? Changes will not be saved.</p>
               <button
                 style={{
@@ -383,10 +490,10 @@ export default function ProfilePage() {
                   backgroundColor: 'white',
                   borderColor: 'lightGray',
                   transition: 'background-color 0.3s ease',
-                  marginRight: '80px',
+                  marginRight: '10px',
                   marginTop: '20px',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                 onClick={() => handleCancelPopupClose(false)}>Continue Editing</button>
               <button
@@ -394,12 +501,13 @@ export default function ProfilePage() {
                   borderRadius: '5px',
                   width: '80px',
                   height: '37px',
-                  backgroundColor: 'white',
+                  backgroundColor: '#7D57FC',
                   borderColor: 'lightGray',
+                  color:'white',
                   transition: 'background-color 0.3s ease',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#7D57FC'}
                 onClick={() => handleCancelPopupClose(true)}>Yes</button>
             </div>
           </div>
@@ -416,11 +524,11 @@ export default function ProfilePage() {
               top: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
               justifyContent: 'center',
               alignItems: 'center',
               overflow: 'auto',
-              display: 'flex', 
+              display: 'flex',
             }}
           >
             <div
@@ -429,12 +537,12 @@ export default function ProfilePage() {
                 borderRadius: '5px',
                 padding: '20px',
                 paddingTop: '30px', paddingBottom: '30px',
-                width: '400px', 
+                width: '400px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 textAlign: 'center'
               }}
-            >
-              <h4>Confirm Changes</h4><hr />
+            ><h4 style={{ color: '#7D57FC', fontWeight: 'bold' }}>Confirm Changes</h4>
+              
               <p>Are you sure you want to save these changes?</p>
               <button
                 style={{
@@ -444,10 +552,10 @@ export default function ProfilePage() {
                   backgroundColor: 'white',
                   borderColor: 'lightGray',
                   transition: 'background-color 0.3s ease',
-                  marginRight: '40px',
+                  marginRight: '10px',
                   marginTop: '20px',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                 onClick={() => handleSaveChangesConfirm(false)}>Continue Editing</button>
               <button
@@ -455,13 +563,14 @@ export default function ProfilePage() {
                   borderRadius: '5px',
                   width: '80px',
                   height: '37px',
-                  backgroundColor: 'white',
+                  backgroundColor: '#7D57FC',
+                  color: 'white',
                   borderColor: 'lightGray',
                   transition: 'background-color 0.3s ease',
                   marginTop: '20px',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DEFFB8'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#7D57FC'}
                 onClick={() => handleSaveChangesConfirm(true)}>Yes</button>
             </div>
           </div>
@@ -471,9 +580,12 @@ export default function ProfilePage() {
         {showResultPopup && (
           <div style={popupStyle}>
             <div style={modalContentStyle}>
-              <h4>{successfulSave ? 'Success' : 'Profile Update Failed'}</h4><hr />
+              <h4 style={{ color: '#7D57FC', fontWeight:'bold' }}>{successfulSave ? 'Success' : 'Profile Update Failed'}</h4>
               <p>{saveResult}</p>
-              <button style={buttonStyle} onClick={handleResultPopupClose}>Okay</button>
+              <button style={buttonStyle} 
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#CFC0FF'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#7D57FC'}
+              onClick={handleResultPopupClose}>Okay</button>
             </div >
           </div >
         )}
@@ -510,11 +622,27 @@ const modalContentStyle = {
 };
 
 const buttonStyle = {
-  borderRadius: '5px',
+  borderRadius: '10px',
   width: '80px',
   height: '37px',
-  backgroundColor: 'white',
+  backgroundColor: '#7D57FC',
+  color: '#fff',
   borderColor: 'lightGray',
   transition: 'background-color 0.3s ease',
   marginTop: '20px',
-};  
+  // '&:hover': {color: '#CFC0FF', }
+};
+
+const modalStyle = {
+  display: 'block',
+  position: 'fixed',
+  zIndex: 1050,
+  left: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  display: 'flex',
+};
