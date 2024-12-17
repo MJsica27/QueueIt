@@ -243,7 +243,7 @@ export default function ProfilePage() {
           borderColor:  'black',
           borderWidth: '1px',
         }}>
-        <h2>Personal Information</h2>
+        <h2 style={{ fontWeight: 'bold' }}>Personal Information</h2>
 
         <div style={{ paddingLeft: '5%', paddingRight: '5%' }}>
           {/* Profile Picture */}
@@ -321,7 +321,7 @@ export default function ProfilePage() {
           {/* Two columns for First Name and Last Name */}
           <div className="row mb-4">
             <div className="col-md-6">
-              <label className="form-label">First Name</label>
+              <label className="form-label" style={{ fontWeight: 'bold' }}>First Name</label>
               <input
                 type="text"
                 value={user.firstname}
@@ -332,7 +332,7 @@ export default function ProfilePage() {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label">Last Name</label>
+              <label className="form-label" style={{ fontWeight: 'bold' }}>Last Name</label>
               <input
                 type="text"
                 value={user.lastname}
@@ -346,7 +346,7 @@ export default function ProfilePage() {
 
           {/* Email Address */}
           <div className="mb-4">
-            <label className="form-label">Email Address</label>
+            <label className="form-label" style={{ fontWeight: 'bold' }}>Email Address</label>
             <input
               type="text"
               value={user.username}
@@ -367,6 +367,7 @@ export default function ProfilePage() {
                   color: 'black',
                   textDecoration: 'underline',
                   cursor: 'pointer',
+                  fontWeight: 'bold',
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.color = 'lightgray'}
                 onMouseLeave={(e) => e.currentTarget.style.color = 'black'}
@@ -380,7 +381,7 @@ export default function ProfilePage() {
           {showChangePassword && (
             <div className="row mb-4">
               <div className="col-md-6 mb-3">
-                <label className="form-label">Current Password</label>
+                <label className="form-label" style={{ fontWeight: 'bold' }}>Current Password</label>
                 <input
                   type="password"
                   value={currentPassword}
@@ -390,7 +391,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <label className="form-label">New Password</label>
+                <label className="form-label" style={{ fontWeight: 'bold' }}>New Password</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -398,7 +399,7 @@ export default function ProfilePage() {
                   className="form-control"
                   style={{ borderRadius: '8px' }}
                 />
-                <label className="form-label">Confirm New Password</label>
+                <label className="form-label" style={{ fontWeight: 'bold' }}>Confirm New Password</label>
                 <input
                   type="password"
                   value={confirmPassword}
