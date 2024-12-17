@@ -9,7 +9,7 @@ import img6 from '../../Assets/img/img6.png';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import BackButton from '../../Components/Buttons/BackButton';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import StudentsModal from '../../Components/Modal/StudentsModal';
 import EditClassroomModal from '../../Components/Modal/EditClassroomModal';
 import DeleteClassroomModal from '../../Components/Modal/DeleteClassroomModal';

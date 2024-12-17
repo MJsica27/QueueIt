@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreateClassroomDialog';
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import img5 from '../../Assets/img/img5.png'; 
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 
 export default function AdviserPage() {
   const navigate = useNavigate();

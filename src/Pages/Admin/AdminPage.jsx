@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button'; 
 import { toast } from 'react-toastify'; 
 import UserNavbar from '../../Components/Navbar/UserNavbar'; 
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import img5 from '../../Assets/img/img5.png'; 
 import CreateUserAccount from '../../Components/Dialogs/Admin/AdminCreateUserAccountDialog';
 

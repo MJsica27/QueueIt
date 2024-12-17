@@ -4,7 +4,7 @@ import BackButton from '../../Components/Buttons/BackButton';
 import UserNavbar from '../../Components/Navbar/UserNavbar'; 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';   
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage'; 
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage'; 
 import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import MemberProfileCard from '../../Components/Card/Adviser/MemberProfileCard';

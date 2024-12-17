@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdviserNavbar from '../../Components/Navbar/UserNavbar';
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import { Box, Card, CardContent, Typography, Button, CardMedia, Modal, TextField, Fade } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import EditIcon from '@mui/icons-material/Edit';

@@ -7,7 +7,7 @@ import BackButton from '../../Components/Buttons/BackButton';
 import { UserContext } from '../../Components/User/UserContext';
 import React from 'react';
 import { capitalizeFirstLetter, capitalizeText } from '../../Components/Utils/Utils'; 
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Typography } from '@mui/material';
 import LockedAdviser from '../../Components/Card/LockedAdviser';

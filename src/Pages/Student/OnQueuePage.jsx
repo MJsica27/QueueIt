@@ -17,7 +17,7 @@ import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Note from '../../Components/Card/Note';
 import MyModal from '../../Components/Modal/Modal';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 
 const OnQueuePage = () => {
     const location = useLocation()

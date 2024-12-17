@@ -14,7 +14,7 @@ import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Queue from '../../Components/Queue';
 import OpenQueueModal from '../../Components/Modal/OpenQueueModal';
 import { convertToTime, millisecondsToHMS } from '../../Components/Utils/Utils';
-import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import starVec from '../../Assets/img/img4.png'
 import vec from '../../Assets/img/3.png'
 import squiggly from '../../Assets/img/img3.png'
@@ -40,6 +40,7 @@ export default function AdviserQueuePage() {
   const [queueingTimeExpiration, setQueueingTimeExpiration] = useState(null);
   const [difference, setDifference] = useState(null);
   const [limit, setLimit] = useState(-1);
+  
 
   useEffect(()=>{
     const intervalID = setInterval(()=>{
@@ -250,19 +251,22 @@ export default function AdviserQueuePage() {
     }
   }
 
-  const concludeMeeting = async ()=>{
-    if(user){
+  const concludeMeeting = async () => {
+    if (user && meeting?.meetingID) { // Check if meeting and meetingID exist
         try {
-            const response = await fetch(`http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-    
+            const response = await fetch(
+                `http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
             switch (response.status) {
                 case 200:
-                    setTendingTeam(null)
+                    setTendingTeam(null);
                     localStorage.removeItem("meetingID");
                     break;
                 case 404:
@@ -270,13 +274,16 @@ export default function AdviserQueuePage() {
                     toast.error(message);
                     break;
                 default:
-                    // toast.error("Something went wrong while fetching teams.");
+                    toast.error("Something went wrong while concluding the meeting.");
             }
         } catch (error) {
             toast.error("An error occurred: " + error.message);
         }
+    } else {
+        toast.error("Meeting or Meeting ID is missing.");
     }
-  }
+};
+
 
   const createNote = async ()=>{
     if(user){

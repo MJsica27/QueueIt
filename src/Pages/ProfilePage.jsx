@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserNavbar from '../Components/Navbar/UserNavbar';
 import Cropper from 'react-easy-crop';
-import AdviserBackgroundPage from '../Components/Backgound.jsx/AdviserBackgroundPage';
+import AdviserBackgroundPage from '../Components/Backgound/AdviserBackgroundPage';
 
 
 export default function ProfilePage() {
@@ -30,7 +30,7 @@ export default function ProfilePage() {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [aspect, setAspect] = useState(1); // 1:1 aspect ratio for profile picture
+  const [aspect, setAspect] = useState(1);  
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
