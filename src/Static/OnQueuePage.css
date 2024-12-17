@@ -44,12 +44,14 @@
 #adviserInfoContainer{
     display: flex;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
+    background-color: #7d57fc;
+    border-radius: 15px;
     gap: 10px;
-    padding-inline:1dvw;
+    padding-inline:1em;
     padding-block: 10px;
     height: 15%;
+    border: solid 1px black;
+    color: white;
 }
 
 #queueingTeamContainer{
@@ -65,8 +67,9 @@
 }
 
 .queueingTeamsContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
+    background-color: white;
+    border: solid 1px black;
+    border-radius: 15px;
     flex-grow: 1;
     padding-inline:1dvw;
     padding-block: 10px;
@@ -81,7 +84,7 @@
 
 #indexNumber{
     color: white;
-    background-color: #457B06;
+    background-color: #7d57fc;
     clip-path: circle();
     font-size: clamp(0.6rem,0.8vw + 1rem, 1.5rem);
     height: 1em;
@@ -93,7 +96,7 @@
 }
 
 #queueingTeamMiniProfile{
-    background-color: #B9FF66;
+    background-color: rgb(215,203,255);
     height: 5em;
     aspect-ratio: 1;
 }
@@ -115,16 +118,17 @@
 
 
 #currentlyTendingContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
+    background-color: white;
+    border: solid 1px black;
+    border-radius: 15px;
     /* padding: 1em; */
-    padding: 5px 10px;
+    padding: 1em;
     flex: 0.25;
 }
 
 #ChatBoxContainer, #savedNotesContainer{
-    background-color: rgba(0, 0, 0, 0.03);
-    border-radius: 5px;
+    background-color: rgb(215,203,255);
+    border-radius: 15px;
     padding: 1em;
     flex: 1;
     max-height: calc(100% - 100px);
@@ -132,6 +136,7 @@
     flex-direction: column;
     overflow: hidden;
     max-width: calc(100%);
+    border: solid 1px black;
 }
 
 #chatBoxFeed{
@@ -157,6 +162,10 @@
 }
 #savedNotesContainer{
     max-height: 100%;
+}
+.buttonCustom{
+    background-color: #7d57fc;
+    border: solid 1px black;
 }
 
 @media (max-width: 850px){

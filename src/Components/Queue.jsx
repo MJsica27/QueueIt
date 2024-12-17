@@ -27,15 +27,15 @@ const Queue = ({teams, groupID, holdQueue, cancelQueue, onHoldTeams, admitTeam, 
                                     <>
                                         {onHoldTeams.find(onHoldTeam=>onHoldTeam.groupID===team.groupID)?
                                             <>
-                                                <Button disabled={loading} size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={requeue}>Requeue</Button>
+                                                <Button disabled={loading} size='sm' style={{paddingInline:'1.5em'}} className='buttonCustom' onClick={requeue}>Requeue</Button>
                                             </>
                                             :
                                             <>
-                                                <Button disabled={loading} size='sm' style={{paddingInline:'1.5em', backgroundColor:'#FFD466', border:'none'}} className='buttonCustom' onClick={holdQueue}>Hold</Button>
+                                                <Button disabled={loading} size='sm' style={{paddingInline:'1.5em'}} className='buttonCustom' onClick={holdQueue}>Hold</Button>
                                                 
                                             </>
                                         }
-                                        <Button disabled={loading} size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'#FF6666', border:'none'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
+                                        <Button disabled={loading} size='sm' style={{marginLeft:'5px', paddingInline:'1em', backgroundColor:'white', color:'black'}} className='buttonCustom' onClick={cancelQueue}>Cancel</Button>
                                         
                                     </>
                                     :

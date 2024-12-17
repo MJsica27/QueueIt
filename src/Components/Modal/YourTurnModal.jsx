@@ -13,7 +13,7 @@ const YourTurnModal = ({open, handleClose}) => {
                     <CircularProgress size={100}/>
                     <Typography variant='h4'>It's your turn now.</Typography>
                     <Typography>Please go to your adviser.</Typography>
-                    <Button variant='contained' color='success' onClick={handleClose}>Close</Button>
+                    <Button variant='contained' className='buttonCustom' style={{border:'none'}} onClick={handleClose}>Close</Button>
                 </div>
                 
             </Modal>

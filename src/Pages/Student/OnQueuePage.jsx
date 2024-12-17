@@ -17,6 +17,7 @@ import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Note from '../../Components/Card/Note';
 import MyModal from '../../Components/Modal/Modal';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
 
 const OnQueuePage = () => {
     const location = useLocation()
@@ -280,7 +281,6 @@ const OnQueuePage = () => {
         if(containerRef.current){
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-        // console.log("nidagan")
     },[chats])
     
     const fetchNotes = async (groupID) =>{
@@ -487,6 +487,7 @@ const OnQueuePage = () => {
     
     return (
         <div id='mainContainer'>
+            <AdviserBackgroundPage opac={0.5}/>
             <UserNavbar/>
             {client && user?
                 <div id="QueuePageSecondRowContainer">
@@ -495,16 +496,16 @@ const OnQueuePage = () => {
                             <AccountCircleIcon className='adviserProfilePhoto'/>
                             <div style={{display:'flex', flexDirection:'column',justifyItems:'center'}}>
                                 {adviser?<span id='adviserName'>{capitalizeFirstLetter(adviser.user.firstname)+" "+capitalizeFirstLetter(adviser.user.lastname)}</span>:<></>}
-                                <a href='/' style={{color:'#6ABf05'}}>View Profile</a>
+                                <a href='/' style={{color:'white'}}>View Profile</a>
                             </div>
                             <span style={{flex:1, display:'flex',justifyContent:'end'}}>Queueing ends 3:00 pm</span>
                         </div>
-                        <div id='adviserInfoContainer' style={{display:'flex', justifyContent:'space-between'}}>
-                            <Typography variant='h6' color='gray'>Current Time:</Typography>
+                        <div id='adviserInfoContainer' style={{display:'flex', justifyContent:'space-between', backgroundColor:'white',color:'black'}}>
+                            <Typography variant='h6'>Current Time:</Typography>
                             <span className='timeText'>{time}</span>
                         </div>
                         {tendingTeam && tendingTeam.groupID == groupID?
-                            <div id="NotesContainer" style={{flex:1.7, backgroundColor:'rgba(0, 0, 0, 0.03)', borderRadius:'5px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%', maxWidth:'100%', overflow:'hidden'}}>
+                            <div id="NotesContainer" style={{flex:1.7, backgroundColor:'rgb(215,203,255)', borderRadius:'15px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%', maxWidth:'100%', overflow:'hidden', border:'solid 1px black'}}>
                                 <div id="noteTitle">
                                     <input type="text" placeholder='Note Title' style={{width:'100%', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0'}} value={subject} onChange={(e)=>{setSubject(e.target.value)}} />
                                 </div>
@@ -536,7 +537,7 @@ const OnQueuePage = () => {
 
                     <div id="rightContainer">
                         <div id="currentlyTendingContainer">
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
+                            <Typography variant='subtitle1'>Currently Tending</Typography>
                             <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
                                 {tendingTeam?
                                     <>
@@ -544,7 +545,7 @@ const OnQueuePage = () => {
                                         <div>
                                             <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
                                             <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
-                                            <div style={{color:'#6abf05'}}>Time elapsed: 23 minutes</div>
+                                            <div style={{color:'#7d57fc'}}>Time elapsed: 23 minutes</div>
                                         </div>    
                                     </>
                                     :
@@ -559,7 +560,7 @@ const OnQueuePage = () => {
                             </div>
                         </div>
                         {tendingTeam && tendingTeam.groupID == groupID?
-                            <div id="savedNotesContainer" style={{backgroundColor:'rgba(0, 0, 0, 0.03)', overflowY:'auto' }}>
+                            <div id="savedNotesContainer" style={{backgroundColor:'rgb(215,203,255)', overflowY:'auto' }}>
                                 {notes.length>0?
                                     <div style={{display:'flex', flexDirection:'column', gap:'15px', flex:1, overflowY:'auto', maxHeight:'100%'}}>
                                     {notes.map((singlenote)=>(
@@ -575,32 +576,33 @@ const OnQueuePage = () => {
                                 <MyModal open={noteToggle} setOpen={setNoteToggle} note={note}/>
                             </div>
                             :
-                            <div id="ChatBoxContainer">
-                                <Typography variant='subtitle1' fontWeight='bold' color='gray'>Chat</Typography>
-                                <div id="chatBoxFeed" ref={containerRef}>
-                                    <div id="welcomeChatMessage">
-                                        Welcome to {`${adviser.user.firstname} ${adviser.user.lastname}'s chat!`}
-                                    </div>
-                                    <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
-                                        {chats.map((chat,index)=>(
-                                            <div style={{display:'flex',justifyContent:chat.userID==user.userID?'end':'start', flexDirection:chat.userID == user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
-                                                <div id="chatProfile"></div>
-                                                <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
-                                                    <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
-                                                    <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.userID?'end':'start'}}>
-                                                        {chat.message}
+                            <div id='ChatBoxContainer' style={{display:'flex', flexDirection:'column'}}>
+                                <div id="ChatBoxContainer" style={{maxHeight:'100%', border:'solid 1px silver', backgroundColor:'white'}}>
+                                    <div id="chatBoxFeed" ref={containerRef}>
+                                        <div id="welcomeChatMessage">
+                                            Welcome to {`${adviser.user.firstname} ${adviser.user.lastname}'s chat!`}
+                                        </div>
+                                        <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
+                                            {chats.map((chat,index)=>(
+                                                <div style={{display:'flex',justifyContent:chat.userID==user.userID?'end':'start', flexDirection:chat.userID == user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
+                                                    <div id="chatProfile"></div>
+                                                    <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
+                                                        <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
+                                                        <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.userID?'end':'start'}}>
+                                                            {chat.message}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
+                                        
                                     </div>
-                                    
-                                </div>
-                                <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                                    <input style={{flexGrow:1, paddingInline:'1em'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); console.log(e.target.value)}} value={message}/>
-                                    <IconButton onClick={sendMessage}>
-                                        <SendIcon style={{color:'black'}}/>
-                                    </IconButton>
+                                    <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
+                                        <input style={{flexGrow:1, paddingInline:'1em', border:'solid 1px silver', borderRadius:'5px'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); console.log(e.target.value)}} value={message}/>
+                                        <IconButton onClick={sendMessage}>
+                                            <SendIcon style={{color:'black'}}/>
+                                        </IconButton>
+                                    </div>
                                 </div>
                             </div>
                         }
