@@ -213,8 +213,8 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser,setQueue
             </Col>
           </Row>
           <Row className='mt-5 d-flex justify-content-center gap-5'>
-            <Button onClick={handleClose} variant='contained' style={{background:'rgba(255,0,0,0.7)',color:'white',textTransform:'none',fontWeight:'bold', width:'30%'}}>Close</Button>
-            {!adviser.ready?<Button onClick={openQueueing} variant='contained' style={{background:'#b9ff66',color:'#000',textTransform:'none',fontWeight:'bold', width:'30%'}}>Open</Button>:<></>}
+            <Button onClick={handleClose} style={{background:'none',color:'black',textTransform:'none',fontWeight:'bold', width:'30%'}}>Cancel</Button>
+            {!adviser.ready?<Button onClick={openQueueing} variant='contained' style={{backgroundColor: '#7d57fc',color:'white',textTransform:'none',fontWeight:'bold', width:'30%', borderRadius:'15px'}}>Open</Button>:<></>}
           </Row>
         </>
       :

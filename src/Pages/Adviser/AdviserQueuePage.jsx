@@ -14,6 +14,10 @@ import RichTextEditor from '../../Components/Utils/RichTextEditor';
 import Queue from '../../Components/Queue';
 import OpenQueueModal from '../../Components/Modal/OpenQueueModal';
 import { convertToTime, millisecondsToHMS } from '../../Components/Utils/Utils';
+import AdviserBackgroundPage from '../../Components/Backgound.jsx/AdviserBackgroundPage';
+import starVec from '../../Assets/img/img4.png'
+import vec from '../../Assets/img/3.png'
+import squiggly from '../../Assets/img/img3.png'
 
 export default function AdviserQueuePage() {
   const navigate = useNavigate();
@@ -122,7 +126,7 @@ export default function AdviserQueuePage() {
                 toast.error("Meeting not found.")
                 break;
             default:
-                toast.error("Server error.")
+                toast.error("Duplicate meeting entries. Please contact administrator.")
         }
     }catch (err){
         console.log(err)
@@ -295,13 +299,16 @@ export default function AdviserQueuePage() {
                 switch (response.status) {
                     case 200:
                         const note = await response.json()
-                        setNotes([...notes, note])
+                        let temp = [...notes,note];
+                        const sortedNotes = temp.sort((a, b) => new Date(b.dateTaken) - new Date(a.dateTaken)).reverse();
+                        setNotes([...sortedNotes])
                         setSubject("")
                         setBody("")
+                        toast.success("Note created.")
                         break;
                     default:
                         response.text().then(bodyMessage =>{
-                            toast.error(bodyMessage)
+                            toast.error("Body too large.")
                         })
                 }
             }else{
@@ -427,127 +434,144 @@ export default function AdviserQueuePage() {
   return (
     
     <div id='mainContainer'>
-      <UserNavbar/>
-      <div id="QueuePageSecondRowContainer">
-        <div style={{flex:0.4}} id="leftContainer">
-          <div style={{backgroundColor: 'rgba(0, 0, 0, 0.03)', height:'15%', display:'flex'}}>
-            {adviser?!adviser.ready?<button style={{backgroundColor:'#baff66', flexGrow:1, fontWeight:'500', borderRadius:'5px'}} onClick={handleOpen}>Open Queueing</button>:
-            <><button style={{backgroundColor:'rgba(255,0,0,0.7)', flexGrow:1, fontWeight:'500', borderRadius:'5px', color:'white'}} onClick={closeQueueing}>{difference?<>{`Queueing ends in ${difference}`}</>:<>Close Queueing</>}</button></>:
-            <></>}
-            <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser} setQueueingTimeExpiration={setQueueingTimeExpiration} setLimit={setLimit}/>
-          </div>
-          <div style={{flexGrow:1, display:'flex'}}>
-            <div className='queueingTeamsContainer'>
-                {teams.length > 0 || onHoldTeams.length > 0?
-                    <>
-                        <div style={{display:'flex', justifyContent:'space-between'}}>
-                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
-                        </div>
-                        <Queue teams={teams} onHoldTeams={onHoldTeams} admitTeam={admitTeam}/>
-                    </>
-                :
-                <>
-                    <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                        <CategoryIcon style={{fontSize:'calc(2em + 5dvw)'}}/>
-                        <Typography style={{ color:'gray', textAlign:'center'}}>Awaiting queueing teams.</Typography>
+        <UserNavbar/>
+        <AdviserBackgroundPage opac={0.5}/>
+        {adviser?.ready?
+            <div id="QueuePageSecondRowContainer">
+                <div style={{flex:0.4}} id="leftContainer">
+                    <div style={{backgroundColor: 'transparent', height:'15%', display:'flex'}}>
+                        {adviser?!adviser.ready?<button style={{backgroundColor:'#baff66', flexGrow:1, fontWeight:'500', borderRadius:'15px'}} onClick={handleOpen}>Open Queueing</button>:
+                        <><button style={{backgroundColor:'#7d57fc', flexGrow:1, fontWeight:'500', borderRadius:'15px', color:'white'}} onClick={closeQueueing}>{difference?<>{`Queueing ends in ${difference}`}</>:<>Close Queueing</>}</button></>:
+                        <></>}
+                        <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser} setQueueingTimeExpiration={setQueueingTimeExpiration} setLimit={setLimit}/>
                     </div>
-                </>
-                }
-            </div>     
-          </div>
-        </div>
-        <div id="rightContainer" style={{flexGrow:1}}>
-            <div id="currentlyTendingContainer" style={{flex:'0.335'}}>
-              <div style={{display:'flex', height:'100%'}}>
-                <div id="currentlyTendingContainer" style={{flex:1, backgroundColor:'transparent'}}>
-                    <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
-                    <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
-                        {tendingTeam?
+                    <div style={{flexGrow:1, display:'flex'}}>
+                        <div className='queueingTeamsContainer'>
+                            {teams.length > 0 || onHoldTeams.length > 0?
+                                <>
+                                    <div style={{display:'flex', justifyContent:'space-between'}}>
+                                        <Typography variant='subtitle1' fontWeight='bold' color='gray'>Up Next</Typography>
+                                    </div>
+                                    <Queue teams={teams} onHoldTeams={onHoldTeams} admitTeam={admitTeam}/>
+                                </>
+                            :
                             <>
-                                <div id="queueingTeamMiniProfile"></div>
-                                <div>
-                                    <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
-                                    <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
-                                    <div style={{color:'#6abf05'}}>{meeting?meeting.start:<></>}</div>
-                                </div>    
+                                <div style={{margin:'0 auto', height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                                    <CategoryIcon style={{fontSize:'calc(2em + 5dvw)'}}/>
+                                    <Typography style={{ color:'gray', textAlign:'center'}}>Awaiting queueing teams.</Typography>
+                                </div>
+                            </>
+                            }
+                    </div>
+                </div>
+                </div>
+                <div id="rightContainer" style={{flexGrow:1}}>
+                    <div id="currentlyTendingContainer" style={{flex:'0.335'}}>
+                    <div style={{display:'flex', height:'100%'}}>
+                        <div id="currentlyTendingContainer" style={{flex:1, backgroundColor:'transparent', border:'none'}}>
+                            <Typography variant='subtitle1' fontWeight='bold' color='gray'>Currently Tending</Typography>
+                            <div id='queueingTeamContainer' style={{gap:'10px', alignItems:'start', marginTop:'5px'}}>
+                                {tendingTeam?
+                                    <>
+                                        <div id="queueingTeamMiniProfile"></div>
+                                        <div>
+                                            <div id='queueingTeamNameLive'>{tendingTeam.groupName}</div>
+                                            <div id='queueingTeamSectionLive'>{`${tendingTeam.subjectCode} - ${tendingTeam.section}`}</div>
+                                            <div style={{color:'#6abf05'}}>{meeting?meeting.start:<></>}</div>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <Stack direction={'column'} sx={{width:'100%'}}>
+                                            <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                            <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                            <Skeleton sx={{width:'100%'}} animation="wave"/>
+                                        </Stack>
+                                        
+                                    </>
+                                }
+                            </div>
+                        </div>
+                        <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:tendingTeam?'end':'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<>
+                        <Typography sx={{color:'#73C314', fontWeight:'bold'}}>{limit && limit > 0?<>{`You'll be seeing ${limit} ${limit <= 1?'group':'groups'}.`}</>:limit == 0?<Typography sx={{textAlign:'center'}} variant='subtitle2'>You have set no limit on number of groups to cater.</Typography>:<></>}</Typography>
+                        </>}</div>
+                    </div>
+                    </div>
+                    <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none', maxWidth:'100%'}}>
+                        <div id="NotesContainer" style={{flex:1.7, backgroundColor:'white', borderRadius:'5px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%', maxWidth:'100%', overflow:'hidden'}}>
+                            {tendingTeam?
+                            <>
+                                <div id="noteTitle">
+                                <input type="text" placeholder='Note Title' style={{width:'100%', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0'}} value={subject} onChange={(e)=>{setSubject(e.target.value)}} />
+                                </div>
+                                <div id="note" style={{flexGrow:1, maxWidth:'100%', display:'flex', flexDirection:'column', gap:'10px', overflow:'hidden'}}>
+                                    <RichTextEditor createNote={createNote} body={body} setBody={setBody}/>
+                                </div>
+                                <div style={{display:'flex', justifyContent:'end'}}>
+                                    
+                                </div>
                             </>
                             :
                             <>
-                                <Stack direction={'column'} sx={{width:'100%'}}>
-                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
-                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
-                                    <Skeleton sx={{width:'100%'}} animation="wave"/>
-                                </Stack>
+                                <div id="chatBoxFeed" ref={containerRef}>
+                                <div id="welcomeChatMessage">
+                                    Welcome to {`${user?user.firstname:<></>} ${user?user.lastname:<></>}'s chat!`}
+                                </div>
+                                <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
+                                    {chats.map((chat,index)=>(
+                                        <div style={{display:'flex',justifyContent:chat.userID==user.userID?'end':'start', flexDirection:chat.userID == user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
+                                            <div id="chatProfile"></div>
+                                            <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
+                                                <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
+                                                <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.userID?'end':'start'}}>
+                                                    {chat.message}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                                 
+                                </div>
+                                <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
+                                <input style={{flexGrow:1, paddingInline:'1em', border:'solid 1px silver', borderRadius:'5px'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); }} value={message}/>
+                                <IconButton onClick={sendMessage}>
+                                    <SendIcon style={{color:'black'}}/>
+                                </IconButton>
+                                </div>
                             </>
-                        }
+                            }
+                        </div>
+                        {tendingTeam?
+                        <div id="savedNotesContainer" style={{backgroundColor:'white', overflowY:'auto', border:'none' }}>
+                            {notes.length>0?
+                                <div style={{display:'flex', flexDirection:'column', gap:'15px', flex:1, overflowY:'auto', maxHeight:'100%'}}>
+                                {notes.map((singlenote)=>(
+                                    <Note note={singlenote} setNoteToggle={setNoteToggle} setNote={setNote} />
+                                ))}
+                                </div>
+                                :
+                                <Typography>No saved notes.</Typography>
+                            }
+                        </div>:<></>}
+                        <MyModal open={noteToggle} setOpen={setNoteToggle} note={note}/>
                     </div>
                 </div>
-                <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:tendingTeam?'end':'center'}}>{tendingTeam?<Button size='sm' style={{paddingInline:'1.5em', border:'none'}} className='buttonCustom' onClick={concludeMeeting}>Conclude</Button>:<>
-                <Typography sx={{color:'#73C314', fontWeight:'bold'}}>{limit && limit > 0?<>{`You'll be seeing ${limit} ${limit <= 1?'group':'groups'}.`}</>:limit == 0?<Typography sx={{textAlign:'center'}} variant='subtitle2'>You have set no limit on number of groups to cater.</Typography>:<></>}</Typography>
-                </>}</div>
-              </div>
             </div>
-            <div id="ChatBoxContainer" style={{flexDirection:'row', gap:'1em', flexWrap:'wrap', maxHeight:'none', maxWidth:'100%'}}>
-                <div id="NotesContainer" style={{flex:1.7, backgroundColor:'white', borderRadius:'5px', display:'flex', flexDirection:'column', gap:'10px', padding:'1em', maxHeight:'100%', maxWidth:'100%', overflow:'hidden'}}>
-                    {tendingTeam?
-                      <>
-                        <div id="noteTitle">
-                          <input type="text" placeholder='Note Title' style={{width:'100%', borderRadius:'5px', padding:'1em', border:'solid 1px #d0d0d0'}} value={subject} onChange={(e)=>{setSubject(e.target.value)}} />
-                        </div>
-                        <div id="note" style={{flexGrow:1, maxWidth:'100%', display:'flex', flexDirection:'column', gap:'10px', overflow:'hidden'}}>
-                            <RichTextEditor createNote={createNote} body={body} setBody={setBody}/>
-                        </div>
-                        <div style={{display:'flex', justifyContent:'end'}}>
-                            
-                        </div>
-                      </>
-                      :
-                      <>
-                        <div id="chatBoxFeed" ref={containerRef}>
-                          <div id="welcomeChatMessage">
-                              Welcome to {`${user?user.firstname:<></>} ${user?user.lastname:<></>}'s chat!`}
-                          </div>
-                          <div style={{marginTop:'30px', display:'flex', flexDirection:'column', gap:'20px', maxWidth:'100%', overflow:'hidden'}}>
-                              {chats.map((chat,index)=>(
-                                  <div style={{display:'flex',justifyContent:chat.userID==user.userID?'end':'start', flexDirection:chat.userID == user.userID?'row-reverse':'row', gap:'8px', maxWidth:'100%', overflow:'hidden',flexGrow:1}}>
-                                      <div id="chatProfile"></div>
-                                      <div style={{display:'flex', flexDirection:'column', flexGrow:1, maxWidth:'100%'}}>
-                                          <div style={{fontSize:'0.7em',alignSelf:chat.userID == user.userID?'end':'', color:'gray'}}>{`${chat.firstname.charAt(0).toUpperCase()}${chat.firstname.slice(1)} ${chat.lastname.charAt(0).toUpperCase()}${chat.lastname.slice(1)}`}</div>
-                                          <div style={{backgroundColor:'rgba(217,217,217,0.5)', paddingBlock:'5px', borderRadius:'20px', paddingInline:'15px', display:'flex',wordBreak:'break-word', maxWidth:'70%',alignSelf:chat.userID == user.userID?'end':'start'}}>
-                                              {chat.message}
-                                          </div>
-                                      </div>
-                                  </div>
-                              ))}
-                          </div>
-                          
-                        </div>
-                        <div id="chatboxUtilities" style={{display:'flex', marginTop:'10px'}}>
-                          <input style={{flexGrow:1, paddingInline:'1em', border:'solid 1px silver', borderRadius:'5px'}} type='text' placeholder='Enter message.' id='messageInput' onChange={(e)=>{setMessage(e.target.value); }} value={message}/>
-                          <IconButton onClick={sendMessage}>
-                              <SendIcon style={{color:'black'}}/>
-                          </IconButton>
-                        </div>
-                      </>
-                    }
+            :
+            <div className='openQueueingLP'>
+                <div className='OPQLPLeft'>
+                    <img src={starVec} alt='vec' style={{aspectRatio:1,height:'15%', position:'absolute',marginLeft:'8%',marginTop:'1%'}}/>
+                    <img src={vec} alt='vec' style={{position:'absolute',left:0,bottom:0, height:'90%'}}/>
                 </div>
-                {tendingTeam?
-                <div id="savedNotesContainer" style={{backgroundColor:'white', overflowY:'auto' }}>
-                    {notes.length>0?
-                        <div style={{display:'flex', flexDirection:'column', gap:'15px', flex:1, overflowY:'auto', maxHeight:'100%'}}>
-                        {notes.map((singlenote)=>(
-                            <Note note={singlenote} setNoteToggle={setNoteToggle} setNote={setNote} />
-                        ))}
-                        </div>
-                        :
-                        <Typography>No saved notes.</Typography>
-                    }
-                </div>:<></>}
-                <MyModal open={noteToggle} setOpen={setNoteToggle} note={note}/>
+                <div className='OPQLPRight'>
+                    <img src={squiggly} alt='vec' style={{position:'absolute',aspectRatio:1, height:'15%',top:20, right:100}}/>
+                    <div className='OPQLTitle'>Let Them In!</div>
+                    <div className='OPQLCaption'>Open the queue now and connect with your students who are ready and waiting!</div>
+                    <Button variant='contained' style={{border:'none', color:'white', padding:'1em 5em', fontSize:'calc(0.5em + 1dvw)'}} className='buttonCustom' onClick={()=>{setOpen(true)}}>Open Queue</Button>
+                    <OpenQueueModal open={open} setOpen={setOpen} adviser={adviser} setAdviser={setAdviser} setQueueingTimeExpiration={setQueueingTimeExpiration} setLimit={setLimit}/>
+                </div>
             </div>
-        </div>
-      </div>
+        }
     </div>
   )
 }

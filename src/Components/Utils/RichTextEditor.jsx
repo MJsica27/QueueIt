@@ -31,8 +31,8 @@ const RichTextEditor = ({createNote, setBody, body}) => {
                 [{ header: [2, 3, 4, false] }],
                 ['bold', 'italic', 'underline', 'blockquote'],
                 [{ list: 'ordered' }, { list: 'bullet' }],
-                ['link', 'image'],
-                ['clean'],
+                // ['link', 'image'],
+                // ['clean'],
             ],
             handlers: {
                 image: imageHandler,
