@@ -18,6 +18,7 @@ import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundP
 import starVec from '../../Assets/img/img4.png'
 import vec from '../../Assets/img/3.png'
 import squiggly from '../../Assets/img/img3.png'
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdviserQueuePage() {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ export default function AdviserQueuePage() {
 
   const fetchAdviser = async () => {
     try {
-        const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${user.userID}`, {
+        const response = await fetch(`${BASE_URL}/user/getAdviser?userID=${user.userID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +112,7 @@ export default function AdviserQueuePage() {
   const getActiveMeeting = async ()=>{
     try{
 
-        const response = await fetch(`http://localhost:8080/meeting/getActive?groupID=${tendingTeam.groupID}`, {
+        const response = await fetch(`${BASE_URL}/meeting/getActive?groupID=${tendingTeam.groupID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ export default function AdviserQueuePage() {
   const fetchTeams = async ()=>{
     if(user){
         try {
-            const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${user.userID}`, {
+            const response = await fetch(`${BASE_URL}/queue/getQueueingTeams?adviserID=${user.userID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,7 +172,7 @@ export default function AdviserQueuePage() {
     if(user){
         try {
             if(message){
-                const response = await fetch(`http://localhost:8080/chat`, {
+                const response = await fetch(`${BASE_URL}/chat`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -193,7 +194,7 @@ export default function AdviserQueuePage() {
   const fetchNotes = async (groupID) =>{
     if(user){
         try {
-            const response = await fetch(`http://localhost:8080/note/getAllByGroupAndAdviser?groupID=${groupID}&adviserID=${user.userID}`, {
+            const response = await fetch(`${BASE_URL}/note/getAllByGroupAndAdviser?groupID=${groupID}&adviserID=${user.userID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -225,7 +226,7 @@ export default function AdviserQueuePage() {
   const admitTeam = async (groupID)=>{
     if(user){
         try {
-            const response = await fetch(`http://localhost:8080/queue/adviser/admit?adviserID=${user.userID}&groupID=${groupID}`, {
+            const response = await fetch(`${BASE_URL}/queue/adviser/admit?adviserID=${user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -255,7 +256,7 @@ export default function AdviserQueuePage() {
     if (user && meeting?.meetingID) { // Check if meeting and meetingID exist
         try {
             const response = await fetch(
-                `http://localhost:8080/queue/adviser/conclude?meetingID=${meeting.meetingID}`,
+                `${BASE_URL}/queue/adviser/conclude?meetingID=${meeting.meetingID}`,
                 {
                     method: 'POST',
                     headers: {
@@ -289,7 +290,7 @@ export default function AdviserQueuePage() {
     if(user){
         try {
             if(subject && body){
-                const response = await fetch(`http://localhost:8080/note/create`, {
+                const response = await fetch(`${BASE_URL}/note/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -329,7 +330,7 @@ export default function AdviserQueuePage() {
 
   const closeQueueing = async () =>{
     try{
-    const response = await fetch(`http://localhost:8080/queue/adviser/close`,{
+    const response = await fetch(`${BASE_URL}/queue/adviser/close`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

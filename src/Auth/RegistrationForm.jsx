@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './auth.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {BASE_URL} from '../Global_vars/Urls';
 
 export default function RegistrationForm() {
     const [firstName, setFirstName] = useState('');
@@ -26,7 +27,7 @@ export default function RegistrationForm() {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/auth/registerStudent', {
+            const response = await fetch(`${BASE_URL}/auth/registerStudent`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

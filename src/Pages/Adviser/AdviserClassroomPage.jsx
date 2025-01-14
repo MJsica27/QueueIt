@@ -13,6 +13,7 @@ import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundP
 import StudentsModal from '../../Components/Modal/StudentsModal';
 import EditClassroomModal from '../../Components/Modal/EditClassroomModal';
 import DeleteClassroomModal from '../../Components/Modal/DeleteClassroomModal';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 
 const AdviserClassroomPage = () => {
@@ -47,7 +48,7 @@ const AdviserClassroomPage = () => {
           if (classroom && classroom.classID) {
             try {
               const response = await fetch(
-                `http://localhost:8080/group/getAllGivenClassroom?classroomID=${classroom.classID}`,
+                `${BASE_URL}/group/getAllGivenClassroom?classroomID=${classroom.classID}`,
                 {
                   headers: {
                     // 'Authorization': `Bearer ${token}`,  
@@ -74,7 +75,7 @@ const AdviserClassroomPage = () => {
     const handleAction = async (action) => {
         if (action === 'View Enrolled Students') {
             try {
-                const response = await fetch(`http://localhost:8080/classroom/getStudents?classID=${classroom.classID}`);
+                const response = await fetch(`${BASE_URL}/classroom/getStudents?classID=${classroom.classID}`);
                 if (response.ok) {
                     const data = await response.json();
                     setStudents(data);
@@ -100,7 +101,7 @@ const AdviserClassroomPage = () => {
         console.log("Updating classroom with data:", classroomDetails); 
         
         try {
-            const response = await fetch(`http://localhost:8080/classroom/editClassroom`, {
+            const response = await fetch(`${BASE_URL}/classroom/editClassroom`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -131,7 +132,7 @@ const AdviserClassroomPage = () => {
     
     const handleDeleteClassroom = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/classroom/deleteClassroom?classID=${classroom.classID}&userID=${classroom.adviserID}`, {
+            const response = await fetch(`${BASE_URL}/classroom/deleteClassroom?classID=${classroom.classID}&userID=${classroom.adviserID}`, {
                 method: 'POST',
             });
 

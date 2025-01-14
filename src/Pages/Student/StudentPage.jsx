@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UserNavbar from '../../Components/Navbar/UserNavbar';  
 import img5 from '../../Assets/img/img5.png'; 
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function StudentPage() {
     const fetchClassrooms = async () => {
       if (user && user.userID) {
         try {
-          const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`,{
+          const response = await fetch(`${BASE_URL}/classroom/getClassrooms?userID=${user.userID}`,{
             method:'GET', 
             headers: {
               'Content-Type': 'application/json',
@@ -72,7 +73,7 @@ export default function StudentPage() {
     setLoading(true);
  
     try {
-      const response = await fetch('http://localhost:8080/classroom/enroll', {
+      const response = await fetch(`${BASE_URL}/classroom/enroll`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

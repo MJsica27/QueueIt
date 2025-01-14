@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserNavbar from '../Components/Navbar/UserNavbar';
 import Cropper from 'react-easy-crop';
 import AdviserBackgroundPage from '../Components/Backgound/AdviserBackgroundPage';
+import { BASE_URL } from '../Global_vars/Urls';
 
 
 export default function ProfilePage() {
@@ -152,7 +153,7 @@ export default function ProfilePage() {
         console.log("Passed Current Password:", currentPassword);
 
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/user/modifyProfile?userID=${user.userID}`, {
+        const response = await fetch(`${BASE_URL}/user/modifyProfile?userID=${user.userID}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

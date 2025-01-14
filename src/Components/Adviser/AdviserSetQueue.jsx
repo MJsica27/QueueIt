@@ -8,6 +8,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Typography } from '@mui/material';
 import { Col, Container, Row } from 'react-bootstrap';
 import { convertToTime } from '../Utils/Utils';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 // Function to get the current date
 function getDate() {
@@ -57,7 +58,7 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser,setQueue
   },[classID])
   const fetchClassrooms = async ()=>{
     try{
-      const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`)
+      const response = await fetch(`${BASE_URL}/classroom/getClassrooms?userID=${user.userID}`)
 
       if(response.ok){
         const data = await response.json();
@@ -108,7 +109,7 @@ export default function AdviserSetQueue({handleClose,adviser,setAdviser,setQueue
       }else{
         console.log(classFilter)
         try{
-          const response = await fetch(`http://localhost:8080/queue/adviser/open`,{
+          const response = await fetch(`${BASE_URL}/queue/adviser/open`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

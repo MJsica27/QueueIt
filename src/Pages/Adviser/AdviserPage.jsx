@@ -9,6 +9,7 @@ import CreateClassroomDialog from '../../Components/Dialogs/Adviser/AdviserCreat
 import UserNavbar from '../../Components/Navbar/UserNavbar';
 import img5 from '../../Assets/img/img5.png'; 
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function AdviserPage() {
     const fetchClassrooms = async () => {
       if (user && user.userID) {
         try {
-          const response = await fetch(`http://localhost:8080/classroom/getClassrooms?userID=${user.userID}`);
+          const response = await fetch(`${BASE_URL}/classroom/getClassrooms?userID=${user.userID}`);
           if (response.ok) {
             const data = await response.json();
             console.log('Fetched classrooms:', data);
@@ -101,7 +102,7 @@ export default function AdviserPage() {
     
 
     try {
-      const response = await fetch('http://localhost:8080/classroom/create', {
+      const response = await fetch(`${BASE_URL}/classroom/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

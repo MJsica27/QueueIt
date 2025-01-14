@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchIcon from '@mui/icons-material/Search'; 
 import UserNavbar from '../../Components/Navbar/UserNavbar';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdminUserPage() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function AdminUserPage() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/auth/register', {
+      const response = await fetch(`${BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

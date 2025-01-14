@@ -6,6 +6,7 @@ import img4 from '../Assets/img/img4.png';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Modal, Button, Form } from 'react-bootstrap';
+import {BASE_URL} from '../Global_vars/Urls';
 
 export default function LoginForm() {
   const [show] = useState(true);
@@ -28,7 +29,7 @@ export default function LoginForm() {
     setLoading(true);
     setLoginBTNText("Logging in...");
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -18,6 +18,7 @@ import Note from '../../Components/Card/Note';
 import MyModal from '../../Components/Modal/Modal';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 const OnQueuePage = () => {
     const location = useLocation()
@@ -67,7 +68,7 @@ const OnQueuePage = () => {
 
     const fetchAdviser = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${adviser.user.userID}`, {
+            const response = await fetch(`${BASE_URL}/user/getAdviser?userID=${adviser.user.userID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ const OnQueuePage = () => {
 
     const fetchTeams = async ()=>{
         try {
-            const response = await fetch(`http://localhost:8080/queue/getQueueingTeams?adviserID=${adviser.user.userID}`, {
+            const response = await fetch(`${BASE_URL}/queue/getQueueingTeams?adviserID=${adviser.user.userID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ const OnQueuePage = () => {
     const holdQueue = async ()=>{
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/queue/student/holdQueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
+            const response = await fetch(`${BASE_URL}/queue/student/holdQueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -164,7 +165,7 @@ const OnQueuePage = () => {
 
     const cancelQueue = async ()=>{
         try {
-            const response = await fetch(`http://localhost:8080/queue/student/dequeue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
+            const response = await fetch(`${BASE_URL}/queue/student/dequeue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +192,7 @@ const OnQueuePage = () => {
     const requeue = async ()=>{
         try {
             setLoading(true)
-            const response = await fetch(`http://localhost:8080/queue/student/requeue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
+            const response = await fetch(`${BASE_URL}/queue/student/requeue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -218,7 +219,7 @@ const OnQueuePage = () => {
     const queue = async ()=>{
         try {
             setLoading(true)
-            const response = await fetch(`http://localhost:8080/queue/student/enqueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
+            const response = await fetch(`${BASE_URL}/queue/student/enqueue?adviserID=${adviser.user.userID}&groupID=${groupID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -254,7 +255,7 @@ const OnQueuePage = () => {
         if(user){
             try {
                 if(message){
-                    const response = await fetch(`http://localhost:8080/chat`, {
+                    const response = await fetch(`${BASE_URL}/chat`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -286,7 +287,7 @@ const OnQueuePage = () => {
     const fetchNotes = async (groupID) =>{
         if(user){
             try {
-                const response = await fetch(`http://localhost:8080/note/getAllByGroupAndAdviser?groupID=${groupID}&adviserID=${adviser.user.userID}`, {
+                const response = await fetch(`${BASE_URL}/note/getAllByGroupAndAdviser?groupID=${groupID}&adviserID=${adviser.user.userID}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -446,7 +447,7 @@ const OnQueuePage = () => {
         if(user){
             try {
                 if(subject != "" && body != ""){
-                    const response = await fetch(`http://localhost:8080/note/create`, {
+                    const response = await fetch(`${BASE_URL}/note/create`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

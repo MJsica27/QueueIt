@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 const Note = ({note, setSubject, setBody, setNoteToggle, setNote}) => {
     const [user,setUser] = useState();
@@ -17,7 +18,7 @@ const Note = ({note, setSubject, setBody, setNoteToggle, setNote}) => {
     const fetchUser = async () => {
         if(note){
             try {
-                const response = await fetch(`http://localhost:8080/user/userDetails?userID=${note.noteTakerUserID}`, {
+                const response = await fetch(`${BASE_URL}/user/userDetails?userID=${note.noteTakerUserID}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

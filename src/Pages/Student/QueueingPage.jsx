@@ -12,6 +12,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Typography } from '@mui/material';
 import LockedAdviser from '../../Components/Card/LockedAdviser';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 const QueueingPage = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const QueueingPage = () => {
     const user = useContext(UserContext).user;
 
     const fetchGroup = async ()=>{
-        const response = await fetch(`http://localhost:8080/group/getGroupGivenStudent?classID=${classroom.classID}&userID=${user.userID}`)
+        const response = await fetch(`${BASE_URL}/group/getGroupGivenStudent?classID=${classroom.classID}&userID=${user.userID}`)
         if (response.ok){
             const data = await response.json();
             // console.log(data)

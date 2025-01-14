@@ -15,6 +15,7 @@ import illustration2 from '../../Assets/img/illustration2.png';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdviserAvailabilityPage() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
@@ -71,7 +72,7 @@ export default function AdviserAvailabilityPage() {
 
   const fetchAdviserData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${userID}`, {
+      const response = await fetch(`${BASE_URL}/user/getAdviser?userID=${userID}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -306,7 +307,7 @@ export default function AdviserAvailabilityPage() {
     ];
 
     try {
-      const response = await fetch(`http://localhost:8080/user/setAdviserAvailability?userID=${userID}`, {
+      const response = await fetch(`${BASE_URL}/user/setAdviserAvailability?userID=${userID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

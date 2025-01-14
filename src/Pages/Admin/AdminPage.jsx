@@ -7,6 +7,7 @@ import UserNavbar from '../../Components/Navbar/UserNavbar';
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import img5 from '../../Assets/img/img5.png'; 
 import CreateUserAccount from '../../Components/Dialogs/Admin/AdminCreateUserAccountDialog';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdminPage() {
   const [user, setUser] = useState(null);
@@ -60,7 +61,7 @@ export default function AdminPage() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/auth/register', {
+      const response = await fetch(`${BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

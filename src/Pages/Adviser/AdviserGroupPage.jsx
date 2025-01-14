@@ -8,6 +8,7 @@ import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundP
 import OptionsMenu from '../../Components/Card/Adviser/OptionsMenu'; 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import MemberProfileCard from '../../Components/Card/Adviser/MemberProfileCard';
+import { BASE_URL } from '../../Global_vars/Urls';
 
 export default function AdviserGroupPage() {
     const navigate = useNavigate(); 
@@ -24,7 +25,7 @@ export default function AdviserGroupPage() {
  
     useEffect(() => {
         if (group && group.groupID) {
-            axios.get(`http://localhost:8080/group/getGroupMembers?groupID=${group.groupID}`)
+            axios.get(`${BASE_URL}/group/getGroupMembers?groupID=${group.groupID}`)
                 .then((response) => { 
                     setMembers(response.data);
                 })

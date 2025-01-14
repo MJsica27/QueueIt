@@ -4,13 +4,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../../User/WebSocketContext';
+import { BASE_URL } from '../../../Global_vars/Urls';
 
 const AdviserQueueingCard = ({groupID, classroom}) => {
     const [adviser,setAdviser] = useState(null);
     const client = useWebSocket();
     const fetchAdviser = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/user/getAdviser?userID=${classroom.adviserID}`, {
+            const response = await fetch(`${BASE_URL}/user/getAdviser?userID=${classroom.adviserID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
