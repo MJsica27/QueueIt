@@ -10,6 +10,7 @@ import UserNavbar from '../../Components/Navbar/UserNavbar';
 import img5 from '../../Assets/img/img5.png'; 
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import { BASE_URL } from '../../Global_vars/Urls';
+import { Box } from '@mui/material';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -134,17 +135,24 @@ export default function AdviserPage() {
       <UserNavbar/> 
       
 
-      <div style={{ marginTop: '5px', height:'150px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px' }}>
+      <div style={{ marginTop: '5px', height:'150px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px', display:'flex'}}>
 
-        <div style={{margin: '30px 0 0 50px', color: '#fff'}}>
+        <div style={{color: '#fff',flex:1, justifyContent:'center', display:'flex',flexDirection:'column', paddingLeft:'1em'}}>
           <h1> Hello, Teacher {user ? user.firstname : 'Guest'} !</h1>
           <h6> It's nice to see you here..</h6>
         </div>
         
-        <Button className="createClassroomBtn" onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold', margin: '-150px 0 0 750px' }} > 
-          Create Classroom
-        </Button>
-        <img src={img5} alt="illustration" style={{height:'250px', marginTop: '-208px', marginLeft: '970px' }} />   
+        <div style={{ flex:1, display:'flex', alignItems:'center',justifyContent:'end', position:'relative', paddingRight:'1em'}}>
+          <Button onClick={handleClickOpen} variant="contained" style={{ background: '#b9ff66', color: '#000', textTransform: 'none', fontWeight: 'bold' }} > 
+            Create Classroom
+          </Button>
+        </div>
+        <Box sx={{flex:1, position:'relative', alignItems:'center', display: {xs:'none',sm:'none',md:'flex'}}} style={{position:'relative', flex:1, alignItems:'center'}}>
+          <img src={img5} alt="illustration" style={{height:'200%', position:'absolute', bottom:-33, left:50, zIndex:0 }} /> 
+        </Box>
+        {/* <div style={{position:'relative', flex:1, display:'flex', alignItems:'center'}}>
+          <img src={img5} alt="illustration" style={{height:'200%', position:'absolute', bottom:-33, left:50 }} />  
+        </div>    */}
 
       </div>
 

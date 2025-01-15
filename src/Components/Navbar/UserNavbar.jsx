@@ -3,9 +3,10 @@ import logo from '../../Assets/logo/logo.png';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { Dropdown, Nav } from 'react-bootstrap';
 import { UserContext } from '../../Components/User/UserContext';
+import TemporaryDrawer from '../Drawer/NavbarDrawer';
  
 const UserNavbar = () => {
     const navigate = useNavigate();
@@ -33,73 +34,83 @@ const UserNavbar = () => {
     };
  
     return (
-        <div
-            style={{ 
+        <Box
+            sx={{ 
                 height:'10dvh',
                 width:'100%',
                 display:'flex',
                 justifyContent:'space-between',
                 alignItems:'center',
                 padding:'0px 6dvw 0px 6dvw',
-                marginTop: '10px'
+                marginTop: '10px',
+                zIndex:1,
             }}
         >
-            <img src={logo} alt='logo' style={{width:'calc(10em + 2dvw)',}}/>
+            <Box sx={{display:{xs:'none',sm:'none',md:'block'}}}>
+                <img src={logo} alt='logo' style={{width:'calc(10em + 2dvw)',}}/>
+            </Box>
  
             {user ? (
                 user.role === "ADMIN" ? (
                     <div></div>
                 ) : user.role === "ADVISER" ? (
-                    <Nav className="d-flex gap-3" style={{height:'45px', backgroundColor:'#f5f5f5', borderRadius:'15px'}}>
-                        <Nav.Link
-                            as={Link}
-                            to="/adviserhomepage"
-                            className={`nav-link-custom ${isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'active' : ''}`}
-                            style={{
-                                color: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#000' : '#666666',
-                                backgroundColor: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#b9ff66' : 'transparent', 
-                                borderRadius: '15px'  
-                            }}
-                        >
-                            Home
-                        </Nav.Link>
-                        <Nav.Link
-                            as={Link}
-                            to="/adviserqueuepage"
-                            className={`nav-link-custom ${isActiveLink('/adviserqueuepage') ? 'active' : ''}`}
-                            style={{
-                                color: isActiveLink('/adviserqueuepage') ? '#000' : '#666666',
-                                backgroundColor: isActiveLink('/adviserqueuepage') ? '#b9ff66' : 'transparent', 
-                                borderRadius: '15px'  
-                            }}
-                        >
-                            Queue
-                        </Nav.Link>
-                        <Nav.Link
-                            as={Link}
-                            to="/adviseravailabilitypage"
-                            className={`nav-link-custom ${isActiveLink('/adviseravailabilitypage') ? 'active' : ''}`}
-                            style={{
-                                color: isActiveLink('/adviseravailabilitypage') ? '#000' : '#666666',
-                                backgroundColor: isActiveLink('/adviseravailabilitypage') ? '#b9ff66' : 'transparent', 
-                                borderRadius: '15px'  
-                            }}
-                        >
-                            Availability
-                        </Nav.Link>
-                        <Nav.Link
-                            as={Link}
-                            to="/adviserlogpage"
-                            className={`nav-link-custom ${isActiveLink('/adviserlogpage') ? 'active' : ''}`}
-                            style={{
-                                color: isActiveLink('/adviserlogpage') ? '#000' : '#666666',
-                                backgroundColor: isActiveLink('/adviserlogpage') ? '#b9ff66' : 'transparent', 
-                                borderRadius: '15px'  
-                            }}
-                        >
-                            Logs
-                        </Nav.Link>
-                    </Nav>
+                    <>
+                        <Box sx={{display:{xs:'none',sm:'none',md:'block'}}}>
+                            <Nav className="d-flex gap-3" style={{height:'45px', backgroundColor:'#f5f5f5', borderRadius:'15px'}}>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/adviserhomepage"
+                                    className={`nav-link-custom ${isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? 'active' : ''}`}
+                                    style={{
+                                        color: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#000' : '#666666',
+                                        backgroundColor: isActiveLink('/adviserhomepage', '/adviserclassroompage', '/group') ? '#b9ff66' : 'transparent', 
+                                        borderRadius: '15px'  
+                                    }}
+                                >
+                                    Home
+                                </Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/adviserqueuepage"
+                                    className={`nav-link-custom ${isActiveLink('/adviserqueuepage') ? 'active' : ''}`}
+                                    style={{
+                                        color: isActiveLink('/adviserqueuepage') ? '#000' : '#666666',
+                                        backgroundColor: isActiveLink('/adviserqueuepage') ? '#b9ff66' : 'transparent', 
+                                        borderRadius: '15px'  
+                                    }}
+                                >
+                                    Queue
+                                </Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/adviseravailabilitypage"
+                                    className={`nav-link-custom ${isActiveLink('/adviseravailabilitypage') ? 'active' : ''}`}
+                                    style={{
+                                        color: isActiveLink('/adviseravailabilitypage') ? '#000' : '#666666',
+                                        backgroundColor: isActiveLink('/adviseravailabilitypage') ? '#b9ff66' : 'transparent', 
+                                        borderRadius: '15px'  
+                                    }}
+                                >
+                                    Availability
+                                </Nav.Link>
+                                <Nav.Link
+                                    as={Link}
+                                    to="/adviserlogpage"
+                                    className={`nav-link-custom ${isActiveLink('/adviserlogpage') ? 'active' : ''}`}
+                                    style={{
+                                        color: isActiveLink('/adviserlogpage') ? '#000' : '#666666',
+                                        backgroundColor: isActiveLink('/adviserlogpage') ? '#b9ff66' : 'transparent', 
+                                        borderRadius: '15px'  
+                                    }}
+                                >
+                                    Logs
+                                </Nav.Link>
+                            </Nav>
+                        </Box>
+                        <Box sx={{display:{xs:'block',sm:'block',md:'none',lg:'none',xl:'none'}, flex:1}}>
+                            <TemporaryDrawer/>
+                        </Box>
+                    </>
                 ) : null
             ) : null}
  
@@ -119,7 +130,7 @@ const UserNavbar = () => {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-        </div>
+        </Box>
     );
 };
  
