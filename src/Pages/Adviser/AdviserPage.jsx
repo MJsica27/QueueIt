@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/Adviser/AdviserClassroomCard';
+import ClassroomCard from '../../Components/Card/ClassroomCard';
 import Button from '@mui/material/Button'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';    
@@ -11,6 +11,7 @@ import img5 from '../../Assets/img/img5.png';
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import { BASE_URL } from '../../Global_vars/Urls';
 import { Box } from '@mui/material';
+import { Container, Row } from 'react-bootstrap';
 
 export default function AdviserPage() {
   const navigate = useNavigate();
@@ -128,7 +129,7 @@ export default function AdviserPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen relative overflow-hidden items-center gap-4">
+    <div className="flex flex-col h-screen relative overflow-auto items-center gap-4 pb-4">
       {/* Background Grid */}
       <AdviserBackgroundPage /> 
 
@@ -136,9 +137,8 @@ export default function AdviserPage() {
       
 
       <div style={{ marginTop: '5px', height:'150px', width: '88%', backgroundColor: '#7d57fc', borderRadius: '15px', display:'flex'}}>
-
         <div style={{color: '#fff',flex:1, justifyContent:'center', display:'flex',flexDirection:'column', paddingLeft:'1em'}}>
-          <h1> Hello, Teacher {user ? user.firstname : 'Guest'} !</h1>
+          <p style={{fontSize:'clamp(1.5rem, 2vw + 0.5rem, 2.5rem)', fontWeight:'bold'}}> Hello, Teacher {user ? user.firstname : 'Guest'} !</p>
           <h6> It's nice to see you here..</h6>
         </div>
         
@@ -148,32 +148,28 @@ export default function AdviserPage() {
           </Button>
         </div>
         <Box sx={{flex:1, position:'relative', alignItems:'center', display: {xs:'none',sm:'none',md:'flex'}}} style={{position:'relative', flex:1, alignItems:'center'}}>
-          <img src={img5} alt="illustration" style={{height:'200%', position:'absolute', bottom:-33, left:50, zIndex:0 }} /> 
+          <img src={img5} alt="illustration" style={{height:'200%', position:'absolute', bottom:'-20%', left:50, zIndex:0 }} /> 
         </Box>
-        {/* <div style={{position:'relative', flex:1, display:'flex', alignItems:'center'}}>
-          <img src={img5} alt="illustration" style={{height:'200%', position:'absolute', bottom:-33, left:50 }} />  
-        </div>    */}
-
       </div>
 
 
-      <div style={{ padding: '25px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
-        <h2 style={{fontWeight: 'bold'}} >Advisory</h2>
+      <div style={{ padding: '25px', width: '88%', backgroundColor: '#fff', borderRadius: '15px', flexGrow:1}}>
+        <p style={{fontWeight: 'bold', fontSize:'clamp(2rem, 2.5vw + 0.5rem, 3.3rem)'}} >Advisory</p>
 
-        <div>  
+        <Container fluid>  
           {classrooms.length === 0 ? (
             <p className="text-center ">No active classrooms found.</p>
           ) : (
-            <div style={{ backgroundColor:'#fff', display:'flex', flexWrap:'wrap', rowGap: '0px', columnGap: '60px',   marginLeft: '50px', maxHeight: '350px', overflowY: 'auto', }}>
+            <Row className='g-5'>
               {classrooms.map((classroom) => (
                 <ClassroomCard 
                   key={classroom.classId}
                   classroom={classroom}
                 />
               ))}
-            </div>
+            </Row>
           )}
-        </div>
+        </Container>
       </div>
 
  
