@@ -85,4 +85,10 @@ public class ClassroomController {
         return ResponseEntity.ok(classrooms);
     }
 
+    @GetMapping("/getStudentHeadCount")
+    public ResponseEntity<Object> getStudentHeadCount(@RequestParam Long classID){
+        Long headCount = classroomService.getStudentHeadCount(classID);
+        return ResponseEntity.ok(headCount);
+    }
+
 }

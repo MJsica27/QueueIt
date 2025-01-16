@@ -143,4 +143,8 @@ public class ClassroomService {
         }
         return null;
     }
+
+    public Long getStudentHeadCount(Long classID) {
+        return classroomRepository.getStudentHeadCount(classID);
+    }
 }
