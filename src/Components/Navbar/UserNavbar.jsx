@@ -46,8 +46,8 @@ const UserNavbar = () => {
                 zIndex:1,
             }}
         >
-            <Box sx={{display:{xs:'none',sm:'none',md:'block'}}}>
-                <img src={logo} alt='logo' style={{width:'calc(10em + 2dvw)',}}/>
+            <Box sx={{display:{xs: user.role=="ADVISER"?'none':'block',sm:user.role=="ADVISER"?'none':'block',md:'block'}}}>
+                <a href='/'><img src={logo} alt='logo' style={{width:'calc(10em + 2dvw)',}}/></a>
             </Box>
  
             {user ? (

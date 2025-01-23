@@ -2,6 +2,7 @@ import { Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { randomPerson } from "../Utils/PersonPicker";
 import AdviserClassroomCardButton from "../IconButtonGroup/AdviserClassroomCardButtons";
+import StudentClassroomCardButton from "../IconButtonGroup/StudentClassroomCardButtons";
 
 export default function ClassroomCard({classroom}){
 
@@ -12,7 +13,7 @@ export default function ClassroomCard({classroom}){
     return(
         <Col xs={12} md={12} lg={6} xl={4}>
             <NavLink
-                to={`/adviserclassroompage`}
+                to={user.role == "ADVISER"?`/adviserclassroompage`:'/queuePage'}
                 state={classroom}
                 style={{ 
                     textDecoration: 'none', 
@@ -39,9 +40,9 @@ export default function ClassroomCard({classroom}){
                         </div>
                         <img src={randomPerson()} alt="randomPerson" style={{aspectRatio:1, height:'80%', bottom:0, right:0,position:'absolute', zIndex:0}}/>
                         {console.log(classroom)}
-                        {user?.role =="ADVISER"?<AdviserClassroomCardButton classID={classroom.classID}/>:<>Hello World</>}
+                        {user?.role =="ADVISER"?<AdviserClassroomCardButton classID={classroom.classID}/>:<StudentClassroomCardButton/>}
                     </div>
-                    
+
             </NavLink>
         </Col>
     )

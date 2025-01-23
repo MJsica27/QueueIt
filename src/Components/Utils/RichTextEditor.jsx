@@ -48,7 +48,7 @@ const RichTextEditor = ({createNote, setBody, body}) => {
                 onChange={setBody}
                 modules={modules}
             />
-            <div style={{display:'flex', justifyContent:'end'}}>
+            <div style={{display:'flex', justifyContent:'end', marginTop:'3em'}}>
                 <Button className='buttonCustom' onClick={createNote}>Create</Button>
             </div>
         </>

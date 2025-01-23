@@ -22,7 +22,7 @@ export default function LandingPage() {
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem]"></div> 
 
       <div className="absolute pointer-events-none"> 
-        <img src={img3} alt="illustration3" style={{ height:'500px', marginTop: '350px', marginLeft: '-40px' }}/>
+        {/* <img src={img3} alt="illustration3" style={{ height:'500px', marginTop: '350px', marginLeft: '-40px' }}/> */}
         <img src={img4} alt="illustration4" style={{ height:'100px', marginTop: '-750px', marginLeft: '650px' }}/>
       </div>
 

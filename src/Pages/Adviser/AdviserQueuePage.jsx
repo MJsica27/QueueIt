@@ -566,12 +566,12 @@ export default function AdviserQueuePage() {
                 </div>
             </div>
             :
-            <div className='openQueueingLP'>
-                <div className='OPQLPLeft'>
+            <div className='openQueueingLP' style={{position:'relative'}}>
+                <div className='OPQLPLeft' style={{zIndex:0}}>
                     <img src={starVec} alt='vec' style={{aspectRatio:1,height:'15%', position:'absolute',marginLeft:'8%',marginTop:'1%'}}/>
                     <img src={vec} alt='vec' style={{position:'absolute',left:0,bottom:0, height:'90%'}}/>
                 </div>
-                <div className='OPQLPRight'>
+                <div className='OPQLPRight' style={{zIndex:1}}>
                     <img src={squiggly} alt='vec' style={{position:'absolute',aspectRatio:1, height:'15%',top:20, right:100}}/>
                     <div className='OPQLTitle'>Let Them In!</div>
                     <div className='OPQLCaption'>Open the queue now and connect with your students who are ready and waiting!</div>

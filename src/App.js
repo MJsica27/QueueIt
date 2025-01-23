@@ -25,6 +25,7 @@ import OnQueuePage from './Pages/Student/OnQueuePage';
 import { WebSocketProvider } from './Components/User/WebSocketContext'; 
 import HomePage from './Pages/HomePage';
 import NotFound404Page from './Pages/NotFound404Page';
+import JournalPage from './Pages/JournalPage';
 
 
 export default function App() {
@@ -52,6 +53,8 @@ export default function App() {
                             {/* <Route path="/studenthomepage" element={<StudentHomePage />} /> */}
                             <Route path='/queuePage' element={<QueueingPage/>} />
                             <Route path='/onQueuePage' element={<OnQueuePage/>} />
+
+                            <Route path='/journal/:studentID/:classID' element={<JournalPage/>}/>
                             {/* user */}  
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginForm />} />

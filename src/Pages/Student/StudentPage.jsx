@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ClassroomCard from '../../Components/Card/Student/StudentClassroomCard'; 
+import ClassroomCard from '../../Components/Card/ClassroomCard';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -16,6 +16,7 @@ import img5 from '../../Assets/img/img5.png';
 import AdviserBackgroundPage from '../../Components/Backgound/AdviserBackgroundPage';
 import { BASE_URL } from '../../Global_vars/Urls';
 import { Box } from '@mui/material';
+import { Container, Row } from 'react-bootstrap';
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -130,25 +131,23 @@ export default function StudentPage() {
       </div>
 
 
-      <div style={{ padding: '30px', height:'450px', width: '88%', backgroundColor: '#fff', border:'1px solid black', borderRadius: '15px'}}>
-      <h2 style={{fontWeight: 'bold'}} >Classes</h2>
+      <div style={{ padding: '25px', width: '88%', backgroundColor: '#fff', borderRadius: '15px', flexGrow:1}}>
+        <p style={{fontWeight: 'bold', fontSize:'clamp(2rem, 2.5vw + 0.5rem, 3.3rem)'}} >Classrooms</p>
 
-        <div style={{ width: '100%'}}>  
+        <Container fluid>  
           {classrooms.length === 0 ? (
-            <p>No active classrooms found.</p>
+            <p className="text-center ">No active classrooms found.</p>
           ) : (
-            
-              <div style={{ backgroundColor:'#fff', display:'flex', flexWrap:'wrap', rowGap: '0px', columnGap: '40px',   marginLeft: '50px', maxHeight: '350px', overflowY: 'auto', }}>
-                {classrooms.map((classroom) => (
-                    <ClassroomCard
-                      key={classroom.classId}
-                      classroom={classroom}
-                    />
-                ))}
-              </div>
-            
+            <Row className='g-5'>
+              {classrooms.map((classroom) => (
+                <ClassroomCard 
+                  key={classroom.classId}
+                  classroom={classroom}
+                />
+              ))}
+            </Row>
           )}
-          </div> 
+        </Container>
       </div>
 
       <Dialog open={open} onClose={handleClose}>

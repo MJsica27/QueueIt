@@ -127,7 +127,7 @@
 }
 
 #ChatBoxContainer, #savedNotesContainer{
-    background-color: rgb(215,203,255);
+    background-color: #f1deff;
     border-radius: 15px;
     padding: 1em;
     flex: 1;
@@ -165,7 +165,9 @@
 }
 .buttonCustom{
     background-color: #7d57fc;
-    border: solid 1px black;
+    color: white;
+    border: none;
+    padding-inline: 3em;
 }
 
 .buttonCustom:hover{

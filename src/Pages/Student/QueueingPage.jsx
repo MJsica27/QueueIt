@@ -13,6 +13,7 @@ import { Typography } from '@mui/material';
 import LockedAdviser from '../../Components/Card/LockedAdviser';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { BASE_URL } from '../../Global_vars/Urls';
+import Journal from '../../Assets/img/Journal.png';
 
 const QueueingPage = () => {
     const navigate = useNavigate();
@@ -87,7 +88,7 @@ const QueueingPage = () => {
                                         classroom.mentorable?
                                             <Col sm={12} md={6} className='customClassCol_QPS' style={{padding:'0px', paddingLeft:'5px'}}>
                                                 {classroom.mentorable?
-                                                    group?
+                                                    group?.mentorid?
                                                         <AdviserQueueingCard classroom={classroom} groupID={group?.groupID} title={"Mentor"}/>:<LockedAdviser/>:<></>}
                                             </Col>
                                             :
@@ -116,8 +117,9 @@ const QueueingPage = () => {
                             </div>
                             <div id='journalContainer_QPS' className='customClassRow_QPS' style={{justifyContent:'space-between'}}>
                                 <div className='containerHeader_QPS'>Journal</div>
+                                <img src={Journal} alt='journal'/>
                                 <Typography className='containerCaption_QPS'>View journal entries.</Typography>
-                                <button className='primaryBTN'>Browse</button>
+                                <button className='primaryBTN' onClick={()=>{navigate(`/journal/${user.userID}/${classroom.classID}`)}}>Browse</button>
                             </div>
                             <div className='customClassRow_QPS'>
                                 <div className='containerHeader_QPS'>Consultation</div>

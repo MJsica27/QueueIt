@@ -32,7 +32,7 @@ export default function AdviserClassroomCardButton({ classID }) {
             <div className="d-flex align-items-center" style={{ marginTop: 'auto' }}>
                 <GroupIcon fontSize="large" />
                 <Typography style={{ marginLeft: '5px', color: '#333' }}>
-                    {headCount !== undefined ? headCount : <CircularProgress/>} Enrollees
+                    {headCount !== undefined ? headCount : <CircularProgress/>} {headCount < 2? <>Enrollee</>:<>Enrollees</>}
                 </Typography>
             </div>
         </div>
