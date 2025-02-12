@@ -17,11 +17,6 @@ public class MeetingController {
     @Autowired
     private MeetingService meetingService;
 
-//    @GetMapping("/getMeetingCount")
-//    public ResponseEntity<Object> getMeetingCount(@RequestParam Long classID, @RequestParam Long groupID){
-//        return meetingService.getMeetingCount(classID,groupID);
-//    }
-
     @GetMapping("/getActive")
     public ResponseEntity<Object> getActiveMeeting(@RequestParam Long groupID){
         try{

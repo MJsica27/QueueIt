@@ -1,8 +1,5 @@
 package com.QueueIt.capstone.API.Requests;
 
-import com.QueueIt.capstone.API.Entities.Classroom;
-
-import java.sql.Time;
 import java.util.List;
 
 public class AdviserOpenCloseQueueRequest {
