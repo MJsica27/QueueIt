@@ -1,7 +1,6 @@
 package com.QueueIt.capstone.API.Services;
 
-import com.QueueIt.capstone.API.Requests.ChatRequest;
-import com.QueueIt.capstone.API.Returns.ChatResponse;
+import com.QueueIt.capstone.API.Requests.ChatDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -15,17 +14,8 @@ public class ChatService {
     @Autowired
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    public ResponseEntity<Void> sendMessage(ChatRequest chatRequest) {
-//        try{
-//            User user = userRepository.findById(chatRequest.getUserID()).orElseThrow();
-//            ChatResponse chatResponse = new ChatResponse(user.getUserID(),user.getFirstname(), user.getLastname(),user.getPhotoURL(),chatRequest.getMessage());
-//            simpMessageSendingOperations.convertAndSend("/topic/chat/adviser/"+chatRequest.getAdviserID(),chatResponse);
-//        }catch (NoSuchElementException e){
-//            return ResponseEntity.notFound().build();
-//        }
-//        return null;
-//    }
+    public ResponseEntity<Void> sendMessage(ChatDTO chatDTO) {
+        simpMessageSendingOperations.convertAndSend("/topic/chat/adviser/"+ chatDTO.getAdviserID(),chatDTO);
+        return null;
+    }
 }

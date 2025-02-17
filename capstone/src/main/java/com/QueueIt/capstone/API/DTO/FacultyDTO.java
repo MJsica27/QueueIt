@@ -1,0 +1,40 @@
+package com.QueueIt.capstone.API.DTO;
+
+import com.QueueIt.capstone.API.Entities.Classroom;
+
+import java.sql.Time;
+import java.util.List;
+
+public class FacultyDTO {
+    private Long facultyID;
+    private Time timeEnds;
+    private Long cateringLimit;
+    private List<Classroom> cateredClassrooms;
+
+    public FacultyDTO(Long facultyID, Time timeEnds, Long cateringLimit, List<Classroom> cateredClassrooms) {
+        this.facultyID = facultyID;
+        this.timeEnds = timeEnds;
+        this.cateringLimit = cateringLimit;
+        this.cateredClassrooms = cateredClassrooms;
+    }
+
+    public List<Classroom> getCateredClassrooms() {
+        return cateredClassrooms;
+    }
+
+    public FacultyDTO(Long facultyID) {
+        this.facultyID = facultyID;
+    }
+
+    public Long getFacultyID() {
+        return facultyID;
+    }
+
+    public Time getTimeEnds() {
+        return timeEnds;
+    }
+
+    public Long getCateringLimit() {
+        return cateringLimit;
+    }
+}
