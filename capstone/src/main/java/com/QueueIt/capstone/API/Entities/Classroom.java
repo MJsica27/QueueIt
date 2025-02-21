@@ -9,7 +9,7 @@ public class Classroom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long classroomID;
-    private Long facultyID;
+//    private Long facultyID;
     @ManyToMany
     @JoinTable(
             name = "QMClassroomFilters",
@@ -24,12 +24,12 @@ public class Classroom {
 
     public Classroom(Long classroomID, Long facultyID) {
         this.classroomID = classroomID;
-        this.facultyID = facultyID;
+//        this.facultyID = facultyID;
     }
 
-    public Long getFacultyID() {
-        return facultyID;
-    }
+//    public Long getFacultyID() {
+//        return facultyID;
+//    }
 
     public Long getClassroomID() {
         return classroomID;

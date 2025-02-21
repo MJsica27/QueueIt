@@ -9,16 +9,16 @@ public class FacultyDTO {
     private Long facultyID;
     private Time timeEnds;
     private Long cateringLimit;
-    private List<Classroom> cateredClassrooms;
+    private List<Long> cateredClassrooms;
 
-    public FacultyDTO(Long facultyID, Time timeEnds, Long cateringLimit, List<Classroom> cateredClassrooms) {
+    public FacultyDTO(Long facultyID, Time timeEnds, Long cateringLimit, List<Long> cateredClassrooms) {
         this.facultyID = facultyID;
         this.timeEnds = timeEnds;
         this.cateringLimit = cateringLimit;
         this.cateredClassrooms = cateredClassrooms;
     }
 
-    public List<Classroom> getCateredClassrooms() {
+    public List<Long> getCateredClassrooms() {
         return cateredClassrooms;
     }
 

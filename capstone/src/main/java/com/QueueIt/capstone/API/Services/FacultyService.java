@@ -46,7 +46,11 @@ public class FacultyService {
         HashMap<String, Object> context = new HashMap<>();
         context.put("isActive",Boolean.TRUE);
         context.put("cateringClasses",queueingManager.getCateredClassrooms());
-        context.put("queueSize",queueingManager.queueLength());
+        if (queueingManager.queueLength() == 0){
+            context.put("queueSize",0);
+        }else{
+            context.put("queueSize",queueingManager.queueLength());
+        }
         simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/"+facultyDTO.getFacultyID(), context);
         return Boolean.TRUE;
     }
