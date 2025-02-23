@@ -1,6 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
-import com.QueueIt.capstone.API.Requests.ChatDTO;
+import com.QueueIt.capstone.API.DTO.ChatDTO;
 import com.QueueIt.capstone.API.Services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

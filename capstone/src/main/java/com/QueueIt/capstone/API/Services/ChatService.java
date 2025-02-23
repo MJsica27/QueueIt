@@ -1,12 +1,10 @@
 package com.QueueIt.capstone.API.Services;
 
-import com.QueueIt.capstone.API.Requests.ChatDTO;
+import com.QueueIt.capstone.API.DTO.ChatDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 public class ChatService {

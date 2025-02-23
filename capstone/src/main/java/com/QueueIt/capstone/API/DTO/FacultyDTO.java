@@ -18,6 +18,13 @@ public class FacultyDTO {
         this.cateredClassrooms = cateredClassrooms;
     }
 
+    public Boolean isAllClassrooms(){
+        if (this.cateredClassrooms.isEmpty()){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
     public List<Long> getCateredClassrooms() {
         return cateredClassrooms;
     }

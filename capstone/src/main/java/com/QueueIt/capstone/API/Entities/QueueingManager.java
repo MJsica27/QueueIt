@@ -1,10 +1,13 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.QueueIt.capstone.API.DTO.FacultyDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class QueueingManager {
@@ -19,6 +22,9 @@ public class QueueingManager {
     @OneToMany(mappedBy = "queueingManager", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<QueueingEntry> queueingEntries;
+    @OneToOne
+    @JoinColumn(name = "tendingQueueingEntryID")
+    private QueueingEntry tendingEntry;
     @ManyToMany(mappedBy = "queueingManagers")
     private List<Classroom> cateredClassrooms;
 
@@ -69,9 +75,48 @@ public class QueueingManager {
         return cateringLimit;
     }
 
-    public int queueLength(){
+    public QueueingEntry getTendingEntry() {
+        return tendingEntry;
+    }
+
+    public int getQueueLength(){
+        if (this.queueingEntries == null){
+            return 0;
+        }
         return this.queueingEntries.size();
     }
 
+    public void sortQueueingEntries(){
+        this.queueingEntries
+                .stream()
+                .sorted(Comparator.comparing(QueueingEntry::getDateTimeQueued))
+                .collect(Collectors.toList());
+    }
 
+    public List<QueueingEntry> getQueueingEntries() {
+        this.sortQueueingEntries();
+        return queueingEntries;
+    }
+
+    public Boolean checkDuplicateEntry(Long teamID){
+        return this.queueingEntries
+                .stream()
+                .anyMatch(queueingEntry -> queueingEntry.getTeamID().equals(teamID));
+    }
+
+    public void addQueueingEntry(QueueingEntry queueingEntry){
+        queueingEntry.getAttendanceList()
+                .stream()
+                .forEach(attendance -> {
+                    Attendance foo = attendance;
+                    foo.setQueueingEntry(queueingEntry);
+                });
+    }
+
+    public void goInactive(){
+        this.isActive = Boolean.FALSE;
+        this.cateringLimit = null;
+        this.timeEnds = null;
+        this.cateredClassrooms.clear();
+    }
 }

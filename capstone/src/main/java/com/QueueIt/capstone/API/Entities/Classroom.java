@@ -1,15 +1,16 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Classroom {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long classroomID;
-//    private Long facultyID;
     @ManyToMany
     @JoinTable(
             name = "QMClassroomFilters",
@@ -17,21 +18,27 @@ public class Classroom {
             inverseJoinColumns = @JoinColumn(name="queueingManagerID")
 
     )
-    private List<QueueingManager> queueingManagers;
+    @JsonIgnore
+    private List<QueueingManager> queueingManagers = new ArrayList<>();
 
     public Classroom() {
     }
 
-    public Classroom(Long classroomID, Long facultyID) {
+    public Classroom(Long classroomID) {
         this.classroomID = classroomID;
-//        this.facultyID = facultyID;
     }
 
-//    public Long getFacultyID() {
-//        return facultyID;
-//    }
+    public void addQueueingManager(QueueingManager queueingManager) {
+        this.queueingManagers.add(queueingManager);
+    }
 
     public Long getClassroomID() {
         return classroomID;
     }
+
+    public List<QueueingManager> getQueueingManagers() {
+        return queueingManagers;
+    }
+
+
 }

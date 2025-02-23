@@ -10,10 +10,6 @@ import jakarta.persistence.ManyToOne;
 public class Member {
     @Id
     private Long memberID;
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    @JsonBackReference
-    private Team team;
 
     public Member(Long memberID) {
         this.memberID = memberID;
@@ -25,9 +21,5 @@ public class Member {
 
     public void setMemberID(Long memberID) {
         this.memberID = memberID;
-    }
-
-    public Team getTeam() {
-        return team;
     }
 }

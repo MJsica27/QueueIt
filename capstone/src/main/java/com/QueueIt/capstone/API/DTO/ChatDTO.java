@@ -1,4 +1,4 @@
-package com.QueueIt.capstone.API.Requests;
+package com.QueueIt.capstone.API.DTO;
 
 public class ChatDTO {
     private Long userID;

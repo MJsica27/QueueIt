@@ -4,6 +4,8 @@ import com.QueueIt.capstone.API.DTO.FacultyDTO;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Services.FacultyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +17,9 @@ import java.util.HashMap;
 @CrossOrigin(origins = "http://localhost:5173")
 public class FacultyController {
 
+    private static final Logger log = LoggerFactory.getLogger(FacultyController.class);
     @Autowired
     private FacultyService facultyService;
-
-    @GetMapping("/isActive/{facultyID}")
-    private ResponseEntity<HashMap<String, Object>> isFacultyActive(@PathVariable Long facultyID){
-        try{
-            HashMap<String, Object> isActive = facultyService.isFacultyActive(facultyID);
-            return ResponseEntity.ok(isActive);
-        } catch (QueueingManagerNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @GetMapping("/getQueueingManager/{facultyID}")
     private ResponseEntity<Object> getFacultyQueueingManager(@PathVariable Long facultyID){
@@ -40,6 +33,7 @@ public class FacultyController {
 
     @PostMapping("/openQueueing")
     private ResponseEntity<Object> facultyOpenQueueing(@RequestBody FacultyDTO facultyDTO){
+        log.info(facultyDTO.toString());
         Boolean isOpen = facultyService.facultyOpenQueueing(facultyDTO);
         return ResponseEntity.ok("Queueing successfully opened.");
     }
