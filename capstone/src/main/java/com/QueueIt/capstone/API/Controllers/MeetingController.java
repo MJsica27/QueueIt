@@ -17,17 +17,4 @@ public class MeetingController {
     @Autowired
     private MeetingService meetingService;
 
-    @GetMapping("/getActive")
-    public ResponseEntity<Object> getActiveMeeting(@RequestParam Long groupID){
-        try{
-            Meeting meeting = meetingService.getActiveMeeting(groupID);
-            return ResponseEntity.ok(meeting);
-        }catch (NoSuchElementException e){
-            return ResponseEntity.status(404).body("Meeting does not exist.");
-        }catch (NonUniqueResultException e){
-            return ResponseEntity.status(500).body("Duplicate entries returned for non-concluded meetings. Please contact administrator.");
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 }

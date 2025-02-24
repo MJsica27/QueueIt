@@ -26,6 +26,7 @@ public class QueueingEntryDTO {
     }
 
     //DTO for Dequeue
+    //DTO for Admit Queueing Entry
     public QueueingEntryDTO(Long queueingEntryID, Long facultyID) {
         this.queueingEntryID = queueingEntryID;
     }

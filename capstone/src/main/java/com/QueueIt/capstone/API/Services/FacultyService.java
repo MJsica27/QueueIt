@@ -1,12 +1,20 @@
 package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
+import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.Classroom;
+import com.QueueIt.capstone.API.Entities.Meeting;
+import com.QueueIt.capstone.API.Entities.QueueingEntry;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Middlewares.ClassroomNotFoundException;
+import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.ClassroomRepository;
+import com.QueueIt.capstone.API.Repository.MeetingRepository;
+import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +35,12 @@ public class FacultyService {
 
     @Autowired
     private ClassroomRepository classroomRepository;
+
+    @Autowired
+    private QueueingEntryRepository queueingEntryRepository;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     public Boolean facultyOpenQueueing(FacultyDTO facultyDTO){
         QueueingManager queueingManager = null;
@@ -106,5 +120,33 @@ public class FacultyService {
         return queueingManagerRepository
                 .findByFacultyID(facultyID)
                 .orElseThrow(()-> new QueueingManagerNotFoundException("Queueing Manager not found"));
+    }
+
+    @Transactional
+    public Boolean admitQueueingEntry(QueueingEntryDTO queueingEntryDTO) throws QueueingEntryNotFoundException, QueueingManagerNotFoundException {
+        QueueingEntry queueingEntry = queueingEntryRepository
+                .findById(queueingEntryDTO.getQueueingEntryID())
+                .orElseThrow(()-> new QueueingEntryNotFoundException("Queueing entry not found"));
+
+        QueueingManager queueingManager = queueingManagerRepository
+                .findById(queueingEntry.getQueueingManager().getQueueingManagerID())
+                .orElseThrow(()->new QueueingManagerNotFoundException("Queueing manager not found."));
+
+        Meeting meeting = new Meeting(
+            MeetingStatus.QUEUEING_CONDUCTED,
+            queueingEntry,
+            queueingManager
+        );
+
+        meetingRepository.save(meeting);
+
+        queueingManager.setQueueingEntryToTending(queueingEntry, meeting);
+
+        queueingManagerRepository.save(queueingManager);
+
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
+
+        return Boolean.TRUE;
     }
 }

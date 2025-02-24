@@ -28,7 +28,13 @@ public class QueueingService {
     @Autowired
     private QueueingEntryRepository queueingEntryRepository;
 
-    public void enqueueTeam(QueueingEntryDTO queueingEntryDTO) throws QueueingManagerNotFoundException, DuplicateQueueingEntryException, QueueingManagerInactiveException, QueueingCapacityExceeded {
+    public void enqueueTeam(QueueingEntryDTO queueingEntryDTO)
+            throws
+            QueueingManagerNotFoundException,
+            DuplicateQueueingEntryException,
+            QueueingManagerInactiveException,
+            QueueingCapacityExceeded,
+            QueueingEntryIsTendingEntryException {
 
         // [1] find the faculty's associated queueing manager
         QueueingManager queueingManager = queueingManagerRepository
@@ -42,6 +48,9 @@ public class QueueingService {
         }
         if(queueingManager.getQueueLength() == queueingManager.getCateringLimit() && queueingManager.getCateringLimit() > 0){
             throw new QueueingCapacityExceeded("Queueing capacity exceeded");
+        }
+        if (queueingManager.isQueueingEntryTending(queueingEntryDTO.getTeamID())){
+            throw new QueueingEntryIsTendingEntryException("Queueing entry is tending entry.");
         }
         // Initializing the queueing entry
         QueueingEntry queueingEntry = new QueueingEntry(
@@ -66,7 +75,10 @@ public class QueueingService {
 
     }
 
-    public void dequeueTeam(QueueingEntryDTO queueingEntryDTO) throws QueueingEntryNotFoundException, QueueingManagerNotFoundException {
+    public void dequeueTeam(QueueingEntryDTO queueingEntryDTO)
+            throws
+            QueueingEntryNotFoundException,
+            QueueingManagerNotFoundException {
 
         QueueingEntry queueingEntry = queueingEntryRepository
                 .findById(queueingEntryDTO.getQueueingEntryID())

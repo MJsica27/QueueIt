@@ -17,13 +17,16 @@ public class QueueingEntry {
     private String classReference;
     @ManyToOne
     @JoinColumn(name = "queueingManager_id")
-    @JsonBackReference
+    @JsonBackReference("queueingEntry-manager")
     private QueueingManager queueingManager;
     private LocalDateTime dateTimeQueued = LocalDateTime.now();
     private Boolean isOnHold = Boolean.FALSE;
     @OneToMany(mappedBy = "queueingEntry", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Attendance> attendanceList;
+    @OneToOne(mappedBy = "queueingEntry", cascade = CascadeType.ALL)
+    @JsonBackReference("entry-meeting")
+    private Meeting meeting;
 
     public QueueingEntry() {
     }
@@ -70,5 +73,9 @@ public class QueueingEntry {
 
     public String getClassReference() {
         return classReference;
+    }
+
+    public void setQueueingManager(QueueingManager queueingManager) {
+        this.queueingManager = queueingManager;
     }
 }

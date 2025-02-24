@@ -17,9 +17,6 @@ public class Attendance {
     private String firstname;
     private String lastname;
     @ManyToOne
-    @JoinColumn(name = "meetingID")
-    private Meeting meeting;
-    @ManyToOne
     @JoinColumn(name = "queueingEntryID")
     @JsonBackReference
     private QueueingEntry queueingEntry;
@@ -64,10 +61,6 @@ public class Attendance {
 
     public String getLastname() {
         return lastname;
-    }
-
-    public Meeting getMeeting() {
-        return meeting;
     }
 
     public QueueingEntry getQueueingEntry() {

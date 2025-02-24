@@ -22,7 +22,8 @@ public class QueueingController {
             return ResponseEntity.ok("Your team is now in the line.");
         }catch (QueueingManagerNotFoundException e){
             return ResponseEntity.status(404).body(e.getMessage());
-        }catch (DuplicateQueueingEntryException | QueueingManagerInactiveException | QueueingCapacityExceeded e){
+        }catch (DuplicateQueueingEntryException | QueueingManagerInactiveException | QueueingCapacityExceeded |
+                QueueingEntryIsTendingEntryException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }

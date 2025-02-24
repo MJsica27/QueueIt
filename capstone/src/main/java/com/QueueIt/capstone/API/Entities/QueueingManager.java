@@ -20,11 +20,12 @@ public class QueueingManager {
     private Boolean isActive;
     private Long cateringLimit;
     @OneToMany(mappedBy = "queueingManager", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference("queueingEntry-manager")
     private List<QueueingEntry> queueingEntries;
     @OneToOne
-    @JoinColumn(name = "tendingQueueingEntryID")
-    private QueueingEntry tendingEntry;
+    @JoinColumn(name = "meetingID")
+    @JsonManagedReference
+    private Meeting meeting;
     @ManyToMany(mappedBy = "queueingManagers")
     private List<Classroom> cateredClassrooms;
 
@@ -75,10 +76,6 @@ public class QueueingManager {
         return cateringLimit;
     }
 
-    public QueueingEntry getTendingEntry() {
-        return tendingEntry;
-    }
-
     public int getQueueLength(){
         if (this.queueingEntries == null){
             return 0;
@@ -111,6 +108,19 @@ public class QueueingManager {
                     Attendance foo = attendance;
                     foo.setQueueingEntry(queueingEntry);
                 });
+    }
+
+    public void setQueueingEntryToTending(QueueingEntry queueingEntry, Meeting meeting) {
+        this.meeting = meeting;
+        queueingEntry.setQueueingManager(null); // Detach from the manager
+        this.queueingEntries.remove(queueingEntry);
+    }
+
+    public Boolean isQueueingEntryTending(Long teamID){
+        if (this.meeting.getQueueingEntry().getTeamID().equals(teamID)){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     public void goInactive(){

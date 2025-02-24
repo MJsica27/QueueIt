@@ -1,12 +1,11 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -15,24 +14,20 @@ public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long meetingID;
-    private Long adviserID;
-    private Long groupID;
-    private Time start;
-    private Time end;
-    private Date meetingDate;
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
-    private List<Attendance> attendance;
+    private LocalDateTime start = LocalDateTime.now();
+    private LocalDateTime end;
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
     private List<Grade> grades;
-    @OneToOne(mappedBy = "meeting")
-    private DefaultedMeetingLog defaultedMeetingLog;
+    private MeetingStatus meetingStatus;
+    @OneToOne
+    @JoinColumn(name = "queueingEntry_id")
+    @JsonManagedReference("entry-meeting")
+    private QueueingEntry queueingEntry;
+    @OneToOne(mappedBy = "meeting", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @JsonBackReference
+    private QueueingManager queueingManager;
 
     public Meeting() {
-    }
-
-    public Meeting(Long adviserID, Long groupID) {
-        this.adviserID = adviserID;
-        this.groupID = groupID;
     }
 
     public Long getMeetingID() {
@@ -43,43 +38,33 @@ public class Meeting {
         this.meetingID = meetingID;
     }
 
-    public Long getAdviserID() {
-        return adviserID;
+    public Meeting(MeetingStatus meetingStatus, QueueingEntry queueingEntry, QueueingManager queueingManager) {
+        this.meetingStatus = meetingStatus;
+        this.queueingEntry = queueingEntry;
+        this.queueingManager = queueingManager;
     }
 
-    public void setAdviserID(Long adviserID) {
-        this.adviserID = adviserID;
-    }
-
-    public Long getGroupID() {
-        return groupID;
-    }
-
-    public void setGroupID(Long groupID) {
-        this.groupID = groupID;
-    }
-
-    public Time getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Time start) {
-        this.start = start;
-    }
-
-    public Time getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Time end) {
-        this.end = end;
+    public List<Grade> getGrades() {
+        return grades;
     }
 
-    public Time calculateDifference(){
-        LocalTime endTime = this.end.toLocalTime();
-        LocalTime startTime = this.start.toLocalTime();
-        Duration duration = Duration.between(startTime,endTime);
-        LocalTime localTime = LocalTime.MIDNIGHT.plus(duration);
-        return Time.valueOf(localTime);
+    public MeetingStatus getMeetingStatus() {
+        return meetingStatus;
+    }
+
+    public QueueingEntry getQueueingEntry() {
+        return queueingEntry;
+    }
+
+    public QueueingManager getQueueingManager() {
+        return queueingManager;
     }
 }

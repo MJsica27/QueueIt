@@ -1,7 +1,9 @@
 package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
+import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Services.FacultyService;
 import org.slf4j.Logger;
@@ -45,6 +47,16 @@ public class FacultyController {
             return ResponseEntity.ok("Queueing closed.");
         }catch (QueueingManagerNotFoundException e){
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/admitQueueingEntry")
+    private ResponseEntity<Object> facultyAdmitQueueingEntry(@RequestBody  QueueingEntryDTO queueingEntryDTO){
+        try{
+            Boolean isAdmitted = facultyService.admitQueueingEntry(queueingEntryDTO);
+            return ResponseEntity.ok(isAdmitted);
+        } catch (QueueingEntryNotFoundException | QueueingManagerNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
