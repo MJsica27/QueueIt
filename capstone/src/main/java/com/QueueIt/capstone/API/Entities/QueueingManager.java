@@ -117,6 +117,9 @@ public class QueueingManager {
     }
 
     public Boolean isQueueingEntryTending(Long teamID){
+        if (this.meeting == null){
+            return Boolean.FALSE;
+        }
         if (this.meeting.getQueueingEntry().getTeamID().equals(teamID)){
             return Boolean.TRUE;
         }

@@ -15,7 +15,6 @@ public class Grade {
     @OneToOne
     @JoinColumn(name = "criterion_id")
     private Criterion criterion;
-    private Date dateRecorded;
     private float mark;
 
 }
