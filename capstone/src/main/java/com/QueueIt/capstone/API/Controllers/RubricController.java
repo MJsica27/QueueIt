@@ -1,24 +1,49 @@
 package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.DTO.RubricDTO;
+import com.QueueIt.capstone.API.Entities.Rubric;
 import com.QueueIt.capstone.API.Services.RubricService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/rubric")
+@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/rubrics")
 public class RubricController {
+    private final RubricService rubricService;
 
-    @Autowired
-    private RubricService rubricService;
-
-    @PostMapping("/create")
-    public ResponseEntity<Object> createRubric(@RequestBody RubricDTO rubricDTO){
-        rubricService.createRubric(rubricDTO);
-        return ResponseEntity.ok("Rubric created.");
+    public RubricController(RubricService rubricService) {
+        this.rubricService = rubricService;
     }
+
+    @PostMapping
+    public ResponseEntity<Rubric> createRubric(@RequestBody RubricDTO rubricDTO) {
+        return ResponseEntity.ok(rubricService.createRubric(rubricDTO));
+    }
+
+    @GetMapping("/{rubricID}")
+    public ResponseEntity<Optional<Rubric>> getRubric(@PathVariable Long rubricID) {
+        return ResponseEntity.ok(rubricService.getRubricById(rubricID));
+    }
+
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<Rubric>> getUserRubrics(@PathVariable Long userID) {
+        return ResponseEntity.ok(rubricService.getRubrics(userID));
+    }
+
+    @PutMapping("/{rubricID}")
+    public ResponseEntity<Rubric> updateRubric(@PathVariable Long rubricID, @RequestBody RubricDTO rubricDTO) {
+        return ResponseEntity.ok(rubricService.updateRubric(rubricID, rubricDTO));
+    }
+
+    @DeleteMapping("/{rubricID}")
+    public ResponseEntity<String> deleteRubric(@PathVariable Long rubricID) {
+        return rubricService.deleteRubric(rubricID)
+                ? ResponseEntity.ok("Rubric deleted successfully")
+                : ResponseEntity.notFound().build();
+    }
+
 }

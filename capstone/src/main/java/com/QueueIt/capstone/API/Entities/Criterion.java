@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +9,8 @@ public class Criterion {
     @Id
     private Long criterionID;
     @ManyToOne
-    @JoinColumn(name = "rubric_id")
+    @JoinColumn(name = "rubric_id", nullable = false)
+    @JsonBackReference
     private Rubric rubric;
     private String title;
     private String description;
