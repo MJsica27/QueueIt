@@ -15,6 +15,7 @@ public class Rubric {
     @Column(nullable = false, unique = true)
     private String title;
 
+    @Lob
     private String description;
 
     @OneToMany(mappedBy = "rubric", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -23,15 +24,27 @@ public class Rubric {
 
     private Boolean isPrivate;
     private Long userID;
+    private String facultyName;
 
     public Rubric() {}
 
-    public Rubric(String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID) {
+    public Rubric(String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName) {
         this.title = title;
         this.description = description;
         this.criteria = criteria;
         this.isPrivate = isPrivate;
         this.userID = userID;
+        this.facultyName = facultyName;
+    }
+
+    public Rubric(Long id, String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.criteria = criteria;
+        this.isPrivate = isPrivate;
+        this.userID = userID;
+        this.facultyName = facultyName;
     }
 
     // Getters
@@ -39,13 +52,27 @@ public class Rubric {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public List<Criterion> getCriteria() { return criteria; }
-    public Boolean isPrivate() { return isPrivate; }
     public Long getUserID() { return userID; }
+    public Boolean getIsPrivate(){return isPrivate;}
+    public String getFacultyName() {
+        return facultyName;
+    }
 
     // Setters
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setCriteria(List<Criterion> criteria) { this.criteria = criteria; }
-    public void setIsPrivate(Boolean isPrivate) { this.isPrivate = isPrivate; } // Renamed setter
     public void setUserID(Long userID) { this.userID = userID; }
+
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
+    }
+
+
+
+
 }

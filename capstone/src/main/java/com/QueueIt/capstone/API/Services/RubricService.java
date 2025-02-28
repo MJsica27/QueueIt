@@ -3,17 +3,21 @@ package com.QueueIt.capstone.API.Services;
 import com.QueueIt.capstone.API.DTO.RubricDTO;
 import com.QueueIt.capstone.API.Entities.Rubric;
 import com.QueueIt.capstone.API.Entities.Criterion;
-import com.QueueIt.capstone.API.Repositories.RubricRepository;
+import com.QueueIt.capstone.API.Repository.RubricRepository;
 import com.QueueIt.capstone.API.Repositories.CriterionRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 public class RubricService {
+    private static final Logger log = LoggerFactory.getLogger(RubricService.class);
     private final RubricRepository rubricRepository;
     private final CriterionRepository criterionRepository;
 
@@ -32,13 +36,17 @@ public class RubricService {
                 rubricDTO.getDescription(),
                 null,
                 rubricDTO.getIsPrivate(),  // Fixed method name
-                rubricDTO.getUserID()
+                rubricDTO.getUserID(),
+                rubricDTO.getFacultyName()
         );
 
         Rubric savedRubric = rubricRepository.save(rubric);
 
         List<Criterion> criteria = rubricDTO.getCriteria().stream()
-                .map(dto -> new Criterion(savedRubric, dto.getTitle(), dto.getDescription()))
+                .map(dto -> new Criterion(
+                        savedRubric,
+                        dto.getTitle(),
+                        dto.getDescription()))
                 .collect(Collectors.toList());
 
         criterionRepository.saveAll(criteria);
@@ -51,9 +59,17 @@ public class RubricService {
      */
     public List<Rubric> getRubrics(Long userID) {
         List<Rubric> userRubrics = rubricRepository.findByUserID(userID);
-        List<Rubric> systemRubrics = rubricRepository.findByIsPrivateFalse();
-        userRubrics.addAll(systemRubrics);
-        return userRubrics;
+        List<Rubric> publiclyAvailableRubrics = rubricRepository.findByIsPrivateFalse(userID);
+
+        // Combine both lists
+        userRubrics.addAll(publiclyAvailableRubrics);
+
+        // Sort the combined list and collect it back into a new list
+        List<Rubric> sortedRubrics = userRubrics.stream()
+                .sorted(Comparator.comparing(Rubric::getId))
+                .collect(Collectors.toList());
+
+        return sortedRubrics; // Return the sorted list
     }
 
     /**
@@ -67,29 +83,31 @@ public class RubricService {
      * ✅ UPDATE a rubric (if system-made, clone it first)
      */
     @Transactional
-    public Rubric updateRubric(Long rubricID, RubricDTO rubricDTO) {
-        Optional<Rubric> optionalRubric = rubricRepository.findById(rubricID);
+    public Rubric updateRubric(Rubric updatedRubricInstance) {
+        Optional<Rubric> optionalRubric = rubricRepository.findById(updatedRubricInstance.getId());
 
         if (optionalRubric.isPresent()) {
             Rubric rubric = optionalRubric.get();
 
             // If it's a system rubric, create a new one for the user instead of updating
-            if (!rubricDTO.getIsPrivate()) {
-                return editSystemRubric(rubricID, rubricDTO);
+            if (rubric.getId() == 1) {
+                return editSystemRubric(rubric.getId(), updatedRubricInstance);
             }
 
-            rubric.setTitle(rubricDTO.getTitle());
-            rubric.setDescription(rubricDTO.getDescription());
-            rubric.setIsPrivate(rubricDTO.getIsPrivate()); // Fixed setter method
+            rubric.setTitle(updatedRubricInstance.getTitle());
+            rubric.setDescription(updatedRubricInstance.getDescription());
+            log.info(("Printed private: "+updatedRubricInstance.getIsPrivate().toString()));
+            rubric.setPrivate(updatedRubricInstance.getIsPrivate());
+            rubric.setFacultyName(updatedRubricInstance.getFacultyName());
 
             // Clear old criteria and save new ones
-            criterionRepository.deleteAll(rubric.getCriteria());
-            List<Criterion> newCriteria = rubricDTO.getCriteria().stream()
+            rubric.getCriteria().clear(); // Clear the existing criteria
+            List<Criterion> newCriteria = updatedRubricInstance.getCriteria().stream()
                     .map(dto -> new Criterion(rubric, dto.getTitle(), dto.getDescription()))
                     .collect(Collectors.toList());
 
-            rubric.setCriteria(newCriteria);
-            criterionRepository.saveAll(newCriteria);
+            rubric.getCriteria().addAll(newCriteria); // Add new criteria
+            criterionRepository.saveAll(newCriteria); // Save new criteria
 
             return rubricRepository.save(rubric);
         }
@@ -112,7 +130,7 @@ public class RubricService {
      * ✅ Clone system rubric when user edits it
      */
     @Transactional
-    public Rubric editSystemRubric(Long rubricID, RubricDTO rubricDTO) {
+    public Rubric editSystemRubric(Long rubricID, Rubric rubricDTO) {
         Optional<Rubric> optionalRubric = rubricRepository.findById(rubricID);
         if (optionalRubric.isPresent()) {
             Rubric originalRubric = optionalRubric.get();
@@ -123,7 +141,8 @@ public class RubricService {
                     rubricDTO.getDescription(),
                     null, // Will be set after saving
                     true, // Make it private for the user
-                    rubricDTO.getUserID()
+                    rubricDTO.getUserID(),
+                    "System"
             );
 
             Rubric savedClonedRubric = rubricRepository.save(clonedRubric);
@@ -144,9 +163,58 @@ public class RubricService {
      */
     @PostConstruct
     public void createDefaultRubrics() {
-        if (rubricRepository.findByIsPrivateFalse().isEmpty()) {
-            Rubric systemRubric = new Rubric("General Rubric", "Standard evaluation rubric", null, false, null);
-            rubricRepository.save(systemRubric);
+        if (rubricRepository.findAll().isEmpty()) {
+            Rubric systemRubric = new Rubric("General Rubric", "Standard evaluation rubric", null, false, null,"System");
+            Rubric savedRubric = rubricRepository.save(systemRubric);
+            List<Criterion> systemGeneratedCriterion = new ArrayList<Criterion>(
+                List.of(
+                    new Criterion(
+                            savedRubric,
+                            "Preparedness",
+                            "Preparedness refers to the extent to which students come to the project presentation or submission ready to engage with the material. This includes having all necessary materials, completing required research, and being able to answer questions or discuss the project confidently. A well-prepared student demonstrates a thorough understanding of the project topic and is able to articulate their ideas clearly."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Punctuality",
+                            "Punctuality assesses the timeliness of project submissions and presentations. This criterion evaluates whether students meet deadlines and adhere to the schedule set for the project. Being punctual reflects a student’s ability to manage their time effectively and respect the timelines established by the instructor or project guidelines."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Conciseness",
+                            "Conciseness measures the ability to communicate ideas clearly and succinctly without unnecessary elaboration or filler content. This criterion evaluates how well students can distill their thoughts and present information in a straightforward manner, ensuring that the main points are easily understood without overwhelming the audience with excessive detail."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Specific",
+                            "Specificity refers to the clarity and precision of the project’s objectives, goals, and content. This criterion evaluates whether students provide clear, detailed information that directly addresses the project requirements. Specific projects outline exact expectations and avoid vague statements, making it easier for the audience to grasp the intended message."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Measurable",
+                            "Measurability assesses whether the goals and outcomes of the project can be quantified or evaluated. This criterion looks at whether students have established clear metrics or indicators that demonstrate success or progress. Measurable projects allow for objective assessment of results, making it easier to determine if the objectives have been met."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Attainable",
+                            "Attainability evaluates whether the goals set for the project are realistic and achievable within the given constraints, such as time, resources, and skills. This criterion encourages students to set goals that are challenging yet feasible, promoting a sense of accomplishment upon completion. Projects should reflect a balance between ambition and practicality."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Relevance",
+                            "Relevance assesses the significance and applicability of the project to the intended audience or context. This criterion evaluates whether the project addresses a pertinent issue, topic, or question that resonates with the audience or aligns with the course objectives. Relevant projects demonstrate a clear connection to real-world applications or academic concepts."
+                    ),
+                    new Criterion(
+                            savedRubric,
+                            "Time-Bound",
+                            "Time-bound refers to the establishment of a clear timeline for project completion, including deadlines for various phases of the project. This criterion evaluates whether students have set specific timeframes for achieving their goals, ensuring that the project progresses in a structured manner. Time-bound projects help students manage their workload effectively and maintain focus on timely completion."
+                    )
+                )
+            );
+            criterionRepository.saveAll(systemGeneratedCriterion);
+            savedRubric.setCriteria(systemGeneratedCriterion);
+            rubricRepository.save(savedRubric);
         }
+
+
     }
 }

@@ -13,6 +13,7 @@ public class Criterion {
     @JsonBackReference
     private Rubric rubric;
     private String title;
+    @Lob
     private String description;
     @OneToOne(mappedBy = "criterion", cascade = CascadeType.ALL)
     private Grade grade;

@@ -19,27 +19,27 @@ public class RubricController {
         this.rubricService = rubricService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Rubric> createRubric(@RequestBody RubricDTO rubricDTO) {
         return ResponseEntity.ok(rubricService.createRubric(rubricDTO));
     }
 
-    @GetMapping("/{rubricID}")
-    public ResponseEntity<Optional<Rubric>> getRubric(@PathVariable Long rubricID) {
-        return ResponseEntity.ok(rubricService.getRubricById(rubricID));
-    }
+//    @GetMapping("/{rubricID}")
+//    public ResponseEntity<Optional<Rubric>> getRubric(@PathVariable Long rubricID) {
+//        return ResponseEntity.ok(rubricService.getRubricById(rubricID));
+//    }
 
     @GetMapping("/user/{userID}")
     public ResponseEntity<List<Rubric>> getUserRubrics(@PathVariable Long userID) {
         return ResponseEntity.ok(rubricService.getRubrics(userID));
     }
 
-    @PutMapping("/{rubricID}")
-    public ResponseEntity<Rubric> updateRubric(@PathVariable Long rubricID, @RequestBody RubricDTO rubricDTO) {
-        return ResponseEntity.ok(rubricService.updateRubric(rubricID, rubricDTO));
+    @PutMapping("/update")
+    public ResponseEntity<Rubric> updateRubric(@RequestBody Rubric updatedRubricInstance) {
+        return ResponseEntity.ok(rubricService.updateRubric(updatedRubricInstance));
     }
 
-    @DeleteMapping("/{rubricID}")
+    @DeleteMapping("/delete/{rubricID}")
     public ResponseEntity<String> deleteRubric(@PathVariable Long rubricID) {
         return rubricService.deleteRubric(rubricID)
                 ? ResponseEntity.ok("Rubric deleted successfully")
