@@ -9,12 +9,14 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long gradeID;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "criterion_id")
     private Criterion criterion;
+
     private String studentName;
     private float mark;
 

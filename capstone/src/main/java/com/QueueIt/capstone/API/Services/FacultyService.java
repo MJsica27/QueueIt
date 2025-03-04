@@ -158,31 +158,35 @@ public class FacultyService {
     public void concludeMeeting(List<GradeDTO> grades) {
         Meeting meeting = meetingRepository.findById(grades.getFirst().getMeetingID())
                 .orElseThrow(()->new RuntimeException("Meeting not found."));
-        System.out.println("Loaded meeting: " + meeting.getMeetingID());
 
-        List<Grade> gradeList = new ArrayList<>();
         grades.forEach(gradeDTO -> {
             Criterion criterion = criterionRepository.findById(gradeDTO.getCriterionID())
                     .orElseThrow(() -> new RuntimeException("Criterion with id " + gradeDTO.getCriterionID() + " not found"));
-            System.out.println("Loaded criterion: " + criterion.getCriterionID());
-
-            gradeList.add(
-                    new Grade(
-                            meeting,
-                            criterion,
-                            gradeDTO.getStudentName(),
-                            gradeDTO.getMark()
-                    )
+            Grade tempGrade = new Grade(
+                    meeting,
+                    criterion,
+                    gradeDTO.getStudentName(),
+                    gradeDTO.getMark()
             );
+            Grade savedGrade = gradeRepository.save(tempGrade);
+            meeting.getGrades().add(savedGrade);
         });
 
         // Ensure meeting and gradeList are set correctly
         meeting.setEnd(LocalDateTime.now());
-        meeting.setGrades(gradeList);
 
         // Save changes
         meetingRepository.save(meeting);
-        gradeRepository.saveAll(gradeList);
+
+        QueueingManager queueingManager = queueingManagerRepository.findById(meeting.getQueueingManager().getQueueingManagerID())
+                        .orElseThrow(()-> new RuntimeException("Queueing Manager not found."));
+
+        queueingManager.setMeeting(null);
+
+        queueingManagerRepository.save(queueingManager);
+
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + meeting.getQueueingManager().getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 
 }
