@@ -3,6 +3,8 @@ package com.QueueIt.capstone.API.Entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Criterion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +17,8 @@ public class Criterion {
     private String title;
     @Lob
     private String description;
-    @OneToOne(mappedBy = "criterion", cascade = CascadeType.ALL)
-    private Grade grade;
+    @OneToMany(mappedBy = "criterion")
+    private List<Grade> grade;
 
     public Criterion() {
     }

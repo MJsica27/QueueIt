@@ -1,6 +1,7 @@
 package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
+import com.QueueIt.capstone.API.DTO.GradeDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
 import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
@@ -57,6 +59,16 @@ public class FacultyController {
             return ResponseEntity.ok(isAdmitted);
         } catch (QueueingEntryNotFoundException | QueueingManagerNotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/concludeMeeting")
+    private ResponseEntity<Object> facultyConcludeMeeting(@RequestBody List<GradeDTO> grades){
+        try{
+            facultyService.concludeMeeting(grades);
+            return ResponseEntity.ok(Boolean.TRUE);
+        }catch (RuntimeException e){
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 

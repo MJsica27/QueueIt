@@ -132,4 +132,8 @@ public class QueueingManager {
         this.timeEnds = null;
         this.cateredClassrooms.clear();
     }
+
+    public void setMeeting(Meeting meeting) {
+        this.meeting = meeting;
+    }
 }

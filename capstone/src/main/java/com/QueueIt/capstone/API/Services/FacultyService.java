@@ -1,27 +1,25 @@
 package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
+import com.QueueIt.capstone.API.DTO.GradeDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
-import com.QueueIt.capstone.API.Entities.Classroom;
-import com.QueueIt.capstone.API.Entities.Meeting;
-import com.QueueIt.capstone.API.Entities.QueueingEntry;
-import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Middlewares.ClassroomNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
-import com.QueueIt.capstone.API.Repository.ClassroomRepository;
-import com.QueueIt.capstone.API.Repository.MeetingRepository;
-import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
-import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
+import com.QueueIt.capstone.API.Repository.*;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+import com.QueueIt.capstone.API.Repositories.CriterionRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FacultyService {
@@ -41,6 +39,12 @@ public class FacultyService {
 
     @Autowired
     private MeetingRepository meetingRepository;
+
+    @Autowired
+    private CriterionRepository criterionRepository;
+
+    @Autowired
+    private GradeRepository gradeRepository;
 
     public Boolean facultyOpenQueueing(FacultyDTO facultyDTO){
         QueueingManager queueingManager = null;
@@ -149,4 +153,36 @@ public class FacultyService {
 
         return Boolean.TRUE;
     }
+
+    @Transactional
+    public void concludeMeeting(List<GradeDTO> grades) {
+        Meeting meeting = meetingRepository.findById(grades.getFirst().getMeetingID())
+                .orElseThrow(()->new RuntimeException("Meeting not found."));
+        System.out.println("Loaded meeting: " + meeting.getMeetingID());
+
+        List<Grade> gradeList = new ArrayList<>();
+        grades.forEach(gradeDTO -> {
+            Criterion criterion = criterionRepository.findById(gradeDTO.getCriterionID())
+                    .orElseThrow(() -> new RuntimeException("Criterion with id " + gradeDTO.getCriterionID() + " not found"));
+            System.out.println("Loaded criterion: " + criterion.getCriterionID());
+
+            gradeList.add(
+                    new Grade(
+                            meeting,
+                            criterion,
+                            gradeDTO.getStudentName(),
+                            gradeDTO.getMark()
+                    )
+            );
+        });
+
+        // Ensure meeting and gradeList are set correctly
+        meeting.setEnd(LocalDateTime.now());
+        meeting.setGrades(gradeList);
+
+        // Save changes
+        meetingRepository.save(meeting);
+        gradeRepository.saveAll(gradeList);
+    }
+
 }

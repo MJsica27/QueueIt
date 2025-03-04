@@ -16,7 +16,7 @@ public class Meeting {
     private Long meetingID;
     private LocalDateTime start = LocalDateTime.now();
     private LocalDateTime end;
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "meeting")
     private List<Grade> grades;
     private MeetingStatus meetingStatus;
     @OneToOne
@@ -66,5 +66,13 @@ public class Meeting {
 
     public QueueingManager getQueueingManager() {
         return queueingManager;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
     }
 }
