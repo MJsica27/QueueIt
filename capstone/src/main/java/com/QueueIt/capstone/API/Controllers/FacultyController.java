@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
+import com.QueueIt.capstone.API.DTO.ConcludeMeetingDTO;
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
 import com.QueueIt.capstone.API.DTO.GradeDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
@@ -63,9 +64,9 @@ public class FacultyController {
     }
 
     @PostMapping("/concludeMeeting")
-    private ResponseEntity<Object> facultyConcludeMeeting(@RequestBody List<GradeDTO> grades){
+    private ResponseEntity<Object> facultyConcludeMeeting(@RequestBody ConcludeMeetingDTO concludeMeetingDTO){
         try{
-            facultyService.concludeMeeting(grades);
+            facultyService.concludeMeeting(concludeMeetingDTO);
             return ResponseEntity.ok(Boolean.TRUE);
         }catch (RuntimeException e){
             return ResponseEntity.status(400).body(e.getMessage());

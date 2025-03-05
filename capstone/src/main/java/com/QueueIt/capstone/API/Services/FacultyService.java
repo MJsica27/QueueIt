@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Services;
 
+import com.QueueIt.capstone.API.DTO.ConcludeMeetingDTO;
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
 import com.QueueIt.capstone.API.DTO.GradeDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
@@ -155,11 +156,11 @@ public class FacultyService {
     }
 
     @Transactional
-    public void concludeMeeting(List<GradeDTO> grades) {
-        Meeting meeting = meetingRepository.findById(grades.getFirst().getMeetingID())
+    public void concludeMeeting(ConcludeMeetingDTO concludeMeetingDTO) {
+        Meeting meeting = meetingRepository.findById(concludeMeetingDTO.getGrades().getFirst().getMeetingID())
                 .orElseThrow(()->new RuntimeException("Meeting not found."));
 
-        grades.forEach(gradeDTO -> {
+        concludeMeetingDTO.getGrades().forEach(gradeDTO -> {
             Criterion criterion = criterionRepository.findById(gradeDTO.getCriterionID())
                     .orElseThrow(() -> new RuntimeException("Criterion with id " + gradeDTO.getCriterionID() + " not found"));
             Grade tempGrade = new Grade(
@@ -174,7 +175,8 @@ public class FacultyService {
 
         // Ensure meeting and gradeList are set correctly
         meeting.setEnd(LocalDateTime.now());
-
+        meeting.setNotedAssignedTasks(concludeMeetingDTO.getNotedAssignedTasks());
+        meeting.setImpedimentsEncountered(concludeMeetingDTO.getImpedimentsEncountered());
         // Save changes
         meetingRepository.save(meeting);
 

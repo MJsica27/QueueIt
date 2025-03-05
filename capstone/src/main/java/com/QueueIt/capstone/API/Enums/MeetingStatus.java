@@ -5,5 +5,6 @@ public enum MeetingStatus {
     FACULTY_NO_SHOW,
     FACULTY_CONDUCTED,
     QUEUEING_CONDUCTED,
-    DEFAULTED
+    DEFAULTED,
+    AUTOMATED
 }

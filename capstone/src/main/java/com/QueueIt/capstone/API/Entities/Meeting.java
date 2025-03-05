@@ -26,6 +26,10 @@ public class Meeting {
     @OneToOne(mappedBy = "meeting", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JsonBackReference
     private QueueingManager queueingManager;
+    @Column(columnDefinition = "TEXT")
+    private String notedAssignedTasks;
+    @Column(columnDefinition = "TEXT")
+    private String impedimentsEncountered;
 
     public Meeting() {
     }
@@ -74,5 +78,13 @@ public class Meeting {
 
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
+    }
+
+    public void setImpedimentsEncountered(String impedimentsEncountered) {
+        this.impedimentsEncountered = impedimentsEncountered;
+    }
+
+    public void setNotedAssignedTasks(String notedAssignedTasks) {
+        this.notedAssignedTasks = notedAssignedTasks;
     }
 }
