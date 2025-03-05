@@ -17,4 +17,8 @@ public class MeetingController {
     @Autowired
     private MeetingService meetingService;
 
+    @GetMapping("/teamMeetings/{teamID}")
+    public ResponseEntity<Object> retrieveMeetingsForMeetingBoard(@PathVariable Long teamID){
+        return ResponseEntity.ok(meetingService.retrieveMeetingsForMeetingBoard(teamID));
+    }
 }

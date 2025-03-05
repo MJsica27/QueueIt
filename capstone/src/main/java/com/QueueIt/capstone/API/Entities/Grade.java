@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -11,6 +12,7 @@ public class Grade {
     private Long gradeID;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "meeting_id")
+    @JsonBackReference
     private Meeting meeting;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QueueingEntryRepository extends JpaRepository<QueueingEntry, Long> {
+
+
 }

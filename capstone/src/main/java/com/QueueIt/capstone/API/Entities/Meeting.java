@@ -17,6 +17,7 @@ public class Meeting {
     private LocalDateTime start = LocalDateTime.now();
     private LocalDateTime end;
     @OneToMany(mappedBy = "meeting")
+    @JsonManagedReference
     private List<Grade> grades;
     private MeetingStatus meetingStatus;
     @OneToOne
