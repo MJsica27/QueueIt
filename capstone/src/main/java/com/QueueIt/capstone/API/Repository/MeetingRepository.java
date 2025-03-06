@@ -20,7 +20,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "m.impedimentsEncountered, " +
             "m.start, " +
             "m.end, " +
-            "m.queueingEntry) " +
+            "m.queueingEntry,"+
+            "m.meetingStatus) " +
             "FROM Meeting m JOIN m.queueingEntry qe WHERE qe.teamID = :teamID")
     public List<MeetingDTO> retrieveMeetingsForTeam(@Param("teamID") Long teamID);
 }

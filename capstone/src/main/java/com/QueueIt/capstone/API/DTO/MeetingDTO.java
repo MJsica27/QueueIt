@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.DTO;
 
 import com.QueueIt.capstone.API.Entities.Attendance;
 import com.QueueIt.capstone.API.Entities.QueueingEntry;
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
@@ -15,22 +16,29 @@ public class MeetingDTO {
     @JsonIgnore
     private QueueingEntry queueingEntry;
     private List<Attendance> attendanceList;
+    private MeetingStatus meetingStatus;
 
 
-    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, QueueingEntry queueingEntry) {
+    //DTO for repository meeting history retrieval for meeting board history
+
+
+    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, QueueingEntry queueingEntry, MeetingStatus meetingStatus) {
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.start = start;
         this.end = end;
         this.queueingEntry = queueingEntry;
+        this.meetingStatus = meetingStatus;
     }
 
-    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList) {
+    //DTO for response that's to be sent to the frontend
+    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.start = start;
         this.end = end;
         this.attendanceList = attendanceList;
+        this.meetingStatus = meetingStatus;
     }
 
     // Getters and Setters (if needed)
@@ -80,5 +88,13 @@ public class MeetingDTO {
 
     public void setAttendanceList(List<Attendance> attendanceList) {
         this.attendanceList = attendanceList;
+    }
+
+    public MeetingStatus getMeetingStatus() {
+        return meetingStatus;
+    }
+
+    public void setMeetingStatus(MeetingStatus meetingStatus) {
+        this.meetingStatus = meetingStatus;
     }
 }

@@ -19,6 +19,7 @@ public class Meeting {
     @OneToMany(mappedBy = "meeting")
     @JsonManagedReference
     private List<Grade> grades;
+    @Enumerated(EnumType.STRING)
     private MeetingStatus meetingStatus;
     @OneToOne
     @JoinColumn(name = "queueingEntry_id")

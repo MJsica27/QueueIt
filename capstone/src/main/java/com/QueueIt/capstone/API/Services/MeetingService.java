@@ -37,7 +37,8 @@ public class MeetingService {
                                             meetingDTO.getImpedimentsEncountered(),
                                             meetingDTO.getStart(),
                                             meetingDTO.getEnd(),
-                                            meetingDTO.getQueueingEntry().getAttendanceList()
+                                            meetingDTO.getQueueingEntry().getAttendanceList(),
+                                            meetingDTO.getMeetingStatus()
                                     )
                             );
                         });
