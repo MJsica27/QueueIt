@@ -22,6 +22,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "m.end, " +
             "m.queueingEntry,"+
             "m.meetingStatus) " +
-            "FROM Meeting m JOIN m.queueingEntry qe WHERE qe.teamID = :teamID")
+            "FROM Meeting m JOIN m.queueingEntry qe WHERE qe.teamID = :teamID AND m.end IS NOT NULL")
     public List<MeetingDTO> retrieveMeetingsForTeam(@Param("teamID") Long teamID);
+
+
+    @Query("SELECT m FROM Meeting m JOIN m.queueingEntry qe WHERE qe.teamID = :teamID AND m.end IS NOT NULL")
+    public List<Meeting> retrieveAllMeetingsForSummary(Long teamID);
 }

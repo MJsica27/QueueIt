@@ -21,4 +21,9 @@ public class MeetingController {
     public ResponseEntity<Object> retrieveMeetingsForMeetingBoard(@PathVariable Long teamID){
         return ResponseEntity.ok(meetingService.retrieveMeetingsForMeetingBoard(teamID));
     }
+
+    @GetMapping("/teamMeetings/generateSummary/{teamID}")
+    public ResponseEntity<Object> generateSummaryReport(@PathVariable Long teamID){
+        return ResponseEntity.ok(meetingService.generateSummaryReport(teamID));
+    }
 }
