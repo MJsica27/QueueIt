@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -80,12 +82,17 @@ public class MeetingService {
                                 // Calculate the average, checking for division by zero
                                 Float gradeAverage = studentGrades.isEmpty() ? 0.0f : sum / studentGrades.size();
 
+                                // Round to one decimal place using BigDecimal
+                                BigDecimal bd = new BigDecimal(gradeAverage);
+                                bd = bd.setScale(1, RoundingMode.HALF_UP); // Rounds to the nearest tenth
+                                Float roundedAverage = bd.floatValue(); // Convert back to float if needed
+
                                 // Create the report summary entry
                                 ReportSummaryEntry reportSummaryEntry = new ReportSummaryEntry(
                                         counter.get(),
                                         meeting.getStart(),
-                                        gradeAverage,
-                                        attendance.getFirstname() + " " + attendance.getLastname()
+                                        roundedAverage,
+                                        attendance.getFirstname() + ", " + attendance.getLastname()
                                 );
 
                                 reportSummary.getReportSummaryEntryList().add(reportSummaryEntry);
