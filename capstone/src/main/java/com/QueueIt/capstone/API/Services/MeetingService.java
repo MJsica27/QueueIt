@@ -2,12 +2,18 @@ package com.QueueIt.capstone.API.Services;
 
 
 import com.QueueIt.capstone.API.DTO.MeetingDTO;
+import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummary;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummaryEntry;
 import com.QueueIt.capstone.API.Entities.Grade;
 import com.QueueIt.capstone.API.Entities.Meeting;
+import com.QueueIt.capstone.API.Entities.QueueingEntry;
+import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
+import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.AttendanceRepository;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
+import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
 import com.QueueIt.capstone.API.Utilities.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -29,6 +36,15 @@ public class MeetingService {
 
     @Autowired
     private AttendanceRepository attendanceRepository;
+
+    @Autowired
+    private QueueingManagerRepository queueingManagerRepository;
+
+    @Autowired
+    private QueueingService queueingService;
+
+    @Autowired
+    private FacultyService facultyService;
 
 
     public List<MeetingDTO> retrieveMeetingsForMeetingBoard(Long teamID){
@@ -101,5 +117,65 @@ public class MeetingService {
                 });
 
         return reportSummary;
+    }
+
+    public Meeting createMeetingAppointment(MeetingDTO meetingDTO) throws QueueingManagerNotFoundException {
+        QueueingManager queueingManager = null;
+        try{
+            queueingManager = queueingManagerRepository
+                    .findByFacultyID(meetingDTO.getMentorID())
+                    .orElseThrow(()-> new QueueingManagerNotFoundException("Queueing manager for faculty not found."));
+        }catch (QueueingManagerNotFoundException e){
+            queueingManager = facultyService.createQueueingManager(meetingDTO.getMentorID());
+        }
+
+        if (queueingManager == null){
+            throw new QueueingManagerNotFoundException("Queueing manager for faculty not found.");
+        }
+
+        QueueingEntryDTO queueingEntryDTO = new QueueingEntryDTO();
+        queueingEntryDTO.setFacultyID(meetingDTO.getMentorID());
+        queueingEntryDTO.setTeamID(meetingDTO.getTeamID());
+        queueingEntryDTO.setAttendanceList(meetingDTO.getAttendanceList());
+        queueingEntryDTO.setClassReference(meetingDTO.getTeamID().toString());
+        queueingEntryDTO.setTeamName(meetingDTO.getTeamName());
+
+        QueueingEntry queueingEntry = queueingService.createQueueingEntry(queueingEntryDTO, queueingManager);
+
+        return meetingRepository.save(new Meeting(
+                meetingDTO.getStart(),
+                meetingDTO.getEnd(),
+                MeetingStatus.SET_MANUALLY,
+                queueingEntry,
+                queueingManager
+        ));
+    }
+
+    public List<MeetingDTO> retrieveAppointmentsForFaculty(Long facultyID) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Meeting> meetings = meetingRepository.retrieveAppointmentsForFaculty(facultyID, now);
+        List<MeetingDTO> events = new ArrayList<>();
+
+        meetings.stream()
+                .forEach(meeting -> {
+                    MeetingDTO foo = new MeetingDTO(
+                            meeting.getMeetingID(),
+                            meeting.getStart(),
+                            meeting.getEnd(),
+                            meeting.getQueueingEntry().getTeamName(),
+                            meeting.getMeetingStatus()
+                    );
+                    events.add(foo);
+                });
+
+        return events;
+    }
+
+    public void cancelMeetingAppointment(Long meetingID){
+        Meeting meeting = meetingRepository.findById(meetingID)
+                .orElseThrow(()-> new RuntimeException("Meeting not found"));
+
+        meeting.setMeetingStatus(MeetingStatus.CANCELLED);
+        meetingRepository.save(meeting);
     }
 }

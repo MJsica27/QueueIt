@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
+import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.Entities.Meeting;
 import com.QueueIt.capstone.API.Services.MeetingService;
 import org.hibernate.NonUniqueResultException;
@@ -25,5 +26,29 @@ public class MeetingController {
     @GetMapping("/teamMeetings/generateSummary/{teamID}")
     public ResponseEntity<Object> generateSummaryReport(@PathVariable Long teamID){
         return ResponseEntity.ok(meetingService.generateSummaryReport(teamID));
+    }
+
+    @PostMapping("/teamMeetings/createAppointment")
+    public ResponseEntity<Object> createMeetingAppointment(@RequestBody MeetingDTO meetingDTO){
+        try{
+            return ResponseEntity.ok(meetingService.createMeetingAppointment(meetingDTO));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/teamMeetings/facultyAppointments/{facultyID}")
+    public ResponseEntity<Object> retrieveAppointmentsForFaculty(@PathVariable Long facultyID){
+        return ResponseEntity.ok(meetingService.retrieveAppointmentsForFaculty(facultyID));
+    }
+
+    @PostMapping("/teamMeetings/facultyAppointments/cancel/{meetingID}")
+    public ResponseEntity<Object> cancelMeetingAppointment(@PathVariable Long meetingID){
+        try{
+            meetingService.cancelMeetingAppointment(meetingID);
+            return ResponseEntity.ok("Cancelled successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 }

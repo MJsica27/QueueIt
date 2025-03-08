@@ -52,22 +52,8 @@ public class QueueingService {
         if (queueingManager.isQueueingEntryTending(queueingEntryDTO.getTeamID())){
             throw new QueueingEntryIsTendingEntryException("Queueing entry is tending entry.");
         }
-        // Initializing the queueing entry
-        QueueingEntry queueingEntry = new QueueingEntry(
-                queueingEntryDTO.getTeamID(),
-                queueingEntryDTO.getTeamName(),
-                queueingEntryDTO.getClassReference(),
-                queueingManager,
-                queueingEntryDTO.getAttendanceList()
-        );
 
-        // Set the queueingEntry reference for each Attendance
-        for (Attendance attendance : queueingEntryDTO.getAttendanceList()) {
-            attendance.setQueueingEntry(queueingEntry); // Set the reference
-        }
-
-        //saving it to the database
-        queueingEntryRepository.save(queueingEntry);
+        QueueingEntry queueingEntry = createQueueingEntry(queueingEntryDTO, queueingManager);
 
         //I just sent a true message, since frontend refetches the queueing manager.
         //For some reasons, queueing entries in the updated queueing manager is not serialized by jackson for this method
@@ -128,5 +114,24 @@ public class QueueingService {
 
         simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingEntry.getQueueingManager().getFacultyID(), queueingManager.getQueueingEntries());
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingEntry.getQueueingManager().getFacultyID(), queueingManager);
+    }
+
+    public QueueingEntry createQueueingEntry(QueueingEntryDTO queueingEntryDTO, QueueingManager queueingManager){
+        // Initializing the queueing entry
+        QueueingEntry queueingEntry = new QueueingEntry(
+                queueingEntryDTO.getTeamID(),
+                queueingEntryDTO.getTeamName(),
+                queueingEntryDTO.getClassReference(),
+                queueingManager,
+                queueingEntryDTO.getAttendanceList()
+        );
+
+        // Set the queueingEntry reference for each Attendance
+        for (Attendance attendance : queueingEntryDTO.getAttendanceList()) {
+            attendance.setQueueingEntry(queueingEntry); // Set the reference
+        }
+
+        //saving it to the database
+        return queueingEntryRepository.save(queueingEntry);
     }
 }

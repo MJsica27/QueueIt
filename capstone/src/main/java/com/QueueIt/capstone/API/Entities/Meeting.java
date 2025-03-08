@@ -44,7 +44,17 @@ public class Meeting {
         this.meetingID = meetingID;
     }
 
+    //constructor for enqueueing a team
     public Meeting(MeetingStatus meetingStatus, QueueingEntry queueingEntry, QueueingManager queueingManager) {
+        this.meetingStatus = meetingStatus;
+        this.queueingEntry = queueingEntry;
+        this.queueingManager = queueingManager;
+    }
+
+    //constructor for mentors manually creating appointments via calendar
+    public Meeting(LocalDateTime start, LocalDateTime end, MeetingStatus meetingStatus, QueueingEntry queueingEntry, QueueingManager queueingManager) {
+        this.start = start;
+        this.end = end;
         this.meetingStatus = meetingStatus;
         this.queueingEntry = queueingEntry;
         this.queueingManager = queueingManager;
@@ -88,5 +98,9 @@ public class Meeting {
 
     public void setNotedAssignedTasks(String notedAssignedTasks) {
         this.notedAssignedTasks = notedAssignedTasks;
+    }
+
+    public void setMeetingStatus(MeetingStatus meetingStatus) {
+        this.meetingStatus = meetingStatus;
     }
 }

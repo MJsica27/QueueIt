@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class MeetingDTO {
+    private Long meetingID;
     private String notedAssignedTasks;
     private String impedimentsEncountered;
     private LocalDateTime start;
@@ -17,11 +18,14 @@ public class MeetingDTO {
     private QueueingEntry queueingEntry;
     private List<Attendance> attendanceList;
     private MeetingStatus meetingStatus;
+    private Long teamID;
+    private String teamName;
+    private Long mentorID;
 
+    public MeetingDTO() {
+    }
 
     //DTO for repository meeting history retrieval for meeting board history
-
-
     public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, QueueingEntry queueingEntry, MeetingStatus meetingStatus) {
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
@@ -31,13 +35,33 @@ public class MeetingDTO {
         this.meetingStatus = meetingStatus;
     }
 
-    //DTO for response that's to be sent to the frontend
+    //DTO for creating appointments via calendar for mentors
+    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName) {
+        this.start = start;
+        this.end = end;
+        this.attendanceList = attendanceList;
+        this.mentorID = mentorID;
+        this.teamID = teamID;
+        this.teamName = teamName;
+    }
+
+    //DTO for meeting board
     public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.start = start;
         this.end = end;
         this.attendanceList = attendanceList;
+        this.meetingStatus = meetingStatus;
+    }
+
+    //Constructor for events
+
+    public MeetingDTO(Long meetingID, LocalDateTime start, LocalDateTime end, String teamName, MeetingStatus meetingStatus) {
+        this.meetingID = meetingID;
+        this.start = start;
+        this.end = end;
+        this.teamName = teamName;
         this.meetingStatus = meetingStatus;
     }
 
@@ -96,5 +120,37 @@ public class MeetingDTO {
 
     public void setMeetingStatus(MeetingStatus meetingStatus) {
         this.meetingStatus = meetingStatus;
+    }
+
+    public Long getTeamID() {
+        return teamID;
+    }
+
+    public void setTeamID(Long teamID) {
+        this.teamID = teamID;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public Long getMentorID() {
+        return mentorID;
+    }
+
+    public void setMentorID(Long mentorID) {
+        this.mentorID = mentorID;
+    }
+
+    public Long getMeetingID() {
+        return meetingID;
+    }
+
+    public void setMeetingID(Long meetingID) {
+        this.meetingID = meetingID;
     }
 }

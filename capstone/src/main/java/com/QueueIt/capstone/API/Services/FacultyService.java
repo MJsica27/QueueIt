@@ -2,7 +2,6 @@ package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.DTO.ConcludeMeetingDTO;
 import com.QueueIt.capstone.API.DTO.FacultyDTO;
-import com.QueueIt.capstone.API.DTO.GradeDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
@@ -20,7 +19,6 @@ import com.QueueIt.capstone.API.Repositories.CriterionRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class FacultyService {
@@ -138,7 +136,7 @@ public class FacultyService {
                 .orElseThrow(()->new QueueingManagerNotFoundException("Queueing manager not found."));
 
         Meeting meeting = new Meeting(
-            MeetingStatus.QUEUEING_CONDUCTED,
+            MeetingStatus.ATTENDED_QUEUEING_CONDUCTED,
             queueingEntry,
             queueingManager
         );

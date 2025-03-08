@@ -54,4 +54,28 @@ public class QueueingEntryDTO {
     public Long getQueueingEntryID() {
         return queueingEntryID;
     }
+
+    public void setQueueingEntryID(Long queueingEntryID) {
+        this.queueingEntryID = queueingEntryID;
+    }
+
+    public void setFacultyID(Long facultyID) {
+        this.facultyID = facultyID;
+    }
+
+    public void setTeamID(Long teamID) {
+        this.teamID = teamID;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public void setClassReference(String classReference) {
+        this.classReference = classReference;
+    }
+
+    public void setAttendanceList(List<Attendance> attendanceList) {
+        this.attendanceList = attendanceList;
+    }
 }
