@@ -92,12 +92,17 @@ public class QueueingManager {
 
     public List<QueueingEntry> getQueueingEntries() {
         this.sortQueueingEntries();
-        return queueingEntries;
+        List<QueueingEntry> filteredEntries = this.queueingEntries.stream()
+                .filter(queueingEntry -> queueingEntry.getMeeting() == null)
+                .collect(Collectors.toList());
+//        System.out.println(filteredEntries.size());
+        return filteredEntries;
     }
 
     public Boolean checkDuplicateEntry(Long teamID){
         return this.queueingEntries
                 .stream()
+                .filter(queueingEntry -> queueingEntry.getMeeting() == null)
                 .anyMatch(queueingEntry -> queueingEntry.getTeamID().equals(teamID));
     }
 

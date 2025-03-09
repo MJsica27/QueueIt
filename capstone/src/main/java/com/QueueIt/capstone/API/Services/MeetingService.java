@@ -5,14 +5,12 @@ import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummary;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummaryEntry;
-import com.QueueIt.capstone.API.Entities.Grade;
-import com.QueueIt.capstone.API.Entities.Meeting;
-import com.QueueIt.capstone.API.Entities.QueueingEntry;
-import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.AttendanceRepository;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
+import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
 import com.QueueIt.capstone.API.Utilities.StringUtility;
 import org.slf4j.Logger;
@@ -45,6 +43,9 @@ public class MeetingService {
 
     @Autowired
     private FacultyService facultyService;
+
+    @Autowired
+    private QueueingEntryRepository queueingEntryRepository;
 
 
     public List<MeetingDTO> retrieveMeetingsForMeetingBoard(Long teamID){
@@ -141,7 +142,6 @@ public class MeetingService {
         queueingEntryDTO.setTeamName(meetingDTO.getTeamName());
 
         QueueingEntry queueingEntry = queueingService.createQueueingEntry(queueingEntryDTO, queueingManager);
-
         return meetingRepository.save(new Meeting(
                 meetingDTO.getStart(),
                 meetingDTO.getEnd(),
@@ -175,6 +175,8 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(()-> new RuntimeException("Meeting not found"));
 
+        queueingEntryRepository.delete(meeting.getQueueingEntry());
+        meeting.setQueueingEntry(null);
         meeting.setMeetingStatus(MeetingStatus.CANCELLED);
         meetingRepository.save(meeting);
     }

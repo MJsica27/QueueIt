@@ -103,4 +103,8 @@ public class Meeting {
     public void setMeetingStatus(MeetingStatus meetingStatus) {
         this.meetingStatus = meetingStatus;
     }
+
+    public void setQueueingEntry(QueueingEntry queueingEntry) {
+        this.queueingEntry = queueingEntry;
+    }
 }

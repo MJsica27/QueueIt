@@ -78,4 +78,8 @@ public class QueueingEntry {
     public void setQueueingManager(QueueingManager queueingManager) {
         this.queueingManager = queueingManager;
     }
+
+    public Meeting getMeeting() {
+        return meeting;
+    }
 }
