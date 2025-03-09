@@ -73,7 +73,7 @@ public class MeetingService {
     }
 
     public ReportSummary generateSummaryReport(Long teamID) {
-        List<Meeting> meetings = meetingRepository.retrieveAllMeetingsForSummary(teamID);
+        List<Meeting> meetings = meetingRepository.retrieveAllMeetingsForSummary(teamID, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED, MeetingStatus.ATTENDED_FACULTY_CONDUCTED);
 
         ReportSummary reportSummary = new ReportSummary();
         AtomicInteger counter = new AtomicInteger(1);

@@ -47,7 +47,7 @@ public class ScheduledTasksService {
 
     //runs every midnight every weekday
     //creates meetings for each week day
-    @Scheduled(cron = "0 0 * * 1-5")
+    @Scheduled(cron = "0 0 0 * * 1-5")
     public void createScheduledMeetingsForToday(){
         //WebClient is supposed to do subscribe, according to blackbox.
         apiService.fetchTeamsForAutomationTodayFromSpear()
