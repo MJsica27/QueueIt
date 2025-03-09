@@ -1,0 +1,64 @@
+package com.QueueIt.capstone.API.Entities;
+
+import com.QueueIt.capstone.API.Enums.DayOfWeek;
+
+import java.time.LocalTime;
+import java.util.List;
+
+public class Team {
+    private Long tid;
+    private String groupName;
+    private List<Long> memberIds;
+    private List<String> memberNames;
+    private DayOfWeek scheduledDay;
+    private LocalTime start;
+    private LocalTime end;
+    private Long adviserID;
+
+
+    public Team() {
+    }
+
+    public Team(Long tid, String groupName, List<Long> memberIds, List<String> memberNames, DayOfWeek scheduledDay, LocalTime start, LocalTime end, Long adviserID) {
+        this.tid = tid;
+        this.groupName = groupName;
+        this.memberIds = memberIds;
+        this.memberNames = memberNames;
+        this.scheduledDay = scheduledDay;
+        this.start = start;
+        this.end = end;
+        this.adviserID = adviserID;
+    }
+
+    public Long getTid() {
+        return tid;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public List<Long> getMemberIds() {
+        return memberIds;
+    }
+
+    public List<String> getMemberNames() {
+        return memberNames;
+    }
+
+    public DayOfWeek getScheduledDay() {
+        return scheduledDay;
+    }
+
+    public LocalTime getStart() {
+        return start;
+    }
+
+    public LocalTime getEnd() {
+        return end;
+    }
+
+    public Long getAdviserID() {
+        return adviserID;
+    }
+}

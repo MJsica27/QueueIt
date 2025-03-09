@@ -119,7 +119,7 @@ public class MeetingService {
         return reportSummary;
     }
 
-    public Meeting createMeetingAppointment(MeetingDTO meetingDTO) throws QueueingManagerNotFoundException {
+    public Meeting createMeetingAppointment(MeetingDTO meetingDTO, MeetingStatus meetingStatus) throws QueueingManagerNotFoundException {
         QueueingManager queueingManager = null;
         try{
             queueingManager = queueingManagerRepository
@@ -145,7 +145,7 @@ public class MeetingService {
         return meetingRepository.save(new Meeting(
                 meetingDTO.getStart(),
                 meetingDTO.getEnd(),
-                MeetingStatus.SET_MANUALLY,
+                meetingStatus,
                 queueingEntry,
                 queueingManager
         ));
@@ -153,7 +153,7 @@ public class MeetingService {
 
     public List<MeetingDTO> retrieveAppointmentsForFaculty(Long facultyID) {
         LocalDateTime now = LocalDateTime.now();
-        List<Meeting> meetings = meetingRepository.retrieveAppointmentsForFaculty(facultyID, now);
+        List<Meeting> meetings = meetingRepository.retrieveAppointmentsForFaculty(facultyID, now, MeetingStatus.SET_MANUALLY);
         List<MeetingDTO> events = new ArrayList<>();
 
         meetings.stream()

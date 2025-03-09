@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.Entities.Meeting;
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Services.MeetingService;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class MeetingController {
     @PostMapping("/teamMeetings/createAppointment")
     public ResponseEntity<Object> createMeetingAppointment(@RequestBody MeetingDTO meetingDTO){
         try{
-            return ResponseEntity.ok(meetingService.createMeetingAppointment(meetingDTO));
+            return ResponseEntity.ok(meetingService.createMeetingAppointment(meetingDTO, MeetingStatus.SET_MANUALLY));
         }catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }

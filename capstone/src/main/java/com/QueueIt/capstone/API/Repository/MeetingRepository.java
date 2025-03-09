@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Repository;
 
 import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.Entities.Meeting;
+import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,6 +36,26 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "JOIN qe.queueingManager qm " + // Join with QueueingManager through QueueingEntry
             "WHERE m.start > :now " +
             "AND qm.facultyID = :facultyID " + // Use qm.facultyID to filter
-            "AND m.meetingStatus = com.QueueIt.capstone.API.Enums.MeetingStatus.SET_MANUALLY")
-    List<Meeting> retrieveAppointmentsForFaculty(@Param("facultyID") Long facultyID, @Param("now") LocalDateTime now);
+            "AND m.meetingStatus = :status")
+    List<Meeting> retrieveAppointmentsForFaculty(@Param("facultyID") Long facultyID,
+                                                 @Param("now") LocalDateTime now,
+                                                 @Param("status") MeetingStatus status);
+
+
+    @Query("SELECT m FROM Meeting m " +
+            "WHERE m.start > :offset " +
+            "AND :now >= m.start " +
+            "AND m.meetingStatus = :status")
+    List<Meeting> retrieveAutomatedMeetingsToStart(@Param("offset") LocalDateTime fiveMinuteOffsetFromNow,
+                                            @Param("now") LocalDateTime now,
+                                            @Param("status")MeetingStatus meetingStatus);
+
+    @Query("SELECT m FROM Meeting m " +
+            "WHERE :offset < m.end " +
+            "AND :now >= m.end " +
+            "AND m.meetingStatus = :status")
+    List<Meeting> retrieveAutomatedMeetingsForDefault(@Param("offset") LocalDateTime offset,
+                                                      @Param("now") LocalDateTime now,
+                                                      @Param("status") MeetingStatus status);
+
 }
