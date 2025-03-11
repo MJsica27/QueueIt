@@ -174,9 +174,6 @@ public class MeetingService {
     public void cancelMeetingAppointment(Long meetingID){
         Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(()-> new RuntimeException("Meeting not found"));
-
-        queueingEntryRepository.delete(meeting.getQueueingEntry());
-        meeting.setQueueingEntry(null);
         meeting.setMeetingStatus(MeetingStatus.CANCELLED);
         meetingRepository.save(meeting);
     }
