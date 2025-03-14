@@ -24,11 +24,6 @@ public class RubricController {
         return ResponseEntity.ok(rubricService.createRubric(rubricDTO));
     }
 
-//    @GetMapping("/{rubricID}")
-//    public ResponseEntity<Optional<Rubric>> getRubric(@PathVariable Long rubricID) {
-//        return ResponseEntity.ok(rubricService.getRubricById(rubricID));
-//    }
-
     @GetMapping("/user/{userID}")
     public ResponseEntity<List<Rubric>> getUserRubrics(@PathVariable Long userID) {
         return ResponseEntity.ok(rubricService.getRubrics(userID));

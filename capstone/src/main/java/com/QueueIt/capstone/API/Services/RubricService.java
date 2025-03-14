@@ -35,23 +35,20 @@ public class RubricService {
                 rubricDTO.getTitle(),
                 rubricDTO.getDescription(),
                 null,
-                rubricDTO.getIsPrivate(),  // Fixed method name
+                rubricDTO.getIsPrivate(),
                 rubricDTO.getUserID(),
                 rubricDTO.getFacultyName()
         );
 
-        Rubric savedRubric = rubricRepository.save(rubric);
-
         List<Criterion> criteria = rubricDTO.getCriteria().stream()
-                .map(dto -> new Criterion(
-                        savedRubric,
-                        dto.getTitle(),
-                        dto.getDescription()))
+                .map(dto -> new Criterion(rubric, dto.getTitle(), dto.getDescription()))
                 .collect(Collectors.toList());
 
+        rubric.setCriteria(criteria);
+        Rubric savedRubric = rubricRepository.save(rubric);
         criterionRepository.saveAll(criteria);
-        savedRubric.setCriteria(criteria);
-        return rubricRepository.save(savedRubric);
+
+        return savedRubric;
     }
 
     /**
@@ -89,11 +86,6 @@ public class RubricService {
         if (optionalRubric.isPresent()) {
             Rubric rubric = optionalRubric.get();
 
-            // If it's a system rubric, create a new one for the user instead of updating
-            if (rubric.getId() == 1) {
-                return editSystemRubric(rubric.getId(), updatedRubricInstance);
-            }
-
             rubric.setTitle(updatedRubricInstance.getTitle());
             rubric.setDescription(updatedRubricInstance.getDescription());
             log.info(("Printed private: "+updatedRubricInstance.getIsPrivate().toString()));
@@ -125,37 +117,6 @@ public class RubricService {
             return true;
         }
         return false;
-    }
-    /**
-     * ✅ Clone system rubric when user edits it
-     */
-    @Transactional
-    public Rubric editSystemRubric(Long rubricID, Rubric rubricDTO) {
-        Optional<Rubric> optionalRubric = rubricRepository.findById(rubricID);
-        if (optionalRubric.isPresent()) {
-            Rubric originalRubric = optionalRubric.get();
-
-            // Clone the rubric under user's ownership
-            Rubric clonedRubric = new Rubric(
-                    rubricDTO.getTitle(),
-                    rubricDTO.getDescription(),
-                    null, // Will be set after saving
-                    true, // Make it private for the user
-                    rubricDTO.getUserID(),
-                    "System"
-            );
-
-            Rubric savedClonedRubric = rubricRepository.save(clonedRubric);
-
-            List<Criterion> clonedCriteria = rubricDTO.getCriteria().stream()
-                    .map(dto -> new Criterion(savedClonedRubric, dto.getTitle(), dto.getDescription()))
-                    .collect(Collectors.toList());
-
-            criterionRepository.saveAll(clonedCriteria);
-            savedClonedRubric.setCriteria(clonedCriteria);
-            return rubricRepository.save(savedClonedRubric);
-        }
-        return null;
     }
 
     /**
