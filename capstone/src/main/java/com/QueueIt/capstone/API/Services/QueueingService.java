@@ -1,9 +1,11 @@
 package com.QueueIt.capstone.API.Services;
 
+import com.QueueIt.capstone.API.Constants;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.Attendance;
 import com.QueueIt.capstone.API.Entities.QueueingEntry;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
+import com.QueueIt.capstone.API.Enums.NotificationType;
 import com.QueueIt.capstone.API.Middlewares.*;
 import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
@@ -27,6 +29,9 @@ public class QueueingService {
 
     @Autowired
     private QueueingEntryRepository queueingEntryRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public void enqueueTeam(QueueingEntryDTO queueingEntryDTO)
             throws
@@ -54,6 +59,14 @@ public class QueueingService {
         }
 
         QueueingEntry queueingEntry = createQueueingEntry(queueingEntryDTO, queueingManager);
+
+        notificationService.generateEnqueueNotificationForFaculty(
+                queueingManager.getFacultyID(),
+                queueingEntry.getTeamID(),
+                Constants.QUEUEIT_FRONTEND_URL+"/queue",
+                queueingEntry.getTeamName()+" has queued in line.",
+                NotificationType.TEAM_ENQUEUE
+        );
 
         //I just sent a true message, since frontend refetches the queueing manager.
         //For some reasons, queueing entries in the updated queueing manager is not serialized by jackson for this method

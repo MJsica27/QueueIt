@@ -55,7 +55,6 @@ public class ScheduledTasksService {
                     if (teams != null && !teams.isEmpty()){
                         teams.stream()
                                 .forEach(team -> {
-
                                     //in here, I reused meeting service on creating meeting appointments
                                     //thus creating a new MeetingDTO and passing MeetingStatus.SET_AUTOMATED
 

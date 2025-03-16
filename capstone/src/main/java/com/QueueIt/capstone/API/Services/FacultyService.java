@@ -1,10 +1,10 @@
 package com.QueueIt.capstone.API.Services;
 
-import com.QueueIt.capstone.API.DTO.ConcludeMeetingDTO;
-import com.QueueIt.capstone.API.DTO.FacultyDTO;
-import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
+import com.QueueIt.capstone.API.Constants;
+import com.QueueIt.capstone.API.DTO.*;
 import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
+import com.QueueIt.capstone.API.Enums.NotificationType;
 import com.QueueIt.capstone.API.Middlewares.ClassroomNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
@@ -19,6 +19,7 @@ import com.QueueIt.capstone.API.Repositories.CriterionRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FacultyService {
@@ -45,6 +46,10 @@ public class FacultyService {
     @Autowired
     private GradeRepository gradeRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
+    @Transactional
     public Boolean facultyOpenQueueing(FacultyDTO facultyDTO){
         QueueingManager queueingManager = null;
         try{
@@ -53,7 +58,7 @@ public class FacultyService {
                                                 .orElseThrow(()->new QueueingManagerNotFoundException("Queueing Manager not found."));
         }catch (QueueingManagerNotFoundException e){
             //creates a new QueueingManager entry in the database
-            queueingManager = createQueueingManager(facultyDTO.getFacultyID());
+            queueingManager = createQueueingManager(facultyDTO.getFacultyID(), facultyDTO.getFacultyName());
         }
 
         if(queueingManager == null){
@@ -65,6 +70,8 @@ public class FacultyService {
         queueingManager.setCateringLimit(facultyDTO.getCateringLimit());
         queueingManagerRepository.save(queueingManager);
         QueueingManager finalQueueingManager = queueingManager;
+
+
         if (!facultyDTO.isAllClassrooms()){
             facultyDTO.getCateredClassrooms().forEach(
                     classroomID -> {
@@ -81,15 +88,36 @@ public class FacultyService {
                         }
                     }
             );
+            List<Integer> idList = facultyDTO.getCateredClassrooms()
+                    .stream()
+                    .map(Long::intValue)
+                    .toList();
+            notificationService.generateNotificationRecipientsForSelectClasses(
+                    queueingManager.getFacultyID(),
+                    new ClassesIDRequest(idList),
+                    Constants.QUEUEIT_FRONTEND_URL+"/queue",
+                    queueingManager.getFacultyName()+" is now available for queueing.",
+                    NotificationType.QUEUEING_OPEN
+            );
         }else{
             // Clear the catered classrooms and remove the reference from each Classroom
-            for (Classroom classroom : new ArrayList<>(queueingManager.getCateredClassrooms())) {
-                classroom.getQueueingManagers().remove(queueingManager); // Remove the reference from Classroom
+            if (queueingManager.getCateredClassrooms() == null) {
+                queueingManager.setCateredClassrooms(new ArrayList<>()); // ✅ Prevent NullPointerException
+            }
+
+            if (!queueingManager.getCateredClassrooms().isEmpty()) {
+                for (Classroom classroom : new ArrayList<>(queueingManager.getCateredClassrooms())) {
+                    classroom.getQueueingManagers().remove(queueingManager);
+                }
             }
             queueingManager.getCateredClassrooms().clear(); // Clear the list
+            notificationService.generateNotificationRecipientsForAllClasses(
+                    queueingManager.getFacultyID(),
+                    Constants.QUEUEIT_FRONTEND_URL+"/queue",
+                    queueingManager.getFacultyName()+" is now available for queueing.",
+                    NotificationType.QUEUEING_OPEN
+            );
         }
-
-
 
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+facultyDTO.getFacultyID(), queueingManager);
         return Boolean.TRUE;
@@ -99,7 +127,26 @@ public class FacultyService {
         QueueingManager queueingManager = queueingManagerRepository
                 .findByFacultyID(facultyID)
                 .orElseThrow(()-> new QueueingManagerNotFoundException("Queueing Manager not found"));
-
+        if (queueingManager.getCateredClassrooms().isEmpty()){
+            notificationService.generateNotificationRecipientsForAllClasses(
+                    queueingManager.getFacultyID(),
+                    null,
+                    queueingManager.getFacultyName()+" has severed the line. Queueing stopped just now.",
+                    NotificationType.QUEUEING_CLOSE
+            );
+        }else{
+            List<Integer> idList = queueingManager.getCateredClassrooms()
+                    .stream()
+                    .map(classroom -> classroom.getClassroomID().intValue())
+                    .toList();
+            notificationService.generateNotificationRecipientsForSelectClasses(
+                    queueingManager.getFacultyID(),
+                    new ClassesIDRequest(idList),
+                    null,
+                    queueingManager.getFacultyName()+" has severed the line. Queueing stopped just now.",
+                    NotificationType.QUEUEING_CLOSE
+            );
+        }
         for (Classroom classroom : new ArrayList<>(queueingManager.getCateredClassrooms())) {
             classroom.getQueueingManagers().remove(queueingManager); // Remove the reference from Classroom
         }
@@ -107,12 +154,13 @@ public class FacultyService {
         queueingManager.goInactive();
         queueingManagerRepository.save(queueingManager);
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+facultyID, queueingManager);
+
         return Boolean.TRUE;
     }
 
-    public QueueingManager createQueueingManager(Long facultyID){
+    public QueueingManager createQueueingManager(Long facultyID, String facultyName){
         try{
-            QueueingManager queueingManager = new QueueingManager(facultyID);
+            QueueingManager queueingManager = new QueueingManager(facultyID, facultyName);
             return queueingManagerRepository.save(queueingManager);
         } catch (Exception e){
             return null;

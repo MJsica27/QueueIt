@@ -5,14 +5,18 @@ import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummary;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummaryEntry;
+import com.QueueIt.capstone.API.DTO.TeamsIDRequest;
 import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
+import com.QueueIt.capstone.API.Enums.NotificationType;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.AttendanceRepository;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
 import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
+import com.QueueIt.capstone.API.Utilities.DateUtility;
 import com.QueueIt.capstone.API.Utilities.StringUtility;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +50,9 @@ public class MeetingService {
 
     @Autowired
     private QueueingEntryRepository queueingEntryRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
     public List<MeetingDTO> retrieveMeetingsForMeetingBoard(Long teamID){
@@ -120,6 +127,7 @@ public class MeetingService {
         return reportSummary;
     }
 
+    @Transactional
     public Meeting createMeetingAppointment(MeetingDTO meetingDTO, MeetingStatus meetingStatus) throws QueueingManagerNotFoundException {
         QueueingManager queueingManager = null;
         try{
@@ -127,7 +135,7 @@ public class MeetingService {
                     .findByFacultyID(meetingDTO.getMentorID())
                     .orElseThrow(()-> new QueueingManagerNotFoundException("Queueing manager for faculty not found."));
         }catch (QueueingManagerNotFoundException e){
-            queueingManager = facultyService.createQueueingManager(meetingDTO.getMentorID());
+            queueingManager = facultyService.createQueueingManager(meetingDTO.getMentorID(), meetingDTO.getFacultyName());
         }
 
         if (queueingManager == null){
@@ -142,13 +150,24 @@ public class MeetingService {
         queueingEntryDTO.setTeamName(meetingDTO.getTeamName());
 
         QueueingEntry queueingEntry = queueingService.createQueueingEntry(queueingEntryDTO, queueingManager);
-        return meetingRepository.save(new Meeting(
+        Meeting savedMeeting = meetingRepository.save(new Meeting(
                 meetingDTO.getStart(),
                 meetingDTO.getEnd(),
                 meetingStatus,
                 queueingEntry,
                 queueingManager
         ));
+        List<Integer> teamsID = new ArrayList<>();
+        teamsID.add(queueingEntryDTO.getTeamID().intValue());
+        notificationService.generateNotificationRecipientsForSelectedTeams(
+                queueingManager.getFacultyID(),
+                new TeamsIDRequest(teamsID),
+                null,
+                "You have an appointment with "+queueingManager.getFacultyName()+" on "+ DateUtility.formatLocalDateTimeToReadable(savedMeeting.getStart()),
+                NotificationType.APPOINTMENT_SET
+        );
+
+        return savedMeeting;
     }
 
     public List<MeetingDTO> retrieveAppointmentsForFaculty(Long facultyID) {
@@ -171,10 +190,20 @@ public class MeetingService {
         return events;
     }
 
+    @Transactional
     public void cancelMeetingAppointment(Long meetingID){
         Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(()-> new RuntimeException("Meeting not found"));
         meeting.setMeetingStatus(MeetingStatus.CANCELLED);
         meetingRepository.save(meeting);
+        List<Integer> teamsID = new ArrayList<>();
+        teamsID.add(meeting.getQueueingEntry().getTeamID().intValue());
+        notificationService.generateNotificationRecipientsForSelectedTeams(
+                meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
+                new TeamsIDRequest(teamsID),
+                null,
+                "Your appointment with "+meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" on "+ DateUtility.formatLocalDateTimeToReadable(meeting.getStart())+" has been cancelled.",
+                NotificationType.APPOINTMENT_CANCELLED
+        );
     }
 }

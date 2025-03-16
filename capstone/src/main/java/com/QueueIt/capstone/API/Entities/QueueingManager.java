@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,12 +18,13 @@ public class QueueingManager {
     private Long queueingManagerID;
     @Column(unique = true)
     private Long facultyID;
+    private String facultyName;
     private Time timeEnds;
     private Boolean isActive;
     private Long cateringLimit;
     @OneToMany(mappedBy = "queueingManager", cascade = CascadeType.ALL)
     @JsonManagedReference("queueingEntry-manager")
-    private List<QueueingEntry> queueingEntries;
+    private List<QueueingEntry> queueingEntries = new ArrayList<>();
     @OneToOne
     @JoinColumn(name = "meetingID")
     @JsonManagedReference
@@ -32,8 +35,9 @@ public class QueueingManager {
     public QueueingManager() {
     }
 
-    public QueueingManager(Long facultyID) {
+    public QueueingManager(Long facultyID, String facultyName) {
         this.facultyID = facultyID;
+        this.facultyName = facultyName;
     }
 
     public void setCateredClassrooms(List<Classroom> cateredClassrooms) {
@@ -41,6 +45,9 @@ public class QueueingManager {
     }
 
     public List<Classroom> getCateredClassrooms() {
+        if (cateredClassrooms == null) {
+            cateredClassrooms = new ArrayList<>();
+        }
         return cateredClassrooms;
     }
 
@@ -80,7 +87,10 @@ public class QueueingManager {
         if (this.queueingEntries == null){
             return 0;
         }
-        return this.queueingEntries.size();
+        return this.queueingEntries
+                .stream()
+                .filter(queueingEntry -> queueingEntry.getMeeting() == null)
+                .collect(Collectors.toList()).size();
     }
 
     public void sortQueueingEntries(){
@@ -91,12 +101,15 @@ public class QueueingManager {
     }
 
     public List<QueueingEntry> getQueueingEntries() {
-        this.sortQueueingEntries();
-        List<QueueingEntry> filteredEntries = this.queueingEntries.stream()
-                .filter(queueingEntry -> queueingEntry.getMeeting() == null)
-                .collect(Collectors.toList());
+        if (!queueingEntries.isEmpty()){
+            this.sortQueueingEntries();
+            List<QueueingEntry> filteredEntries = this.queueingEntries.stream()
+                    .filter(queueingEntry -> queueingEntry.getMeeting() == null)
+                    .collect(Collectors.toList());
 //        System.out.println(filteredEntries.size());
-        return filteredEntries;
+            return filteredEntries;
+        }
+        return Collections.emptyList();
     }
 
     public Boolean checkDuplicateEntry(Long teamID){
@@ -140,5 +153,9 @@ public class QueueingManager {
 
     public void setMeeting(Meeting meeting) {
         this.meeting = meeting;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
     }
 }

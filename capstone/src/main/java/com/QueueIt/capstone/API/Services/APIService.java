@@ -1,5 +1,8 @@
 package com.QueueIt.capstone.API.Services;
 
+import com.QueueIt.capstone.API.Constants;
+import com.QueueIt.capstone.API.DTO.ClassesIDRequest;
+import com.QueueIt.capstone.API.DTO.TeamsIDRequest;
 import com.QueueIt.capstone.API.Entities.Team;
 import com.QueueIt.capstone.API.Enums.DayOfWeek;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,7 +19,7 @@ public class APIService {
     private WebClient webClient;
 
     public APIService(WebClient.Builder webClientBuilder){
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
+        this.webClient = webClientBuilder.baseUrl(Constants.SPEAR_BACKEND_URL).build();
     }
 
     public Mono<List<Team>> fetchTeamsForAutomationTodayFromSpear(){
@@ -36,5 +39,52 @@ public class APIService {
 
         return Mono.empty();
     }
+
+    public Mono<List<Long>> retrieveNotificationRecipientsForAllClasses(Long facultyID){
+        return webClient.get()
+                .uri("/team/all/notification/"+facultyID)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Long>>() {
+                })
+                .onErrorResume(e -> {
+                    return Mono.empty();
+                });
+    }
+
+    public Mono<List<Long>> retrieveNotificationRecipientsForSelectClasses(Long facultyID, ClassesIDRequest classesIDRequest){
+        return webClient.post()
+                .uri("/team/selected/notification/"+facultyID)
+                .bodyValue(classesIDRequest)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Long>>() {
+                })
+                .onErrorResume(e -> {
+                    return Mono.empty();
+                });
+    }
+
+    public Mono<List<Long>> retrieveNotificationRecipientsForAllTeams(Long facultyID){
+        return webClient.get()
+                .uri("/team/allTeamsByFaculty/notification/"+facultyID)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Long>>() {
+                })
+                .onErrorResume(e -> {
+                    return Mono.empty();
+                });
+    }
+
+    public Mono<List<Long>> retrieveNotificationRecipientsForSelectedTeams(Long facultyID, TeamsIDRequest teamsIDRequest){
+        return webClient.post()
+                .uri("/team/selectedTeamsByFaculty/notification/"+facultyID)
+                .bodyValue(teamsIDRequest)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Long>>() {
+                })
+                .onErrorResume(e -> {
+                    return Mono.empty();
+                });
+    }
+
 
 }

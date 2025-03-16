@@ -10,12 +10,14 @@ public class FacultyDTO {
     private Time timeEnds;
     private Long cateringLimit;
     private List<Long> cateredClassrooms;
+    private String facultyName;
 
-    public FacultyDTO(Long facultyID, Time timeEnds, Long cateringLimit, List<Long> cateredClassrooms) {
+    public FacultyDTO(Long facultyID, Time timeEnds, Long cateringLimit, List<Long> cateredClassrooms, String facultyName) {
         this.facultyID = facultyID;
         this.timeEnds = timeEnds;
         this.cateringLimit = cateringLimit;
         this.cateredClassrooms = cateredClassrooms;
+        this.facultyName = facultyName;
     }
 
     public Boolean isAllClassrooms(){
@@ -43,5 +45,9 @@ public class FacultyDTO {
 
     public Long getCateringLimit() {
         return cateringLimit;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
     }
 }

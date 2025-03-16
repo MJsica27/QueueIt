@@ -21,6 +21,7 @@ public class MeetingDTO {
     private Long teamID;
     private String teamName;
     private Long mentorID;
+    private String facultyName;
 
     public MeetingDTO() {
     }
@@ -44,6 +45,17 @@ public class MeetingDTO {
         this.teamID = teamID;
         this.teamName = teamName;
     }
+
+    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, String facultyName) {
+        this.start = start;
+        this.end = end;
+        this.attendanceList = attendanceList;
+        this.mentorID = mentorID;
+        this.teamID = teamID;
+        this.teamName = teamName;
+        this.facultyName = facultyName;
+    }
+
 
     //DTO for meeting board
     public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
@@ -152,5 +164,9 @@ public class MeetingDTO {
 
     public void setMeetingID(Long meetingID) {
         this.meetingID = meetingID;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
     }
 }

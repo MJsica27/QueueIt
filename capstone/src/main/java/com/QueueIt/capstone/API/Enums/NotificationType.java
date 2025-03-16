@@ -1,0 +1,10 @@
+package com.QueueIt.capstone.API.Enums;
+
+public enum NotificationType {
+    QUEUEING_OPEN,
+    QUEUEING_CLOSE,
+    TEAM_ENQUEUE,
+    APPOINTMENT_SET,
+    APPOINTMENT_CANCELLED,
+    APPOINTMENT_DEFAULTED
+}
