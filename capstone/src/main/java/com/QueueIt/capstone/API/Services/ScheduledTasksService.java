@@ -172,7 +172,7 @@ public class ScheduledTasksService {
                             meeting.getQueueingEntry().getTeamID(),
                             Constants.QUEUEIT_FRONTEND_URL+"/availability",
                             "The system generated appointment with " + meeting.getQueueingEntry().getTeamName()+" has been defaulted.",
-                            NotificationType.AUTOMATED_APPOINTMENT_STARTED
+                            NotificationType.APPOINTMENT_DEFAULTED
                     );
                     List<Integer> teamIDs = new ArrayList<>();
                     teamIDs.add(meeting.getQueueingEntry().getTeamID().intValue());
@@ -181,7 +181,7 @@ public class ScheduledTasksService {
                             new TeamsIDRequest(teamIDs),
                             null,
                             "The system generated appointment with " + meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" has been defaulted.",
-                            NotificationType.AUTOMATED_APPOINTMENT_STARTED
+                            NotificationType.APPOINTMENT_DEFAULTED
                     );
                 });
 
