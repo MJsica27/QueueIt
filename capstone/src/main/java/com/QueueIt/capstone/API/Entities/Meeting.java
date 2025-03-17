@@ -107,4 +107,8 @@ public class Meeting {
     public void setQueueingEntry(QueueingEntry queueingEntry) {
         this.queueingEntry = queueingEntry;
     }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
 }

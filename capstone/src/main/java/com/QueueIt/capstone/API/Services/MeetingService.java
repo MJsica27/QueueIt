@@ -206,4 +206,23 @@ public class MeetingService {
                 NotificationType.APPOINTMENT_CANCELLED
         );
     }
+
+    public void manuallyStartMeeting(Long meetingID){
+        Meeting meeting = meetingRepository.findById(meetingID)
+                .orElseThrow(()->new RuntimeException("Meeting not found."));
+
+        meeting.setMeetingStatus(MeetingStatus.STARTED_MANUALLY);
+        meeting.setStart(LocalDateTime.now());
+        List<Integer> teamIDList = new ArrayList<>();
+        teamIDList.add(meeting.getQueueingEntry().getTeamID().intValue());
+        notificationService.generateNotificationRecipientsForSelectedTeams(
+                meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
+                new TeamsIDRequest(teamIDList),
+                null,
+                meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" has started the appointment.",
+                NotificationType.MANUALLY_APPOINTMENT_STARTED
+        );
+
+        meetingRepository.save(meeting);
+    }
 }
