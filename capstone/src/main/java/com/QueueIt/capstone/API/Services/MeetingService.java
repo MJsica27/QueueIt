@@ -94,8 +94,8 @@ public class MeetingService {
                                 // Filter grades based on the student's name
                                 List<Grade> studentGrades = meeting.getGrades().stream()
                                         .filter(grade -> grade.getStudentName().equals(
-                                                StringUtility.capitalizeFirstLetter(attendance.getFirstname()) + " " +
-                                                        StringUtility.capitalizeFirstLetter(attendance.getLastname())))
+                                                attendance.getFirstname() + " " +
+                                                        attendance.getLastname()))
                                         .collect(Collectors.toList());
 
                                 // Calculate the sum of grades

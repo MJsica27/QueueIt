@@ -31,20 +31,20 @@ public class NotificationService {
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
     public void generateNotificationRecipientsForAllClasses(Long facultyID, String uri, String message, NotificationType notificationType){
-        Notification notification = notificationRepository.save(
-                new Notification(
-                        facultyID,
-                        notificationType,
-                        uri,
-                        message
-                )
-        );
-
-        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
 
         apiService.retrieveNotificationRecipientsForAllClasses(facultyID)
                 .subscribe(IDList ->{
                     if (IDList != null && !IDList.isEmpty()){
+                        Notification notification = notificationRepository.save(
+                                new Notification(
+                                        facultyID,
+                                        notificationType,
+                                        uri,
+                                        message
+                                )
+                        );
+
+                        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
                         IDList.stream()
                                 .forEach(entry->{
                                     notificationRecipientList.add(new NotificationRecipient(
@@ -65,20 +65,21 @@ public class NotificationService {
     }
 
     public void generateNotificationRecipientsForSelectClasses(Long facultyID, ClassesIDRequest classesIDRequest, String uri, String message, NotificationType notificationType){
-        Notification notification = notificationRepository.save(
-                new Notification(
-                        facultyID,
-                        notificationType,
-                        uri,
-                        message
-                )
-        );
 
-        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
 
         apiService.retrieveNotificationRecipientsForSelectClasses(facultyID, classesIDRequest)
                 .subscribe(IDList ->{
                     if (IDList != null && !IDList.isEmpty()){
+                        Notification notification = notificationRepository.save(
+                                new Notification(
+                                        facultyID,
+                                        notificationType,
+                                        uri,
+                                        message
+                                )
+                        );
+
+                        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
                         IDList.stream()
                                 .forEach(entry->{
                                     notificationRecipientList.add(new NotificationRecipient(
@@ -99,20 +100,21 @@ public class NotificationService {
     }
 
     public void generateNotificationRecipientsForAllTeams(Long facultyID, String uri, String message, NotificationType notificationType){
-        Notification notification = notificationRepository.save(
-                new Notification(
-                        facultyID,
-                        notificationType,
-                        uri,
-                        message
-                )
-        );
 
-        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
 
         apiService.retrieveNotificationRecipientsForAllTeams(facultyID)
                 .subscribe(IDList ->{
                     if (IDList != null && !IDList.isEmpty()){
+                        Notification notification = notificationRepository.save(
+                                new Notification(
+                                        facultyID,
+                                        notificationType,
+                                        uri,
+                                        message
+                                )
+                        );
+
+                        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
                         IDList.stream()
                                 .forEach(entry->{
                                     notificationRecipientList.add(new NotificationRecipient(
@@ -133,20 +135,21 @@ public class NotificationService {
     }
 
     public void generateNotificationRecipientsForSelectedTeams(Long facultyID, TeamsIDRequest teamsIDRequest, String uri, String message, NotificationType notificationType){
-        Notification notification = notificationRepository.save(
-                new Notification(
-                        facultyID,
-                        notificationType,
-                        uri,
-                        message
-                )
-        );
 
-        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
 
         apiService.retrieveNotificationRecipientsForSelectedTeams(facultyID, teamsIDRequest)
                 .subscribe(IDList ->{
                     if (IDList != null && !IDList.isEmpty()){
+                        Notification notification = notificationRepository.save(
+                                new Notification(
+                                        facultyID,
+                                        notificationType,
+                                        uri,
+                                        message
+                                )
+                        );
+
+                        List<NotificationRecipient> notificationRecipientList = new ArrayList<>();
                         IDList.stream()
                                 .forEach(entry->{
                                     notificationRecipientList.add(new NotificationRecipient(
