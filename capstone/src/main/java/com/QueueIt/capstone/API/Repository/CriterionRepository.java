@@ -1,4 +1,4 @@
-package com.QueueIt.capstone.API.Repositories;
+package com.QueueIt.capstone.API.Repository;
 
 import com.QueueIt.capstone.API.Entities.Criterion;
 import org.springframework.data.jpa.repository.JpaRepository;

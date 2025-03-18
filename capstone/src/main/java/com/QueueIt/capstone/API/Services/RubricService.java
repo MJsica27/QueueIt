@@ -4,7 +4,7 @@ import com.QueueIt.capstone.API.DTO.RubricDTO;
 import com.QueueIt.capstone.API.Entities.Rubric;
 import com.QueueIt.capstone.API.Entities.Criterion;
 import com.QueueIt.capstone.API.Repository.RubricRepository;
-import com.QueueIt.capstone.API.Repositories.CriterionRepository;
+import com.QueueIt.capstone.API.Repository.CriterionRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

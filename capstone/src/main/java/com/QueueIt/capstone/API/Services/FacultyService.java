@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import com.QueueIt.capstone.API.Repositories.CriterionRepository;
+import com.QueueIt.capstone.API.Repository.CriterionRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

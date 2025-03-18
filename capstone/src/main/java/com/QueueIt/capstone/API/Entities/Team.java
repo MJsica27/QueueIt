@@ -13,13 +13,13 @@ public class Team {
     private DayOfWeek scheduledDay;
     private LocalTime start;
     private LocalTime end;
-    private Long adviserID;
+    private Long adviserId;
 
 
     public Team() {
     }
 
-    public Team(Long tid, String groupName, List<Long> memberIds, List<String> memberNames, DayOfWeek scheduledDay, LocalTime start, LocalTime end, Long adviserID) {
+    public Team(Long tid, String groupName, List<Long> memberIds, List<String> memberNames, DayOfWeek scheduledDay, LocalTime start, LocalTime end, Long adviserId) {
         this.tid = tid;
         this.groupName = groupName;
         this.memberIds = memberIds;
@@ -27,7 +27,7 @@ public class Team {
         this.scheduledDay = scheduledDay;
         this.start = start;
         this.end = end;
-        this.adviserID = adviserID;
+        this.adviserId = adviserId;
     }
 
     public Long getTid() {
@@ -58,7 +58,7 @@ public class Team {
         return end;
     }
 
-    public Long getAdviserID() {
-        return adviserID;
+    public Long getAdviserId() {
+        return adviserId;
     }
 }
