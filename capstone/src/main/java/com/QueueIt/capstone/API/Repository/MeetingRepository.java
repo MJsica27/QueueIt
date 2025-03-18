@@ -8,10 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
@@ -35,10 +33,9 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "JOIN m.queueingEntry qe " +
             "WHERE qe.teamID = :teamID " +
             "AND m.end IS NOT NULL " +
-            "AND (m.meetingStatus = :attendedStatus OR m.meetingStatus = :facultyAttendedStatus)")
+            "AND m.meetingStatus IN :statusList")
     public List<Meeting> retrieveAllMeetingsForSummary(@Param("teamID") Long teamID,
-                                                       @Param("attendedStatus") MeetingStatus attendedStatus,
-                                                       @Param("facultyAttendedStatus") MeetingStatus facultyAttendedStatus);
+                                                       @Param("statusList") List<MeetingStatus> statusList);
     @Query("SELECT m FROM Meeting m " +
             "JOIN m.queueingEntry qe " + // Join with QueueingEntry
             "JOIN qe.queueingManager qm " + // Join with QueueingManager through QueueingEntry
@@ -53,10 +50,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     @Query("SELECT m FROM Meeting m " +
             "WHERE m.start > :offset " +
             "AND :now >= m.start " +
-            "AND m.meetingStatus = :status")
-    List<Meeting> retrieveAutomatedMeetingsToStart(@Param("offset") LocalDateTime fiveMinuteOffsetFromNow,
+            "AND m.meetingStatus IN :statusList")
+    List<Meeting> retrieveAutomatedMeetings(@Param("offset") LocalDateTime offset,
                                             @Param("now") LocalDateTime now,
-                                            @Param("status")MeetingStatus meetingStatus);
+                                            @Param("statusList")List<MeetingStatus> statusList);
 
     @Query("SELECT m FROM Meeting m " +
             "WHERE :offset < m.end " +
@@ -65,5 +62,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     List<Meeting> retrieveAutomatedMeetingsForDefault(@Param("offset") LocalDateTime offset,
                                                       @Param("now") LocalDateTime now,
                                                       @Param("status") MeetingStatus status);
+
 
 }

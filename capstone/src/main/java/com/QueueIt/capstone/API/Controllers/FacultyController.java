@@ -32,7 +32,7 @@ public class FacultyController {
             QueueingManager queueingManager = facultyService.getFacultyQueueingManager(facultyID);
             return ResponseEntity.ok(queueingManager);
         }catch (QueueingManagerNotFoundException e){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 

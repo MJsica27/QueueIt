@@ -67,6 +67,16 @@ public class MeetingDTO {
         this.meetingStatus = meetingStatus;
     }
 
+    //for spontaneous meeting in group page Meet Now button
+    public MeetingDTO(List<Attendance> attendanceList, String teamName, Long teamID, Long mentorID, String facultyName) {
+        this.attendanceList = attendanceList;
+        this.teamName = teamName;
+        this.teamID = teamID;
+        this.mentorID = mentorID;
+        this.facultyName = facultyName;
+    }
+
+
     //Constructor for events
 
     public MeetingDTO(Long meetingID, LocalDateTime start, LocalDateTime end, String teamName, MeetingStatus meetingStatus) {

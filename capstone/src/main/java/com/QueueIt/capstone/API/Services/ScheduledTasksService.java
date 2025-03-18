@@ -5,7 +5,6 @@ import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.DTO.TeamsIDRequest;
 import com.QueueIt.capstone.API.Entities.Attendance;
 import com.QueueIt.capstone.API.Entities.Meeting;
-import com.QueueIt.capstone.API.Entities.Team;
 import com.QueueIt.capstone.API.Enums.AttendanceStatus;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Enums.NotificationType;
@@ -13,9 +12,7 @@ import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.AttendanceRepository;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
-import com.QueueIt.capstone.API.Utilities.DateUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +45,7 @@ public class ScheduledTasksService {
     @Scheduled(cron = "0 0,30 8-17 * * 1-5")
     public void manageMeetings(){
         LocalDateTime fiveMinuteOffsetFromNow = LocalDateTime.now().minusMinutes(5);
+        LocalDateTime tenMinuteOffset = LocalDateTime.now().minusMinutes(10);
         LocalDateTime now = LocalDateTime.now();
         //[1] retrieves the meetings that were created via automation @midnight of this day
         //that is supposed to start at n:00 or n:30 or 5 minutes before that.
@@ -126,7 +124,9 @@ public class ScheduledTasksService {
     //e.g a team member naka sud una sa meeting, meetingStatus = MeetingStatus.STARTED_TEAM_INITIATED,
     // if faculty maka una then meetingStatus = STARTED_FACULTY_INITIATED,
     public void startMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetingsToStart(fiveMinuteOffsetFromNow,now, MeetingStatus.SET_AUTOMATED);
+        List<MeetingStatus> statusList = new ArrayList<>();
+        statusList.add(MeetingStatus.SET_AUTOMATED);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(fiveMinuteOffsetFromNow,now, statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     meeting.setMeetingStatus(MeetingStatus.STARTED_AUTOMATED);
@@ -156,7 +156,9 @@ public class ScheduledTasksService {
     //meaning way nitunga sa either sides, team ug faculty.
     //so set nato siya as Defaulted
     public void defaultMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetingsToStart(fiveMinuteOffsetFromNow,now, MeetingStatus.STARTED_AUTOMATED);
+        List<MeetingStatus> statusList = new ArrayList<>();
+        statusList.add(MeetingStatus.STARTED_AUTOMATED);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(fiveMinuteOffsetFromNow,now, statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     meeting.setMeetingStatus(MeetingStatus.FAILED_DEFAULTED);
@@ -179,5 +181,35 @@ public class ScheduledTasksService {
                 });
 
         meetingRepository.saveAll(retrievedMeetings);
+    }
+
+    @Scheduled(cron = "0 20,50 8-17 * * 1-5")
+    public void remindMeetings(){
+        LocalDateTime tenMinuteOffset = LocalDateTime.now().minusMinutes(10);
+        LocalDateTime now = LocalDateTime.now();
+        List<MeetingStatus> statusList = new ArrayList<>();
+        statusList.add(MeetingStatus.SET_AUTOMATED);
+        statusList.add(MeetingStatus.SET_MANUALLY);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(tenMinuteOffset,now, statusList);
+        retrievedMeetings.stream()
+                .forEach(meeting -> {
+                    List<Integer> teamsIDList = new ArrayList<>();
+                    teamsIDList.add(meeting.getQueueingEntry().getTeamID().intValue());
+                    notificationService.generateNotificationRecipientsForSelectedTeams(
+                            meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
+                            new TeamsIDRequest(teamsIDList),
+                            null,
+                            "Your appointment with "+meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" will start in 10 minutes.",
+                            NotificationType.REMINDER
+                    );
+
+                    notificationService.generateEnqueueNotificationForFaculty(
+                            meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
+                            meeting.getQueueingEntry().getTeamID(),
+                            Constants.QUEUEIT_FRONTEND_URL+"/availability",
+                            "Your appointment with "+meeting.getQueueingEntry().getTeamName()+" will start in 10 minutes.",
+                            NotificationType.REMINDER
+                    );
+                });
     }
 }

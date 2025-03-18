@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/meeting")
 public class MeetingController {
 
@@ -48,6 +48,26 @@ public class MeetingController {
         try{
             meetingService.cancelMeetingAppointment(meetingID);
             return ResponseEntity.ok("Cancelled successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/teamMeetings/startAppointment/{meetingID}")
+    public ResponseEntity<Object> manuallyStartAppointment(@PathVariable Long meetingID){
+        try{
+            meetingService.manuallyStartAppointment(meetingID);
+            return ResponseEntity.ok("Meeting Started.");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/teamMeetings/spontaneous")
+    public ResponseEntity<Object> createSpontaneousMeeting(@RequestBody MeetingDTO meetingDTO){
+        try{
+            meetingService.createSpontaneousMeeting(meetingDTO);
+            return ResponseEntity.ok("Spontaneous Meeting Started.");
         }catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }

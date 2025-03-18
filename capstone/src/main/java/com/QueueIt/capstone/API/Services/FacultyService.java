@@ -223,6 +223,9 @@ public class FacultyService {
         meeting.setEnd(LocalDateTime.now());
         meeting.setNotedAssignedTasks(concludeMeetingDTO.getNotedAssignedTasks());
         meeting.setImpedimentsEncountered(concludeMeetingDTO.getImpedimentsEncountered());
+        if (meeting.getMeetingStatus().equals(MeetingStatus.STARTED_MANUALLY)){
+            meeting.setMeetingStatus(MeetingStatus.ATTENDED_FACULTY_CONDUCTED);
+        }
         // Save changes
         meetingRepository.save(meeting);
 

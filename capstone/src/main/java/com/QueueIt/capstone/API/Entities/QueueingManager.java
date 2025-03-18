@@ -83,6 +83,10 @@ public class QueueingManager {
         return cateringLimit;
     }
 
+    public Meeting getMeeting() {
+        return meeting;
+    }
+
     public int getQueueLength(){
         if (this.queueingEntries == null){
             return 0;
