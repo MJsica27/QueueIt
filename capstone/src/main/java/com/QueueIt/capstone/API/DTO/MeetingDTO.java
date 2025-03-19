@@ -27,7 +27,8 @@ public class MeetingDTO {
     }
 
     //DTO for repository meeting history retrieval for meeting board history
-    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, QueueingEntry queueingEntry, MeetingStatus meetingStatus) {
+    public MeetingDTO(Long meetingID, String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, QueueingEntry queueingEntry, MeetingStatus meetingStatus) {
+        this.meetingID = meetingID;
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.start = start;
@@ -58,7 +59,8 @@ public class MeetingDTO {
 
 
     //DTO for meeting board
-    public MeetingDTO(String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
+    public MeetingDTO(Long meetingID, String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
+        this.meetingID = meetingID;
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.start = start;

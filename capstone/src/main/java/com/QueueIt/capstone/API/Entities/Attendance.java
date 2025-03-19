@@ -35,6 +35,16 @@ public class Attendance {
         this.attendanceStatus = attendanceStatus;
     }
 
+    public Attendance(Long attendanceID, String studentEmail, String firstname, String lastname, Date attendanceDate, String attendanceNote, AttendanceStatus attendanceStatus) {
+        this.attendanceID = attendanceID;
+        this.studentEmail = studentEmail;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.attendanceDate = attendanceDate;
+        this.attendanceNote = attendanceNote;
+        this.attendanceStatus = attendanceStatus;
+    }
+
     public String getStudentEmail() {
         return studentEmail;
     }

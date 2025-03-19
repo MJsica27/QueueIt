@@ -49,6 +49,9 @@ public class FacultyService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
     @Transactional
     public Boolean facultyOpenQueueing(FacultyDTO facultyDTO){
         QueueingManager queueingManager = null;
@@ -219,6 +222,22 @@ public class FacultyService {
             meeting.getGrades().add(savedGrade);
         });
 
+        List<Attendance> attendanceList = attendanceRepository.findAllById(concludeMeetingDTO.getAttendanceList().stream().map(Attendance::getAttendanceID).toList());
+        attendanceList.stream().forEach(
+                attendance -> {
+                    concludeMeetingDTO.getAttendanceList().stream()
+                            .filter(editedAttendanceEntry ->
+                                    editedAttendanceEntry.getAttendanceID() == attendance.getAttendanceID()
+                            )
+                            .findFirst() // Returns Optional<Attendance>
+                            .ifPresent(editedAttendance ->
+                                    attendance.setAttendanceStatus(editedAttendance.getAttendanceStatus())
+                            );
+                }
+        );
+
+        attendanceRepository.saveAll(attendanceList);
+
         // Ensure meeting and gradeList are set correctly
         meeting.setEnd(LocalDateTime.now());
         meeting.setNotedAssignedTasks(concludeMeetingDTO.getNotedAssignedTasks());
@@ -229,14 +248,14 @@ public class FacultyService {
         // Save changes
         meetingRepository.save(meeting);
 
-        QueueingManager queueingManager = queueingManagerRepository.findById(meeting.getQueueingManager().getQueueingManagerID())
+        QueueingManager queueingManager = queueingManagerRepository.findById(concludeMeetingDTO.getQueueingManagerID())
                         .orElseThrow(()-> new RuntimeException("Queueing Manager not found."));
 
         queueingManager.setMeeting(null);
 
         queueingManagerRepository.save(queueingManager);
 
-        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + meeting.getQueueingManager().getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 

@@ -16,6 +16,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
 
     @Query("SELECT new com.QueueIt.capstone.API.DTO.MeetingDTO(" +
+            "m.meetingID,"+
             "m.notedAssignedTasks, " +
             "m.impedimentsEncountered, " +
             "m.start, " +
