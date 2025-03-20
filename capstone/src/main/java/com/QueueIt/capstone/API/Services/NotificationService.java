@@ -1,6 +1,7 @@
 package com.QueueIt.capstone.API.Services;
 
 import com.QueueIt.capstone.API.DTO.ClassesIDRequest;
+import com.QueueIt.capstone.API.DTO.NotificationReadDTO;
 import com.QueueIt.capstone.API.DTO.TeamsIDRequest;
 import com.QueueIt.capstone.API.Entities.Notification;
 import com.QueueIt.capstone.API.Entities.NotificationRecipient;
@@ -195,5 +196,15 @@ public class NotificationService {
                         Comparator.reverseOrder()
                 ))
                 .toList();
+    }
+
+    public void setNotificationsToRead(NotificationReadDTO notificationReadDTO) {
+        List<NotificationRecipient> notificationRecipients = notificationRecipientRepository.findAllById(notificationReadDTO.getNotificationIDs());
+        notificationRecipients.stream()
+                .forEach(notificationRecipientEntry -> {
+                    notificationRecipientEntry.setRead(Boolean.TRUE);
+                });
+        notificationRecipientRepository.saveAll(notificationRecipients);
+
     }
 }
