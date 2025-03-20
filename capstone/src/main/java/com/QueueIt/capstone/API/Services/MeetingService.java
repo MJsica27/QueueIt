@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Services;
 
 
 import com.QueueIt.capstone.API.Constants;
+import com.QueueIt.capstone.API.DTO.AttendanceGradeEditionDTO;
 import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummary;
@@ -11,10 +12,7 @@ import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Enums.NotificationType;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
-import com.QueueIt.capstone.API.Repository.AttendanceRepository;
-import com.QueueIt.capstone.API.Repository.MeetingRepository;
-import com.QueueIt.capstone.API.Repository.QueueingEntryRepository;
-import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
+import com.QueueIt.capstone.API.Repository.*;
 import com.QueueIt.capstone.API.Utilities.DateUtility;
 import com.QueueIt.capstone.API.Utilities.StringUtility;
 import jakarta.transaction.Transactional;
@@ -57,6 +55,9 @@ public class MeetingService {
 
     @Autowired
     private APIService apiService;
+
+    @Autowired
+    private GradeRepository gradeRepository;
 
 
     public List<MeetingDTO> retrieveMeetingsForMeetingBoard(Long teamID){
@@ -278,6 +279,26 @@ public class MeetingService {
             throw new RuntimeException("Please conclude existing meeting with "
                     + queueingManager.getMeeting().getQueueingEntry().getTeamName());
         }
+    }
+
+    public AttendanceGradeEditionDTO getAttendanceAndGradeForEdition(AttendanceGradeEditionDTO attendanceGradeEditionDTO){
+        Meeting meeting = meetingRepository.findById(attendanceGradeEditionDTO.getMeetingID())
+                .orElseThrow(()->new RuntimeException("Meeting not found."));
+        String studentName = attendanceGradeEditionDTO.getFirstName()+" "+attendanceGradeEditionDTO.getLastName();
+
+        List<Grade> grades = gradeRepository.findByStudentNameAndMeeting(studentName, meeting);
+
+        List<Attendance> attendanceList = meeting.getQueueingEntry().getAttendanceList();
+
+        Attendance attendanceEntry = attendanceList.stream()
+                .filter(attendance -> attendance.getFirstname().equals(attendanceGradeEditionDTO.getFirstName()) && attendance.getLastname().equals(attendanceGradeEditionDTO.getLastName()))
+                .findFirst()
+                .orElseThrow(()->new RuntimeException("Attendance for "+attendanceGradeEditionDTO.getFirstName()+" "+attendanceGradeEditionDTO.getLastName()+" not found."));
+
+        return new AttendanceGradeEditionDTO(
+                attendanceEntry,
+                grades
+        );
     }
 
 }

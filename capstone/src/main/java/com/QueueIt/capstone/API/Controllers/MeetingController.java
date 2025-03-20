@@ -1,5 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
+import com.QueueIt.capstone.API.DTO.AttendanceGradeEditionDTO;
 import com.QueueIt.capstone.API.DTO.MeetingDTO;
 import com.QueueIt.capstone.API.Entities.Meeting;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
@@ -68,6 +69,15 @@ public class MeetingController {
         try{
             meetingService.createSpontaneousMeeting(meetingDTO);
             return ResponseEntity.ok("Spontaneous Meeting Started.");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/teamMeetings/attendanceGradeForEdition")
+    public ResponseEntity<Object> getAttendanceAndGradeForEdition(@RequestBody AttendanceGradeEditionDTO attendanceGradeEditionDTO){
+        try{
+            return ResponseEntity.ok(meetingService.getAttendanceAndGradeForEdition(attendanceGradeEditionDTO));
         }catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
