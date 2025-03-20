@@ -301,4 +301,37 @@ public class MeetingService {
         );
     }
 
+    public void saveAttendanceGradeModification(AttendanceGradeEditionDTO attendanceGradeEditionDTO){
+        Attendance attendance = attendanceRepository.findById(attendanceGradeEditionDTO.getAttendance().getAttendanceID())
+                .orElseThrow(()->new RuntimeException("Attendance not found"));
+
+        List<Grade> grades = gradeRepository.findAllById(
+                attendanceGradeEditionDTO.getGrades().stream()
+                        .map(Grade::getGradeID)
+                        .collect(Collectors.toList()));
+
+        if (grades.isEmpty()){
+            throw new RuntimeException("Grades not found.");
+        }
+
+        attendance.setAttendanceStatus(attendanceGradeEditionDTO.getAttendance().getAttendanceStatus());
+        attendance.setAttendanceNote(attendanceGradeEditionDTO.getAttendance().getAttendanceNote());
+        attendanceRepository.save(attendance);
+
+        Map<Long, Grade> gradeMap = attendanceGradeEditionDTO.getGrades().stream()
+                .collect(Collectors.toMap(Grade::getGradeID, grade -> grade));
+
+        grades.stream()
+                .forEach(grade -> {
+                    Grade matchingGrade = gradeMap.get(grade.getGradeID());
+                    if (matchingGrade != null) {
+                        grade.setMark(matchingGrade.getMark());
+                    }else{
+                        throw new RuntimeException("Grade missing.");
+                    }
+                });
+        gradeRepository.saveAll(grades);
+
+    }
+
 }

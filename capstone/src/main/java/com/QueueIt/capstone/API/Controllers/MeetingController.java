@@ -82,4 +82,15 @@ public class MeetingController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
+
+    @PostMapping("/teamMeetings/saveModified")
+    public ResponseEntity<Object> saveAttendanceGradeModification(@RequestBody AttendanceGradeEditionDTO attendanceGradeEditionDTO){
+        try{
+            meetingService.saveAttendanceGradeModification(attendanceGradeEditionDTO);
+            return ResponseEntity.ok("saved");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }

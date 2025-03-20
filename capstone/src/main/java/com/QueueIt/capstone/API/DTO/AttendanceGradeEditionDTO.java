@@ -10,7 +10,7 @@ public class AttendanceGradeEditionDTO {
     private String firstName;
     private String lastName;
     private Attendance attendance;
-    private List<Grade> grade;
+    private List<Grade> grades;
 
     public AttendanceGradeEditionDTO() {
     }
@@ -23,9 +23,9 @@ public class AttendanceGradeEditionDTO {
     }
 
     //for return data
-    public AttendanceGradeEditionDTO(Attendance attendance, List<Grade> grade) {
+    public AttendanceGradeEditionDTO(Attendance attendance, List<Grade> grades) {
         this.attendance = attendance;
-        this.grade = grade;
+        this.grades = grades;
     }
 
     public Long getMeetingID() {
@@ -44,8 +44,8 @@ public class AttendanceGradeEditionDTO {
         return lastName;
     }
 
-    public List<Grade> getGrade() {
-        return grade;
+    public List<Grade> getGrades() {
+        return grades;
     }
 }
 

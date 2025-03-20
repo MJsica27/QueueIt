@@ -32,6 +32,13 @@ public class Grade {
         this.mark = mark;
     }
 
+    public Grade(Long gradeID, Criterion criterion, String studentName, float mark) {
+        this.gradeID = gradeID;
+        this.criterion = criterion;
+        this.studentName = studentName;
+        this.mark = mark;
+    }
+
     public Long getGradeID() {
         return gradeID;
     }
