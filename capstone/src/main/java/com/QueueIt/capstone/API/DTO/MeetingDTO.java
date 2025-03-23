@@ -22,6 +22,7 @@ public class MeetingDTO {
     private String teamName;
     private Long mentorID;
     private String facultyName;
+    private Long classroomID;
 
     public MeetingDTO() {
     }
@@ -47,7 +48,7 @@ public class MeetingDTO {
         this.teamName = teamName;
     }
 
-    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, String facultyName) {
+    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, String facultyName, Long classroomID) {
         this.start = start;
         this.end = end;
         this.attendanceList = attendanceList;
@@ -55,8 +56,8 @@ public class MeetingDTO {
         this.teamID = teamID;
         this.teamName = teamName;
         this.facultyName = facultyName;
+        this.classroomID = classroomID;
     }
-
 
     //DTO for meeting board
     public MeetingDTO(Long meetingID, String notedAssignedTasks, String impedimentsEncountered, LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, MeetingStatus meetingStatus) {
@@ -70,17 +71,16 @@ public class MeetingDTO {
     }
 
     //for spontaneous meeting in group page Meet Now button
-    public MeetingDTO(List<Attendance> attendanceList, String teamName, Long teamID, Long mentorID, String facultyName) {
+    public MeetingDTO(List<Attendance> attendanceList, String teamName, Long teamID, Long mentorID, String facultyName, Long classroomID) {
         this.attendanceList = attendanceList;
         this.teamName = teamName;
         this.teamID = teamID;
         this.mentorID = mentorID;
         this.facultyName = facultyName;
+        this.classroomID = classroomID;
     }
 
-
     //Constructor for events
-
     public MeetingDTO(Long meetingID, LocalDateTime start, LocalDateTime end, String teamName, MeetingStatus meetingStatus) {
         this.meetingID = meetingID;
         this.start = start;
@@ -180,5 +180,13 @@ public class MeetingDTO {
 
     public String getFacultyName() {
         return facultyName;
+    }
+
+    public Long getClassroomID() {
+        return classroomID;
+    }
+
+    public void setClassroomID(Long classroomID) {
+        this.classroomID = classroomID;
     }
 }

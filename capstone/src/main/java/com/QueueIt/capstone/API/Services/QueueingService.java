@@ -135,6 +135,7 @@ public class QueueingService {
                 queueingEntryDTO.getTeamID(),
                 queueingEntryDTO.getTeamName(),
                 queueingEntryDTO.getClassReference(),
+                queueingEntryDTO.getClassroomID(),
                 queueingManager,
                 queueingEntryDTO.getAttendanceList()
         );

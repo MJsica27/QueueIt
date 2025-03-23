@@ -1,20 +1,13 @@
 package com.QueueIt.capstone.API.Services;
 
 
-import com.QueueIt.capstone.API.Constants;
-import com.QueueIt.capstone.API.DTO.AttendanceGradeEditionDTO;
-import com.QueueIt.capstone.API.DTO.MeetingDTO;
-import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
-import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummary;
-import com.QueueIt.capstone.API.DTO.ReportSummaryDTOs.ReportSummaryEntry;
-import com.QueueIt.capstone.API.DTO.TeamsIDRequest;
+import com.QueueIt.capstone.API.DTO.*;
 import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
 import com.QueueIt.capstone.API.Enums.NotificationType;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.*;
 import com.QueueIt.capstone.API.Utilities.DateUtility;
-import com.QueueIt.capstone.API.Utilities.StringUtility;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,6 +148,7 @@ public class MeetingService {
         queueingEntryDTO.setFacultyID(meetingDTO.getMentorID());
         queueingEntryDTO.setTeamID(meetingDTO.getTeamID());
         queueingEntryDTO.setAttendanceList(meetingDTO.getAttendanceList());
+        queueingEntryDTO.setClassroomID(meetingDTO.getClassroomID());
         queueingEntryDTO.setClassReference(meetingDTO.getTeamID().toString());
         queueingEntryDTO.setTeamName(meetingDTO.getTeamName());
 

@@ -11,17 +11,19 @@ public class QueueingEntryDTO {
     private Long teamID;
     private String teamName;
     private String classReference;
+    private Long classroomID;
     private List<Attendance> attendanceList;
 
     public QueueingEntryDTO() {
     }
 
     //DTO for Enqueue
-    public QueueingEntryDTO(Long facultyID, Long teamID, String teamName, String classReference, List<Attendance> attendanceList) {
+    public QueueingEntryDTO(Long facultyID, Long teamID, String teamName, String classReference, Long classroomID, List<Attendance> attendanceList) {
         this.facultyID = facultyID;
         this.teamID = teamID;
         this.teamName = teamName;
         this.classReference = classReference;
+        this.classroomID = classroomID;
         this.attendanceList = attendanceList;
     }
 
@@ -77,5 +79,13 @@ public class QueueingEntryDTO {
 
     public void setAttendanceList(List<Attendance> attendanceList) {
         this.attendanceList = attendanceList;
+    }
+
+    public Long getClassroomID() {
+        return classroomID;
+    }
+
+    public void setClassroomID(Long classroomID) {
+        this.classroomID = classroomID;
     }
 }

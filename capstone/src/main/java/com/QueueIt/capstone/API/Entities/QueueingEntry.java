@@ -15,6 +15,7 @@ public class QueueingEntry {
     private Long teamID;
     private String teamName;
     private String classReference;
+    private Long classroomID;
     @ManyToOne
     @JoinColumn(name = "queueingManager_id")
     @JsonBackReference("queueingEntry-manager")
@@ -31,10 +32,11 @@ public class QueueingEntry {
     public QueueingEntry() {
     }
 
-    public QueueingEntry(Long teamID, String teamName, String classReference, QueueingManager queueingManager, List<Attendance> attendanceList) {
+    public QueueingEntry(Long teamID, String teamName, String classReference, Long classroomID, QueueingManager queueingManager, List<Attendance> attendanceList) {
         this.teamID = teamID;
         this.teamName = teamName;
         this.classReference = classReference;
+        this.classroomID = classroomID;
         this.queueingManager = queueingManager;
         this.attendanceList = attendanceList;
     }
@@ -77,6 +79,14 @@ public class QueueingEntry {
 
     public void setQueueingManager(QueueingManager queueingManager) {
         this.queueingManager = queueingManager;
+    }
+
+    public Long getClassroomID() {
+        return classroomID;
+    }
+
+    public void setClassroomID(Long classroomID) {
+        this.classroomID = classroomID;
     }
 
     public Meeting getMeeting() {

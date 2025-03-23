@@ -1,4 +1,4 @@
-package com.QueueIt.capstone.API.DTO.ReportSummaryDTOs;
+package com.QueueIt.capstone.API.DTO;
 
 import java.time.LocalDateTime;
 

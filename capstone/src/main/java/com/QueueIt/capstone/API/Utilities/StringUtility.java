@@ -12,4 +12,25 @@ public class StringUtility {
 
         return firstLetter + restOfString;
     }
+
+    public static String randomBackgroundColorString(int e) {
+        String[] colors = {
+                "#51a647",
+                "#85c454",
+                "#a7d192",
+                "#4ca16f",
+                "#a3d4b2",
+                "#51b7c4",
+                "#0285b5",
+                "#04578f",
+                "#242d4a",
+                "#67679c",
+                "#4c4699",
+                "#232d61",
+                "#342354",
+                "#413063",
+        };
+
+        return colors[e];
+    }
 }

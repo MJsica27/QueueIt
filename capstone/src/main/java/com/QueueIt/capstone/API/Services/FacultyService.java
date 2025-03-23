@@ -255,6 +255,10 @@ public class FacultyService {
 
         queueingManagerRepository.save(queueingManager);
 
+        QueueingEntry queueingEntry = meeting.getQueueingEntry();
+        queueingEntry.setQueueingManager(queueingManager);
+        queueingEntryRepository.save(queueingEntry);
+
         simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }

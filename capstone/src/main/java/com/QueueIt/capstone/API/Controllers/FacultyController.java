@@ -7,6 +7,7 @@ import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
 import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
+import com.QueueIt.capstone.API.Services.AnalyticsService;
 import com.QueueIt.capstone.API.Services.FacultyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,12 @@ import java.util.List;
 public class FacultyController {
 
     private static final Logger log = LoggerFactory.getLogger(FacultyController.class);
+
     @Autowired
     private FacultyService facultyService;
+
+    @Autowired
+    private AnalyticsService analyticsService;
 
     @GetMapping("/getQueueingManager/{facultyID}")
     private ResponseEntity<Object> getFacultyQueueingManager(@PathVariable Long facultyID){
@@ -71,6 +76,11 @@ public class FacultyController {
         }catch (RuntimeException e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/classroomAnalytics/{classroomID}")
+    private ResponseEntity<Object> generateClassroomAnalytics(@PathVariable Long classroomID){
+        return ResponseEntity.ok(analyticsService.generateClassroomAnalytics(classroomID));
     }
 
 }
