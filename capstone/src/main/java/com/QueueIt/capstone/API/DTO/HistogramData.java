@@ -2,11 +2,14 @@ package com.QueueIt.capstone.API.DTO;
 
 import java.util.List;
 
-public class PieChartData {
+public class HistogramData {
     private List<String> labels;
     private List<DataEntry> datasets;
 
-    public PieChartData(List<String> labels, List<DataEntry> datasets) {
+    public HistogramData() {
+    }
+
+    public HistogramData(List<String> labels, List<DataEntry> datasets) {
         this.labels = labels;
         this.datasets = datasets;
     }

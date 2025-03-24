@@ -2,11 +2,14 @@ package com.QueueIt.capstone.API.DTO;
 
 import java.util.List;
 
-public class PieChartData {
+public class RadarData {
     private List<String> labels;
-    private List<DataEntry> datasets;
+    private List<DataEntryv2> datasets;
 
-    public PieChartData(List<String> labels, List<DataEntry> datasets) {
+    public RadarData() {
+    }
+
+    public RadarData(List<String> labels, List<DataEntryv2> datasets) {
         this.labels = labels;
         this.datasets = datasets;
     }
@@ -19,11 +22,11 @@ public class PieChartData {
         this.labels = labels;
     }
 
-    public List<DataEntry> getDatasets() {
+    public List<DataEntryv2> getDatasets() {
         return datasets;
     }
 
-    public void setDatasets(List<DataEntry> datasets) {
+    public void setDatasets(List<DataEntryv2> datasets) {
         this.datasets = datasets;
     }
 }

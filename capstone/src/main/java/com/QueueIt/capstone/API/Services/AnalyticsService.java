@@ -44,6 +44,54 @@ public class AnalyticsService {
         );
     }
 
+    public GroupAnalyticsDTO generateGroupAnalytics(Long teamID){
+        return new GroupAnalyticsDTO(
+                generateAttendanceHistogramData(teamID),
+                generatePerformanceRadarData(teamID)
+        );
+    }
+
+    public HistogramData generateAttendanceHistogramData(Long teamID){
+        List<HistogramObservation> histogramObservationList = meetingRepository.getAttendanceHistogram(teamID, List.of(AttendanceStatus.PRESENT), List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED));
+        if (histogramObservationList.size() > 1){
+            List<String> labels = new ArrayList<>();
+            List<DataEntry> datasets = new ArrayList<>();
+            datasets.add(new DataEntry(
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+            for(int i = 0; i < histogramObservationList.size(); i++){
+                labels.add(histogramObservationList.get(i).getStudentName());
+                datasets.getFirst().getData().add(histogramObservationList.get(i).getAttendanceCount());
+                datasets.getFirst().getBackgroundColor().add(StringUtility.randomBackgroundColorString(i));
+            }
+            return new HistogramData(labels, datasets);
+        }
+        return new HistogramData();
+    }
+
+    public RadarData generatePerformanceRadarData(Long teamID){
+        List<RadarChartObservation> radarChartObservations = meetingRepository.getTeamPerformanceWeb(teamID);
+        if (radarChartObservations.size() > 1){
+            List<String> labels = new ArrayList<>();
+            List<DataEntryv2> datasets = new ArrayList<>();
+            datasets.add(new DataEntryv2(
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+            for(int i =0; i < radarChartObservations.size(); i++){
+                labels.add(radarChartObservations.get(i).getStudentName());
+                datasets.getFirst().getData().add(radarChartObservations.get(i).getGradeAverage());
+                datasets.getFirst().getBackgroundColor().add(StringUtility.randomBackgroundColorString(i));
+            }
+            return new RadarData(
+                    labels,
+                    datasets
+            );
+        }
+        return new RadarData();
+    }
+
     public List<LowestEngagementDTO> getTop3LowestEngagingTeam(Long classroomID){
 
 
@@ -81,11 +129,11 @@ public class AnalyticsService {
     public PieChartData retrieveFacultyPerformanceInClassroom(Long classroomID){
         List<PieChartObservation> observations = meetingRepository.meetingCountPerFaculty(classroomID);
         List<String> labels = new ArrayList<>();
-        PieChartDataEntry pieChartDataEntry = new PieChartDataEntry(
+        DataEntry pieChartDataEntry = new DataEntry(
                 new ArrayList<>(),
                 new ArrayList<>()
         );
-        List<PieChartDataEntry> datasets = new ArrayList<>();
+        List<DataEntry> datasets = new ArrayList<>();
         observations.stream()
                 .forEach(pieChartObservation -> {
                     labels.add(pieChartObservation.getFacultyName());

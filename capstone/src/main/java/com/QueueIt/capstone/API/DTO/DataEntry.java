@@ -2,11 +2,11 @@ package com.QueueIt.capstone.API.DTO;
 
 import java.util.List;
 
-public class PieChartDataEntry {
+public class DataEntry {
     private List<Long> data;
     private List<String> backgroundColor;
 
-    public PieChartDataEntry(List<Long> data, List<String> backgroundColor) {
+    public DataEntry(List<Long> data, List<String> backgroundColor) {
         this.data = data;
         this.backgroundColor = backgroundColor;
     }

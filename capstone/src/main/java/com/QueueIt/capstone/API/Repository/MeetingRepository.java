@@ -169,6 +169,33 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
 
 
+    @Query(
+            "SELECT new com.QueueIt.capstone.API.DTO.HistogramObservation(CONCAT(a.firstname,' ',a.lastname), COUNT(a.attendanceID)) " +
+                    "FROM Meeting m JOIN m.queueingEntry qe JOIN qe.attendanceList a " +
+                    "WHERE qe.teamID = :teamID AND m.meetingStatus IN :meetingStatus AND a.attendanceStatus IN :attendanceStatus " +
+                    "GROUP BY a.studentEmail"
+    )
+    public List<HistogramObservation> getAttendanceHistogram(
+            @Param("teamID") Long teamID,
+            @Param("attendanceStatus") List<AttendanceStatus> attendanceStatusList,
+            @Param("meetingStatus") List<MeetingStatus> meetingStatuses
+    );
+
+
+    @Query(
+            "SELECT new com.QueueIt.capstone.API.DTO.RadarChartObservation(g.studentName, AVG(g.mark)) " +
+                    "FROM Grade g JOIN g.meeting m JOIN m.queueingEntry qe " +
+                    "WHERE qe.teamID = :teamID"
+    )
+    public List<RadarChartObservation> getTeamPerformanceWeb(
+            @Param("teamID") Long teamID
+    );
+
+
+
+
+
+
 
 
 
