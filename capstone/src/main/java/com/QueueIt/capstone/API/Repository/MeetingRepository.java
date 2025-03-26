@@ -129,10 +129,11 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
                     "FROM Meeting m " +
                     "JOIN m.queueingEntry qe " +
                     "JOIN qe.queueingManager qm " +
-                    "WHERE qe.classroomID = :classroomID " +
+                    "WHERE qe.classroomID = :classroomID AND m.meetingStatus IN :meetingStatusList " +
                     "GROUP BY qm.facultyName"
     )
-    List<PieChartObservation> meetingCountPerFaculty(@Param("classroomID") Long classroomID);
+    List<PieChartObservation> meetingCountPerFaculty(@Param("classroomID") Long classroomID,
+                                                     @Param("meetingStatusList") List<MeetingStatus> meetingStatusList);
 
 
 //    @Query(
@@ -185,7 +186,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     @Query(
             "SELECT new com.QueueIt.capstone.API.DTO.RadarChartObservation(g.studentName, AVG(g.mark)) " +
                     "FROM Grade g JOIN g.meeting m JOIN m.queueingEntry qe " +
-                    "WHERE qe.teamID = :teamID"
+                    "WHERE qe.teamID = :teamID GROUP BY g.studentName"
     )
     public List<RadarChartObservation> getTeamPerformanceWeb(
             @Param("teamID") Long teamID

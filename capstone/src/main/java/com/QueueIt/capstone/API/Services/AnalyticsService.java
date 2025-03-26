@@ -127,7 +127,7 @@ public class AnalyticsService {
     }
 
     public PieChartData retrieveFacultyPerformanceInClassroom(Long classroomID){
-        List<PieChartObservation> observations = meetingRepository.meetingCountPerFaculty(classroomID);
+        List<PieChartObservation> observations = meetingRepository.meetingCountPerFaculty(classroomID, List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED));
         List<String> labels = new ArrayList<>();
         DataEntry pieChartDataEntry = new DataEntry(
                 new ArrayList<>(),
