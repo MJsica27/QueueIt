@@ -205,22 +205,26 @@ public class FacultyService {
     }
 
     @Transactional
-    public void concludeMeeting(ConcludeMeetingDTO concludeMeetingDTO) {
-        Meeting meeting = meetingRepository.findById(concludeMeetingDTO.getGrades().getFirst().getMeetingID())
+    public void concludeMeeting(ConcludeMeetingDTO concludeMeetingDTO, Long meetingID) {
+        Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(()->new RuntimeException("Meeting not found."));
 
-        concludeMeetingDTO.getGrades().forEach(gradeDTO -> {
-            Criterion criterion = criterionRepository.findById(gradeDTO.getCriterionID())
-                    .orElseThrow(() -> new RuntimeException("Criterion with id " + gradeDTO.getCriterionID() + " not found"));
-            Grade tempGrade = new Grade(
-                    meeting,
-                    criterion,
-                    gradeDTO.getStudentName(),
-                    gradeDTO.getMark()
-            );
-            Grade savedGrade = gradeRepository.save(tempGrade);
-            meeting.getGrades().add(savedGrade);
-        });
+        if (concludeMeetingDTO.getGrades().isEmpty()){
+            meeting.setMeetingStatus(MeetingStatus.FOLLOWUP_MEETING);
+        }else{
+            concludeMeetingDTO.getGrades().forEach(gradeDTO -> {
+                Criterion criterion = criterionRepository.findById(gradeDTO.getCriterionID())
+                        .orElseThrow(() -> new RuntimeException("Criterion with id " + gradeDTO.getCriterionID() + " not found"));
+                Grade tempGrade = new Grade(
+                        meeting,
+                        criterion,
+                        gradeDTO.getStudentName(),
+                        gradeDTO.getMark()
+                );
+                Grade savedGrade = gradeRepository.save(tempGrade);
+                meeting.getGrades().add(savedGrade);
+            });
+        }
 
         List<Attendance> attendanceList = attendanceRepository.findAllById(concludeMeetingDTO.getAttendanceList().stream().map(Attendance::getAttendanceID).toList());
         attendanceList.stream().forEach(

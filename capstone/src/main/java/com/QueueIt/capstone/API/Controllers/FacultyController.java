@@ -68,14 +68,14 @@ public class FacultyController {
         }
     }
 
-    @PostMapping("/concludeMeeting")
-    private ResponseEntity<Object> facultyConcludeMeeting(@RequestBody ConcludeMeetingDTO concludeMeetingDTO){
-        try{
-            facultyService.concludeMeeting(concludeMeetingDTO);
+    @PostMapping("/concludeMeeting/{meetingID}")
+    private ResponseEntity<Object> facultyConcludeMeeting(@RequestBody ConcludeMeetingDTO concludeMeetingDTO, @PathVariable Long meetingID){
+//        try{
+            facultyService.concludeMeeting(concludeMeetingDTO, meetingID);
             return ResponseEntity.ok(Boolean.TRUE);
-        }catch (RuntimeException e){
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
+//        }catch (Exception e){
+//            return ResponseEntity.status(400).body(e.getMessage());
+//        }
     }
 
     @GetMapping("/classroomAnalytics/{classroomID}")
