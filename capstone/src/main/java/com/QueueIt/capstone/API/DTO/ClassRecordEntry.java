@@ -20,7 +20,7 @@ public class ClassRecordEntry {
     }
 
     public Double getGradeAverage() {
-        return gradeAverage;
+        return Math.round(gradeAverage * 10 ) / 10.0 ;
     }
 
     public void setGradeAverage(Double gradeAverage) {
