@@ -39,20 +39,19 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "AND m.meetingStatus IN :statusList")
     public List<Meeting> retrieveAllMeetingsForSummary(@Param("teamID") Long teamID,
                                                        @Param("statusList") List<MeetingStatus> statusList);
+
     @Query("SELECT m FROM Meeting m " +
             "JOIN m.queueingEntry qe " + // Join with QueueingEntry
             "JOIN qe.queueingManager qm " + // Join with QueueingManager through QueueingEntry
-            "WHERE m.start > :now " +
-            "AND qm.facultyID = :facultyID " + // Use qm.facultyID to filter
-            "AND m.meetingStatus = :status")
+            "WHERE qm.facultyID = :facultyID " + // Use qm.facultyID to filter
+            "AND m.meetingStatus IN :status")
     List<Meeting> retrieveAppointmentsForFaculty(@Param("facultyID") Long facultyID,
-                                                 @Param("now") LocalDateTime now,
-                                                 @Param("status") MeetingStatus status);
+                                                 @Param("status") List<MeetingStatus> status);
 
 
     @Query("SELECT m FROM Meeting m " +
             "WHERE m.start > :offset " +
-            "AND :now >= m.start " +
+            "AND m.start <= :now " +
             "AND m.meetingStatus IN :statusList")
     List<Meeting> retrieveAutomatedMeetings(@Param("offset") LocalDateTime offset,
                                             @Param("now") LocalDateTime now,
@@ -61,10 +60,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     @Query("SELECT m FROM Meeting m " +
             "WHERE :offset < m.end " +
             "AND :now >= m.end " +
-            "AND m.meetingStatus = :status")
+            "AND m.meetingStatus IN :status")
     List<Meeting> retrieveAutomatedMeetingsForDefault(@Param("offset") LocalDateTime offset,
                                                       @Param("now") LocalDateTime now,
-                                                      @Param("status") MeetingStatus status);
+                                                      @Param("status") List<MeetingStatus> status);
 
 
 

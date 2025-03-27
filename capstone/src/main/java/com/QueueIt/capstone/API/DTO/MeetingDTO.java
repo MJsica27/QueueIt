@@ -48,6 +48,17 @@ public class MeetingDTO {
         this.teamName = teamName;
     }
 
+    //DTO for meeting automation that runs every midnight
+    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, Long classroomId) {
+        this.start = start;
+        this.end = end;
+        this.attendanceList = attendanceList;
+        this.mentorID = mentorID;
+        this.teamID = teamID;
+        this.teamName = teamName;
+        this.classroomID = classroomId;
+    }
+
     public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, String facultyName, Long classroomID) {
         this.start = start;
         this.end = end;

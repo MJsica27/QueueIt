@@ -61,7 +61,9 @@ public class ScheduledTasksService {
     //runs every midnight every weekday
     //creates meetings for each week day
     @Scheduled(cron = "0 0 0 * * 1-5")
+//    @Scheduled(cron = "0 49 * * * 1-5")
     public void createScheduledMeetingsForToday(){
+        System.out.println("\n\n*** Scheduled Meetings Generation Function Ran @ "+LocalDateTime.now()+" ***\n\n");
         //WebClient is supposed to do subscribe, according to blackbox.
         apiService.fetchTeamsForAutomationTodayFromSpear()
                 .subscribe(teams -> {
@@ -100,7 +102,8 @@ public class ScheduledTasksService {
                                             attendanceList,
                                             team.getAdviserId(),
                                             team.getTid(),
-                                            team.getGroupName()
+                                            team.getGroupName(),
+                                            team.getClassId()
                                     );
 
                                     try{
@@ -124,9 +127,11 @@ public class ScheduledTasksService {
     //e.g a team member naka sud una sa meeting, meetingStatus = MeetingStatus.STARTED_TEAM_INITIATED,
     // if faculty maka una then meetingStatus = STARTED_FACULTY_INITIATED,
     public void startMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
+        System.out.println("\n\n!!! Automated Starting of Meetings Function Ran @ "+LocalDateTime.now()+" !!!\n\n");
+
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.SET_AUTOMATED);
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(fiveMinuteOffsetFromNow,now, statusList);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(fiveMinuteOffsetFromNow,now,statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     meeting.setMeetingStatus(MeetingStatus.STARTED_AUTOMATED);
@@ -156,9 +161,10 @@ public class ScheduledTasksService {
     //meaning way nitunga sa either sides, team ug faculty.
     //so set nato siya as Defaulted
     public void defaultMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
+        System.out.println("\n\n~ ~ ~ Defaulting of Automated Meetings Function Ran @ "+LocalDateTime.now()+" ~ ~ ~\n\n");
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.STARTED_AUTOMATED);
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(fiveMinuteOffsetFromNow,now, statusList);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetingsForDefault(fiveMinuteOffsetFromNow,now,statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     meeting.setMeetingStatus(MeetingStatus.FAILED_DEFAULTED);
@@ -190,7 +196,7 @@ public class ScheduledTasksService {
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.SET_AUTOMATED);
         statusList.add(MeetingStatus.SET_MANUALLY);
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(tenMinuteOffset,now, statusList);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(tenMinuteOffset,now,statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     List<Integer> teamsIDList = new ArrayList<>();

@@ -14,12 +14,13 @@ public class Team {
     private LocalTime start;
     private LocalTime end;
     private Long adviserId;
+    private Long classId;
 
 
     public Team() {
     }
 
-    public Team(Long tid, String groupName, List<Long> memberIds, List<String> memberNames, DayOfWeek scheduledDay, LocalTime start, LocalTime end, Long adviserId) {
+    public Team(Long tid, String groupName, List<Long> memberIds, List<String> memberNames, DayOfWeek scheduledDay, LocalTime start, LocalTime end, Long adviserId, Long classId) {
         this.tid = tid;
         this.groupName = groupName;
         this.memberIds = memberIds;
@@ -28,6 +29,11 @@ public class Team {
         this.start = start;
         this.end = end;
         this.adviserId = adviserId;
+        this.classId = classId;
+    }
+
+    public Long getClassId() {
+        return classId;
     }
 
     public Long getTid() {
@@ -60,5 +66,10 @@ public class Team {
 
     public Long getAdviserId() {
         return adviserId;
+    }
+
+    @Override
+    public String toString() {
+        return "group name: "+this.groupName+" classroom id: "+this.classId;
     }
 }
