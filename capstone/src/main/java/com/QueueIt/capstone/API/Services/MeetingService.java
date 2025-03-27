@@ -118,7 +118,7 @@ public class MeetingService {
                                         counter.get(),
                                         meeting.getStart(),
                                         roundedAverage,
-                                        attendance.getFirstname() + ", " + attendance.getLastname()
+                                        attendance.getFirstname() + " " + attendance.getLastname()
                                 );
 
                                 reportSummary.getReportSummaryEntryList().add(reportSummaryEntry);
