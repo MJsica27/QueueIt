@@ -88,4 +88,9 @@ public class FacultyController {
         return ResponseEntity.ok(analyticsService.generateGroupAnalytics(teamID));
     }
 
+    @GetMapping("/generateClassRecord/{classroomID}")
+    private ResponseEntity<Object> generateClassRecord(@PathVariable Long classroomID){
+        return ResponseEntity.ok(facultyService.generateClassRecord(classroomID));
+    }
+
 }

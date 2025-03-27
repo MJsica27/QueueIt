@@ -193,6 +193,14 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     );
 
 
+    @Query(
+            "SELECT new com.QueueIt.capstone.API.DTO.ClassRecordEntry(g.studentName, AVG(g.mark), qe.teamName) " +
+                    "FROM Meeting m JOIN m.queueingEntry qe JOIN m.grades g WHERE qe.classroomID = :classroomID" +
+                    " GROUP BY g.studentName"
+    )
+    public List<ClassRecordEntry> generateClassRecord(@Param("classroomID") Long classroomID);
+
+
 
 
 

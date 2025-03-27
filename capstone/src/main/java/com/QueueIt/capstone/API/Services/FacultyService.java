@@ -267,4 +267,8 @@ public class FacultyService {
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 
+    public List<ClassRecordEntry> generateClassRecord(Long clasroomID){
+        return meetingRepository.generateClassRecord(clasroomID);
+    }
+
 }
