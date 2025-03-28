@@ -57,6 +57,16 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
                                             @Param("now") LocalDateTime now,
                                             @Param("statusList")List<MeetingStatus> statusList);
 
+
+    @Query(
+            "SELECT m FROM Meeting m WHERE m.start >= :now " +
+            "AND m.start <= :offset " +
+            "AND m.meetingStatus IN :statusList"
+    )
+    List<Meeting> retrieveMeetingsForReminder(@Param("offset") LocalDateTime offset,
+                                              @Param("now") LocalDateTime now,
+                                              @Param("statusList") List<MeetingStatus> statusList);
+
     @Query("SELECT m FROM Meeting m " +
             "WHERE :offset < m.end " +
             "AND :now >= m.end " +

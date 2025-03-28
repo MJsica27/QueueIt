@@ -47,6 +47,8 @@ public class ScheduledTasksService {
         LocalDateTime fiveMinuteOffsetFromNow = LocalDateTime.now().minusMinutes(5);
         LocalDateTime tenMinuteOffset = LocalDateTime.now().minusMinutes(10);
         LocalDateTime now = LocalDateTime.now();
+
+
         //[1] retrieves the meetings that were created via automation @midnight of this day
         //that is supposed to start at n:00 or n:30 or 5 minutes before that.
         // e.g: 7:55 - 8:00 or 8:25 - 8:30 ... 4:25 : 4:30
@@ -191,12 +193,13 @@ public class ScheduledTasksService {
 
     @Scheduled(cron = "0 20,50 8-17 * * 1-5")
     public void remindMeetings(){
-        LocalDateTime tenMinuteOffset = LocalDateTime.now().minusMinutes(10);
+        System.out.println("\n\n@@@ Meeting Reminder Script ran @ "+LocalDateTime.now()+" ~ ~ ~\n\n");
+        LocalDateTime offset = LocalDateTime.now().plusMinutes(15);
         LocalDateTime now = LocalDateTime.now();
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.SET_AUTOMATED);
         statusList.add(MeetingStatus.SET_MANUALLY);
-        List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetings(tenMinuteOffset,now,statusList);
+        List<Meeting> retrievedMeetings = meetingRepository.retrieveMeetingsForReminder(offset,now,statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
                     List<Integer> teamsIDList = new ArrayList<>();
