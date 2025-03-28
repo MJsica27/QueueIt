@@ -93,4 +93,14 @@ public class MeetingController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
+    @GetMapping("/teamMeetings/scheduled/{meetingID}")
+    public ResponseEntity<Object> lobbyTeam(@PathVariable Long meetingID){
+        try{
+            meetingService.lobbyTeam(meetingID);
+            return ResponseEntity.ok("Lobbied");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }

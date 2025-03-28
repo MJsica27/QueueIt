@@ -20,6 +20,7 @@ import com.QueueIt.capstone.API.Repository.CriterionRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FacultyService {
@@ -209,7 +210,7 @@ public class FacultyService {
         Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(()->new RuntimeException("Meeting not found."));
 
-        if (concludeMeetingDTO.getGrades().isEmpty()){
+        if (concludeMeetingDTO.getIsFollowup()){
             meeting.setMeetingStatus(MeetingStatus.FOLLOWUP_MEETING);
         }else{
             concludeMeetingDTO.getGrades().forEach(gradeDTO -> {
@@ -249,6 +250,10 @@ public class FacultyService {
         if (meeting.getMeetingStatus().equals(MeetingStatus.STARTED_MANUALLY)){
             meeting.setMeetingStatus(MeetingStatus.ATTENDED_FACULTY_CONDUCTED);
         }
+
+        if (meeting.getMeetingStatus().equals(MeetingStatus.STARTED_TEAM_INITIATED) || meeting.getMeetingStatus().equals(MeetingStatus.STARTED_FACULTY_INITIATED)){
+            meeting.setMeetingStatus(MeetingStatus.ATTENDED_SCHEDULE_CONDUCTED);
+        }
         // Save changes
         meetingRepository.save(meeting);
 
@@ -271,4 +276,40 @@ public class FacultyService {
         return meetingRepository.generateClassRecord(clasroomID);
     }
 
+    public Boolean startAutomatedMeeting(Long meetingID, Long facultyID) {
+        Meeting meeting = meetingRepository.findById(meetingID)
+                .orElseThrow(()-> new RuntimeException("Meeting not found"));
+        QueueingEntry queueingEntry = meeting.getQueueingEntry();
+        QueueingManager queueingManager = queueingEntry.getQueueingManager();
+
+        if (!Objects.equals(queueingManager.getFacultyID(), facultyID)){
+            throw new RuntimeException("You have no permission to precide over this meeting.");
+        }
+
+        if (queueingManager.getMeeting() != null){
+            throw new RuntimeException("Please conclude existing meeting with "+queueingManager.getMeeting().getQueueingEntry().getTeamName());
+        }
+        if (meeting.getMeetingStatus().equals(MeetingStatus.STARTED_AUTOMATED)){
+            meeting.setMeetingStatus(MeetingStatus.STARTED_FACULTY_INITIATED);
+        }
+
+        List<Integer> teamIDList = new ArrayList<>();
+        teamIDList.add(queueingEntry.getTeamID().intValue());
+
+        notificationService.generateNotificationRecipientsForSelectedTeams(
+                queueingManager.getFacultyID(),
+                new TeamsIDRequest(teamIDList),
+                Constants.QUEUEIT_FRONTEND_URL+"/lobby/"+meetingID,
+                queueingManager.getFacultyName()+" is now waiting for your team's scheduled consultation.",
+                NotificationType.AUTOMATED_APPOINTMENT_STARTED
+        );
+
+        queueingManager.setMeeting(meeting);
+        queueingManagerRepository.save(queueingManager);
+
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
+
+        return Boolean.TRUE;
+    }
 }

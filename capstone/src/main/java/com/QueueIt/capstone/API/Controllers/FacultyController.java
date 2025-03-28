@@ -93,4 +93,14 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.generateClassRecord(classroomID));
     }
 
+
+    @GetMapping("/startAutomated/{meetingID}/{facultyID}")
+    private ResponseEntity<Object> startAutomatedMeeting(@PathVariable Long meetingID, Long facultyID){
+        try{
+            return ResponseEntity.ok(facultyService.startAutomatedMeeting(meetingID, facultyID));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
 }

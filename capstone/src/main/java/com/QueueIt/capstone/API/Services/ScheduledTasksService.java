@@ -140,7 +140,7 @@ public class ScheduledTasksService {
                     notificationService.generateEnqueueNotificationForFaculty(
                             meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
                             meeting.getQueueingEntry().getTeamID(),
-                            Constants.QUEUEIT_FRONTEND_URL+"/availability",
+                            null,
                             "The system generated appointment with " + meeting.getQueueingEntry().getTeamName()+" has now started.",
                             NotificationType.AUTOMATED_APPOINTMENT_STARTED
                     );
@@ -149,8 +149,8 @@ public class ScheduledTasksService {
                     notificationService.generateNotificationRecipientsForSelectedTeams(
                             meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
                             new TeamsIDRequest(teamIDs),
-                            null,
-                            "The system generated appointment with " + meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" has now started.",
+                            Constants.QUEUEIT_FRONTEND_URL+"/meetingLobby/"+meeting.getMeetingID(),
+                            "The system generated appointment with " + meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" has now started. Click this notification to get you lobbied.",
                             NotificationType.AUTOMATED_APPOINTMENT_STARTED
                     );
                 });
@@ -166,10 +166,20 @@ public class ScheduledTasksService {
         System.out.println("\n\n~ ~ ~ Defaulting of Automated Meetings Function Ran @ "+LocalDateTime.now()+" ~ ~ ~\n\n");
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.STARTED_AUTOMATED);
+        statusList.add(MeetingStatus.STARTED_FACULTY_INITIATED);
+        statusList.add(MeetingStatus.STARTED_TEAM_INITIATED);
         List<Meeting> retrievedMeetings = meetingRepository.retrieveAutomatedMeetingsForDefault(fiveMinuteOffsetFromNow,now,statusList);
         retrievedMeetings.stream()
                 .forEach(meeting -> {
-                    meeting.setMeetingStatus(MeetingStatus.FAILED_DEFAULTED);
+                    switch(meeting.getMeetingStatus()){
+                        case MeetingStatus.STARTED_AUTOMATED ->
+                                meeting.setMeetingStatus(MeetingStatus.FAILED_DEFAULTED);
+                        case MeetingStatus.STARTED_FACULTY_INITIATED ->
+                                meeting.setMeetingStatus(MeetingStatus.FAILED_TEAM_NO_SHOW);
+                        case MeetingStatus.STARTED_TEAM_INITIATED ->
+                                meeting.setMeetingStatus(MeetingStatus.FAILED_FACULTY_NO_SHOW);
+                    }
+
                     notificationService.generateEnqueueNotificationForFaculty(
                             meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
                             meeting.getQueueingEntry().getTeamID(),
@@ -207,16 +217,16 @@ public class ScheduledTasksService {
                     notificationService.generateNotificationRecipientsForSelectedTeams(
                             meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
                             new TeamsIDRequest(teamsIDList),
-                            null,
-                            "Your appointment with "+meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" will start in 10 minutes.",
+                            Constants.QUEUEIT_FRONTEND_URL+"/lobby/"+meeting.getMeetingID(),
+                            "Your appointment with "+meeting.getQueueingEntry().getQueueingManager().getFacultyName()+" will start in 10 minutes. You can click this notification as early as now to be lobbied and wait for the faculty member.",
                             NotificationType.REMINDER
                     );
 
                     notificationService.generateEnqueueNotificationForFaculty(
                             meeting.getQueueingEntry().getQueueingManager().getFacultyID(),
                             meeting.getQueueingEntry().getTeamID(),
-                            Constants.QUEUEIT_FRONTEND_URL+"/availability",
-                            "Your appointment with "+meeting.getQueueingEntry().getTeamName()+" will start in 10 minutes.",
+                            null,
+                            "Your appointment with "+meeting.getQueueingEntry().getTeamName()+" will start in 10 minutes. You can click this notification to start this meeting as early as now, as they might be already in the lobby.",
                             NotificationType.REMINDER
                     );
                 });

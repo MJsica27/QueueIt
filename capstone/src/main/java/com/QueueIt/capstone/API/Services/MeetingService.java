@@ -1,6 +1,7 @@
 package com.QueueIt.capstone.API.Services;
 
 
+import com.QueueIt.capstone.API.Constants;
 import com.QueueIt.capstone.API.DTO.*;
 import com.QueueIt.capstone.API.Entities.*;
 import com.QueueIt.capstone.API.Enums.MeetingStatus;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -51,6 +53,9 @@ public class MeetingService {
 
     @Autowired
     private GradeRepository gradeRepository;
+
+    @Autowired
+    private SimpMessageSendingOperations simpMessageSendingOperations;
 
 
     public List<MeetingDTO> retrieveMeetingsForMeetingBoard(Long teamID){
@@ -246,6 +251,8 @@ public class MeetingService {
             throw new RuntimeException("Please conclude existing meeting with "
                     + queueingManager.getMeeting().getQueueingEntry().getTeamName());
         }
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 
 
@@ -273,6 +280,8 @@ public class MeetingService {
             throw new RuntimeException("Please conclude existing meeting with "
                     + queueingManager.getMeeting().getQueueingEntry().getTeamName());
         }
+        simpMessageSendingOperations.convertAndSend("/topic/queueStatus/adviser/" + queueingManager.getFacultyID(), queueingManager.getQueueingEntries());
+        simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 
     public AttendanceGradeEditionDTO getAttendanceAndGradeForEdition(AttendanceGradeEditionDTO attendanceGradeEditionDTO){
@@ -327,5 +336,53 @@ public class MeetingService {
         gradeRepository.saveAll(grades);
 
     }
+
+    public Boolean lobbyTeam(Long meetingID){
+        Meeting meeting = meetingRepository.findById(meetingID)
+                .orElseThrow(()->new RuntimeException("Meeting not found."));
+
+        QueueingEntry queueingEntry = meeting.getQueueingEntry();
+        QueueingManager queueingManager = queueingEntry.getQueueingManager();
+
+        //if started automated pa ang meeting status, meaning silay naka una ug interact sa meeting.
+        if (meeting.getMeetingStatus().equals(MeetingStatus.STARTED_AUTOMATED)){
+            meeting.setMeetingStatus(MeetingStatus.STARTED_TEAM_INITIATED);
+        }
+
+
+        //since mag agad man ta sa faculty if available na jud sha for consultation,
+        // send lang ta ug notif nga si team gahulat na para sa consultation
+        notificationService.generateEnqueueNotificationForFaculty(
+                queueingManager.getFacultyID(),
+                queueingEntry.getTeamID(),
+                Constants.QUEUEIT_FRONTEND_URL+"/lobby/"+meetingID,
+                queueingEntry.getTeamName()+" is now on the lobby for the scheduled appointment.",
+                NotificationType.AUTOMATED_APPOINTMENT_STARTED
+        );
+
+        return Boolean.TRUE;
+    }
+
+
+    //commented leave lobby for now, i strict lang sa nato sha sa automation of default sa scheduledtaskservice
+
+
+//    public Boolean leaveLobbyMarkAdviserLate(Long meetingID){
+//        Meeting meeting = meetingRepository.findById(meetingID)
+//                .orElseThrow(()-> new RuntimeException("Meeting not found"));
+//
+//
+//        //if dili ang team naka una ug interact nor naka interact ba sila at all,
+//        // then it doesn't make sense nga ipa late nila ang faculty
+//        if (!meeting.getMeetingStatus().equals(MeetingStatus.STARTED_TEAM_INITIATED)){
+//            throw new RuntimeException("Cannot justify marking faculty as late, when team itself is late.");
+//        }
+//
+//
+//        QueueingEntry queueingEntry = meeting.getQueueingEntry();
+//        QueueingManager queueingManager = queueingEntry.getQueueingManager();
+//
+//
+//    }
 
 }

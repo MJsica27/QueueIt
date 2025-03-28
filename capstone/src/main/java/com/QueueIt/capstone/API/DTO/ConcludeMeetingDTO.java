@@ -10,6 +10,7 @@ public class ConcludeMeetingDTO {
     private String impedimentsEncountered;
     private List<Attendance> attendanceList;
     private Long queueingManagerID;
+    private boolean isFollowup;
 
     public ConcludeMeetingDTO() {
     }
@@ -20,12 +21,21 @@ public class ConcludeMeetingDTO {
         this.impedimentsEncountered = impedimentsEncountered;
     }
 
-    public ConcludeMeetingDTO(List<GradeDTO> grades, String notedAssignedTasks, String impedimentsEncountered, List<Attendance> attendanceList, Long queueingManagerID) {
+//    public ConcludeMeetingDTO(List<GradeDTO> grades, String notedAssignedTasks, String impedimentsEncountered, List<Attendance> attendanceList, Long queueingManagerID) {
+//        this.grades = grades;
+//        this.notedAssignedTasks = notedAssignedTasks;
+//        this.impedimentsEncountered = impedimentsEncountered;
+//        this.attendanceList = attendanceList;
+//        this.queueingManagerID = queueingManagerID;
+//    }
+
+    public ConcludeMeetingDTO(List<GradeDTO> grades, String notedAssignedTasks, String impedimentsEncountered, List<Attendance> attendanceList, Long queueingManagerID, Boolean isFollowup) {
         this.grades = grades;
         this.notedAssignedTasks = notedAssignedTasks;
         this.impedimentsEncountered = impedimentsEncountered;
         this.attendanceList = attendanceList;
         this.queueingManagerID = queueingManagerID;
+        this.isFollowup = isFollowup;
     }
 
     public Long getQueueingManagerID() {
@@ -46,5 +56,9 @@ public class ConcludeMeetingDTO {
 
     public String getImpedimentsEncountered() {
         return impedimentsEncountered;
+    }
+
+    public boolean getIsFollowup() {
+        return isFollowup;
     }
 }
