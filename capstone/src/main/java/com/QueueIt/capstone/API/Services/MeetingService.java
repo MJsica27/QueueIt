@@ -219,6 +219,7 @@ public class MeetingService {
     }
 
     public void manuallyStartAppointment(Long meetingID) {
+
         Meeting meeting = meetingRepository.findById(meetingID)
                 .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
@@ -227,8 +228,17 @@ public class MeetingService {
             throw new RuntimeException("Queueing Entry not found.");
         }
 
-        QueueingManager queueingManager = queueingEntry.getQueueingManager();
-        if (queueingManager == null) {
+        QueueingManager queueingManager = null;
+        try{
+            queueingManager =   queueingManagerRepository
+                    .findByFacultyID(queueingEntry.getQueueingManager().getFacultyID())
+                    .orElseThrow(()->new QueueingManagerNotFoundException("Queueing Manager not found."));
+        }catch (QueueingManagerNotFoundException e){
+            //creates a new QueueingManager entry in the database
+            queueingManager = facultyService.createQueueingManager(queueingEntry.getQueueingManager().getFacultyID(), queueingEntry.getQueueingManager().getFacultyName());
+        }
+
+        if(queueingManager == null){
             throw new RuntimeException("Queueing Manager not found.");
         }
 
@@ -256,11 +266,22 @@ public class MeetingService {
     }
 
 
-    public void createSpontaneousMeeting(MeetingDTO meetingDTO) throws QueueingManagerNotFoundException {
+    public void createSpontaneousMeeting(MeetingDTO meetingDTO, Long facultyID) throws QueueingManagerNotFoundException {
         meetingDTO.setStart(LocalDateTime.now());
         meetingDTO.setEnd(null);
-        QueueingManager queueingManager = queueingManagerRepository.findByFacultyID(meetingDTO.getMentorID())
-                .orElseThrow(()->new RuntimeException("Queueing Manager not found."));
+        QueueingManager queueingManager = null;
+        try{
+            queueingManager =   queueingManagerRepository
+                    .findByFacultyID(facultyID)
+                    .orElseThrow(()->new QueueingManagerNotFoundException("Queueing Manager not found."));
+        }catch (QueueingManagerNotFoundException e){
+            //creates a new QueueingManager entry in the database
+            queueingManager = facultyService.createQueueingManager(facultyID, meetingDTO.getFacultyName());
+        }
+
+        if(queueingManager == null){
+            throw new RuntimeException("Queueing Manager not found.");
+        }
 
         if (queueingManager.getMeeting() == null){
             Meeting createdMeeting = createMeetingAppointment(meetingDTO,MeetingStatus.ATTENDED_FACULTY_CONDUCTED);

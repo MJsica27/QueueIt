@@ -64,10 +64,10 @@ public class MeetingController {
         }
     }
 
-    @PostMapping("/teamMeetings/spontaneous")
-    public ResponseEntity<Object> createSpontaneousMeeting(@RequestBody MeetingDTO meetingDTO){
+    @PostMapping("/teamMeetings/spontaneous/{facultyID}")
+    public ResponseEntity<Object> createSpontaneousMeeting(@RequestBody MeetingDTO meetingDTO, @PathVariable Long facultyID){
         try{
-            meetingService.createSpontaneousMeeting(meetingDTO);
+            meetingService.createSpontaneousMeeting(meetingDTO,facultyID);
             return ResponseEntity.ok("Spontaneous Meeting Started.");
         }catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
