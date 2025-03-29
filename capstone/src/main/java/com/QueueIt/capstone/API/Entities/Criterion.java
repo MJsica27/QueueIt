@@ -19,14 +19,18 @@ public class Criterion {
     private String description;
     @OneToMany(mappedBy = "criterion")
     private List<Grade> grade;
+    private float weight;
 
     public Criterion() {
     }
 
-    public Criterion(Rubric rubric, String title, String description) {
+
+
+    public Criterion(Rubric rubric, String title, String description, float weight) {
         this.rubric = rubric;
         this.title = title;
         this.description = description;
+        this.weight = weight;
     }
 
     public void setTitle(String title) {
@@ -51,5 +55,9 @@ public class Criterion {
 
     public String getDescription() {
         return description;
+    }
+
+    public float getWeight() {
+        return weight;
     }
 }

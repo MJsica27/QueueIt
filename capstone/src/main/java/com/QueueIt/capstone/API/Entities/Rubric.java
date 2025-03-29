@@ -25,19 +25,21 @@ public class Rubric {
     private Boolean isPrivate;
     private Long userID;
     private String facultyName;
+    private boolean isWeighted;
 
     public Rubric() {}
 
-    public Rubric(String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName) {
+    public Rubric(String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName, boolean isWeighted) {
         this.title = title;
         this.description = description;
         this.criteria = criteria;
         this.isPrivate = isPrivate;
         this.userID = userID;
         this.facultyName = facultyName;
+        this.isWeighted = isWeighted;
     }
 
-    public Rubric(Long id, String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName) {
+    public Rubric(Long id, String title, String description, List<Criterion> criteria, Boolean isPrivate, Long userID, String facultyName, boolean isWeighted) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -45,6 +47,7 @@ public class Rubric {
         this.isPrivate = isPrivate;
         this.userID = userID;
         this.facultyName = facultyName;
+        this.isWeighted = isWeighted;
     }
 
     // Getters
@@ -72,7 +75,11 @@ public class Rubric {
         this.facultyName = facultyName;
     }
 
+    public boolean getIsWeighted() {
+        return isWeighted;
+    }
 
-
-
+    public void setWeighted(boolean weighted) {
+        isWeighted = weighted;
+    }
 }

@@ -20,8 +20,12 @@ public class RubricController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Rubric> createRubric(@RequestBody RubricDTO rubricDTO) {
-        return ResponseEntity.ok(rubricService.createRubric(rubricDTO));
+    public ResponseEntity<Object> createRubric(@RequestBody RubricDTO rubricDTO) {
+        try{
+            return ResponseEntity.ok(rubricService.createRubric(rubricDTO));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @GetMapping("/user/{userID}")
@@ -30,8 +34,12 @@ public class RubricController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Rubric> updateRubric(@RequestBody Rubric updatedRubricInstance) {
-        return ResponseEntity.ok(rubricService.updateRubric(updatedRubricInstance));
+    public ResponseEntity<Object> updateRubric(@RequestBody Rubric updatedRubricInstance) {
+        try{
+            return ResponseEntity.ok(rubricService.updateRubric(updatedRubricInstance));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{rubricID}")

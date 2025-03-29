@@ -9,17 +9,19 @@ public class RubricDTO {
     private Boolean isPrivate;
     private Long userID;
     private String facultyName;
+    private boolean isWeighted;
 
     public RubricDTO() {}
 
 
-    public RubricDTO(String title, String description, List<CriterionDTO> criteria, Boolean isPrivate, Long userID, String facultyName) {
+    public RubricDTO(String title, String description, List<CriterionDTO> criteria, Boolean isPrivate, Long userID, String facultyName, boolean isWeighted) {
         this.title = title;
         this.description = description;
         this.criteria = criteria;
         this.isPrivate = isPrivate;
         this.userID = userID;
         this.facultyName = facultyName;
+        this.isWeighted = isWeighted;
     }
 
     // Getters
@@ -35,5 +37,9 @@ public class RubricDTO {
 
     public String getFacultyName() {
         return facultyName;
+    }
+
+    public boolean getIsWeighted() {
+        return isWeighted;
     }
 }
