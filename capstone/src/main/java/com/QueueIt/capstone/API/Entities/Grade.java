@@ -21,22 +21,25 @@ public class Grade {
 
     private String studentName;
     private float mark;
+    private float weightedGrade;
 
     public Grade() {
     }
 
-    public Grade(Meeting meeting, Criterion criterion, String studentName, float mark) {
+    public Grade(Meeting meeting, Criterion criterion, String studentName, float mark, float weightedGrade) {
         this.meeting = meeting;
         this.criterion = criterion;
         this.studentName = studentName;
         this.mark = mark;
+        this.weightedGrade = weightedGrade;
     }
 
-    public Grade(Long gradeID, Criterion criterion, String studentName, float mark) {
+    public Grade(Long gradeID, Criterion criterion, String studentName, float mark, float weightedGrade) {
         this.gradeID = gradeID;
         this.criterion = criterion;
         this.studentName = studentName;
         this.mark = mark;
+        this.weightedGrade = weightedGrade;
     }
 
     public Long getGradeID() {
@@ -61,5 +64,13 @@ public class Grade {
 
     public void setMark(float mark) {
         this.mark = mark;
+    }
+
+    public float getWeightedGrade() {
+        return weightedGrade;
+    }
+
+    public void setWeightedGrade(float weightedGrade) {
+        this.weightedGrade = weightedGrade;
     }
 }

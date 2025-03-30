@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
@@ -220,7 +221,8 @@ public class FacultyService {
                         meeting,
                         criterion,
                         gradeDTO.getStudentName(),
-                        gradeDTO.getMark()
+                        gradeDTO.getMark(),
+                        gradeDTO.getWeightedGrade()
                 );
                 Grade savedGrade = gradeRepository.save(tempGrade);
                 meeting.getGrades().add(savedGrade);
@@ -272,9 +274,18 @@ public class FacultyService {
         simpMessageSendingOperations.convertAndSend("/topic/facultyActivity/adviser/"+queueingManager.getFacultyID(), queueingManager);
     }
 
-    public List<ClassRecordEntry> generateClassRecord(Long clasroomID){
-        return meetingRepository.generateClassRecord(clasroomID);
+    public List<ClassRecordEntry> generateClassRecord(Long classroomID) {
+        List<Object[]> rawResults = meetingRepository.generateClassRecordNative(classroomID);
+
+        return rawResults.stream()
+                .map(row -> new ClassRecordEntry(
+                        (String) row[0],
+                        (double) ((Number) row[1]).floatValue(),
+                        (String) row[2]
+                ))
+                .collect(Collectors.toList());
     }
+
 
     public Boolean startAutomatedMeeting(Long meetingID, Long facultyID) {
         Meeting meeting = meetingRepository.findById(meetingID)

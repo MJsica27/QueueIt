@@ -104,14 +104,29 @@ public class MeetingService {
                                                 attendance.getFirstname() + " " +
                                                         attendance.getLastname()))
                                         .collect(Collectors.toList());
-
+                                Float sum = (float) 0;
+                                Float gradeAverage = (float) 0;
                                 // Calculate the sum of grades
-                                Float sum = studentGrades.stream()
-                                        .map(Grade::getMark)
-                                        .reduce(0.0f, Float::sum);
+                                // Check if grades are present and avoid lazy loading issues
+                                if (!meeting.getGrades().isEmpty()) {
+                                    Grade firstGrade = meeting.getGrades().getFirst();
+                                    if (firstGrade.getCriterion() != null &&
+                                            firstGrade.getCriterion().getRubric() != null &&
+                                            firstGrade.getCriterion().getRubric().getIsWeighted()) {
 
-                                // Calculate the average, checking for division by zero
-                                Float gradeAverage = studentGrades.isEmpty() ? 0.0f : sum / studentGrades.size();
+                                        sum = studentGrades.stream()
+                                                .map(Grade::getWeightedGrade)
+                                                .reduce(0.0f, Float::sum);
+
+                                        gradeAverage = studentGrades.isEmpty() ? 0.0f : sum;
+
+                                    } else {
+                                        sum = studentGrades.stream()
+                                                .map(Grade::getMark)
+                                                .reduce(0.0f, Float::sum);
+                                        gradeAverage = studentGrades.isEmpty() ? 0.0f : sum / studentGrades.size();
+                                    }
+                                }
 
                                 // Round to one decimal place using BigDecimal
                                 BigDecimal bd = new BigDecimal(gradeAverage);

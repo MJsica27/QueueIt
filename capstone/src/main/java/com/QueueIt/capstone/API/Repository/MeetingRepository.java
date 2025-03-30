@@ -33,12 +33,16 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
 
     @Query("SELECT m FROM Meeting m " +
-            "JOIN m.queueingEntry qe " +
+            "JOIN FETCH m.queueingEntry qe " +
+            "LEFT JOIN FETCH m.grades g " +  // Fetch grades
+            "LEFT JOIN FETCH g.criterion c " +  // Fetch criterion
+            "LEFT JOIN FETCH c.rubric r " +  // Fetch rubric
             "WHERE qe.teamID = :teamID " +
             "AND m.end IS NOT NULL " +
             "AND m.meetingStatus IN :statusList")
-    public List<Meeting> retrieveAllMeetingsForSummary(@Param("teamID") Long teamID,
-                                                       @Param("statusList") List<MeetingStatus> statusList);
+    List<Meeting> retrieveAllMeetingsForSummary(@Param("teamID") Long teamID,
+                                                @Param("statusList") List<MeetingStatus> statusList);
+
 
     @Query("SELECT m FROM Meeting m " +
             "JOIN m.queueingEntry qe " + // Join with QueueingEntry
@@ -203,11 +207,42 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
 
     @Query(
-            "SELECT new com.QueueIt.capstone.API.DTO.ClassRecordEntry(g.studentName, AVG(g.mark), qe.teamName) " +
-                    "FROM Meeting m JOIN m.queueingEntry qe JOIN m.grades g WHERE qe.classroomID = :classroomID" +
-                    " GROUP BY g.studentName"
+            value = "SELECT \n" +
+                    "    meeting_total.student_name, \n" +
+                    "    AVG(meeting_total.grade_sum) AS final_avg, \n" +
+                    "    meeting_total.team_name\n" +
+                    "FROM (\n" +
+                    "    -- Compute total weighted sum per meeting per student\n" +
+                    "    SELECT \n" +
+                    "        g.student_name, \n" +
+                    "        qe.team_name, \n" +
+                    "        m.meetingID, \n" +
+                    "        SUM(\n" +
+                    "            CASE WHEN r.is_weighted = 1 \n" +
+                    "                THEN g.weighted_grade \n" +
+                    "                ELSE g.mark \n" +
+                    "            END\n" +
+                    "        ) AS grade_sum\n" +
+                    "    FROM grade g\n" +
+                    "    JOIN criterion c ON g.criterion_id = c.criterionID\n" +
+                    "    JOIN rubric r ON c.rubric_id = r.id\n" +
+                    "    JOIN meeting m ON g.meeting_id = m.meetingID\n" +
+                    "    JOIN queueing_entry qe ON m.queueing_entry_id = qe.queueing_entryid\n" +
+                    "    WHERE qe.classroomID = 6 \n" +
+                    "      AND m.meeting_status IN (\n" +
+                    "          'ATTENDED_QUEUEING_CONDUCTED', \n" +
+                    "          'ATTENDED_FACULTY_CONDUCTED', \n" +
+                    "          'ATTENDED_SCHEDULE_CONDUCTED'\n" +
+                    "      )\n" +
+                    "    GROUP BY g.student_name, m.meetingID, qe.team_name\n" +
+                    ") AS meeting_total\n" +
+                    "GROUP BY meeting_total.student_name, meeting_total.team_name;\n",
+            nativeQuery = true
     )
-    public List<ClassRecordEntry> generateClassRecord(@Param("classroomID") Long classroomID);
+    List<Object[]> generateClassRecordNative(@Param("classroomID") Long classroomID);
+
+
+
 
 
 
