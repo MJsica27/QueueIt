@@ -13,9 +13,7 @@ public class ClassroomAnalyticsDTO {
     private PieChartData pieChartData;
     private ScatterPlotDataset scatterPlotDataset;
 
-    public ClassroomAnalyticsDTO(List<LowestEngagementDTO> lowestEngagementDTO, List<StudentAtRiskForKickOut> atRiskForKickOuts, List<TopTeam> topTeams, PieChartData pieChartData, ScatterPlotDataset scatterPlotDataset) {
-        this.lowestEngagementDTO = lowestEngagementDTO;
-        this.atRiskForKickOuts = atRiskForKickOuts;
+    public ClassroomAnalyticsDTO(List<TopTeam> topTeams, PieChartData pieChartData, ScatterPlotDataset scatterPlotDataset) {
         this.topTeams = topTeams;
         this.pieChartData = pieChartData;
         this.scatterPlotDataset = scatterPlotDataset;

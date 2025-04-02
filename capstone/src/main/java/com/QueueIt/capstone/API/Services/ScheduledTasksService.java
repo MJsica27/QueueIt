@@ -12,6 +12,7 @@ import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
 import com.QueueIt.capstone.API.Repository.AttendanceRepository;
 import com.QueueIt.capstone.API.Repository.MeetingRepository;
 import com.QueueIt.capstone.API.Repository.QueueingManagerRepository;
+import com.QueueIt.capstone.API.Utilities.DateUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class ScheduledTasksService {
     @Scheduled(cron = "0 0 0 * * 1-5")
 //    @Scheduled(cron = "0 49 * * * 1-5")
     public void createScheduledMeetingsForToday(){
-        System.out.println("\n\n*** Scheduled Meetings Generation Function Ran @ "+LocalDateTime.now()+" ***\n\n");
+        System.out.println("\n\n*** Scheduled Meetings Generation Function Ran @ "+DateUtility.formatLocalDateTimeToReadable(LocalDateTime.now())+" ***\n\n");
         //WebClient is supposed to do subscribe, according to blackbox.
         apiService.fetchTeamsForAutomationTodayFromSpear()
                 .subscribe(teams -> {
@@ -105,7 +106,8 @@ public class ScheduledTasksService {
                                             team.getAdviserId(),
                                             team.getTid(),
                                             team.getGroupName(),
-                                            team.getClassId()
+                                            team.getClassId(),
+                                            team.getAdviserName()
                                     );
 
                                     try{
@@ -129,7 +131,7 @@ public class ScheduledTasksService {
     //e.g a team member naka sud una sa meeting, meetingStatus = MeetingStatus.STARTED_TEAM_INITIATED,
     // if faculty maka una then meetingStatus = STARTED_FACULTY_INITIATED,
     public void startMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
-        System.out.println("\n\n!!! Automated Starting of Meetings Function Ran @ "+LocalDateTime.now()+" !!!\n\n");
+        System.out.println("\n\n!!! Automated Starting of Meetings Function Ran @ "+DateUtility.formatLocalDateTimeToReadable(LocalDateTime.now())+" !!!\n\n");
 
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.SET_AUTOMATED);
@@ -163,7 +165,7 @@ public class ScheduledTasksService {
     //meaning way nitunga sa either sides, team ug faculty.
     //so set nato siya as Defaulted
     public void defaultMeetings(LocalDateTime fiveMinuteOffsetFromNow, LocalDateTime now){
-        System.out.println("\n\n~ ~ ~ Defaulting of Automated Meetings Function Ran @ "+LocalDateTime.now()+" ~ ~ ~\n\n");
+        System.out.println("\n\n~ ~ ~ Defaulting of Automated Meetings Function Ran @ "+ DateUtility.formatLocalDateTimeToReadable(LocalDateTime.now()) +" ~ ~ ~\n\n");
         List<MeetingStatus> statusList = new ArrayList<>();
         statusList.add(MeetingStatus.STARTED_AUTOMATED);
         statusList.add(MeetingStatus.STARTED_FACULTY_INITIATED);
@@ -203,7 +205,7 @@ public class ScheduledTasksService {
 
     @Scheduled(cron = "0 20,50 8-17 * * 1-5")
     public void remindMeetings(){
-        System.out.println("\n\n@@@ Meeting Reminder Script ran @ "+LocalDateTime.now()+" ~ ~ ~\n\n");
+        System.out.println("\n\n@@@ Meeting Reminder Script ran @ "+DateUtility.formatLocalDateTimeToReadable(LocalDateTime.now())+" ~ ~ ~\n\n");
         LocalDateTime offset = LocalDateTime.now().plusMinutes(15);
         LocalDateTime now = LocalDateTime.now();
         List<MeetingStatus> statusList = new ArrayList<>();

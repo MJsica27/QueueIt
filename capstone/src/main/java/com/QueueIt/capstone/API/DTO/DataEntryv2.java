@@ -4,14 +4,18 @@ import java.util.List;
 
 public class DataEntryv2 {
     private List<Double> data;
-    private List<String> backgroundColor;
+    private String backgroundColor;
+    private String borderColor;
+    private String pointBackgroundColor;
 
     public DataEntryv2() {
     }
 
-    public DataEntryv2(List<Double> data, List<String> backgroundColor) {
+    public DataEntryv2(List<Double> data, String backgroundColor, String borderColor, String pointBackgroundColor) {
         this.data = data;
         this.backgroundColor = backgroundColor;
+        this.borderColor = borderColor;
+        this.pointBackgroundColor = pointBackgroundColor;
     }
 
     public List<Double> getData() {
@@ -22,11 +26,19 @@ public class DataEntryv2 {
         this.data = data;
     }
 
-    public List<String> getBackgroundColor() {
+    public String getBackgroundColor() {
         return backgroundColor;
     }
 
-    public void setBackgroundColor(List<String> backgroundColor) {
+    public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public String getBorderColor() {
+        return borderColor;
+    }
+
+    public String getPointBackgroundColor() {
+        return pointBackgroundColor;
     }
 }

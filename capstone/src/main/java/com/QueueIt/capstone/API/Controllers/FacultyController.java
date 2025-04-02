@@ -103,4 +103,9 @@ public class FacultyController {
         }
     }
 
+    @GetMapping("/approveMilestone/{teamID}/{facultyID}")
+    private ResponseEntity<Object> approveMilestone(@PathVariable Long teamID, @PathVariable Long facultyID){
+        return null;
+    }
+
 }

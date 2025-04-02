@@ -36,8 +36,6 @@ public class AnalyticsService {
 
     public ClassroomAnalyticsDTO generateClassroomAnalytics(Long classroomID){
         return new ClassroomAnalyticsDTO(
-                getTop3LowestEngagingTeam(classroomID),
-                retrieveTop3AtRiskStudents(classroomID),
                 retrieveTopThreeTeams(classroomID),
                 retrieveFacultyPerformanceInClassroom(classroomID),
                 getTeamsPerformance(classroomID)
@@ -77,12 +75,13 @@ public class AnalyticsService {
             List<DataEntryv2> datasets = new ArrayList<>();
             datasets.add(new DataEntryv2(
                     new ArrayList<>(),
-                    new ArrayList<>()
+                    "rgba(125,87,252,0.2)",
+                    "rgb(125,87,252)",
+                    "rgb(125,87,252)"
             ));
             for(int i =0; i < radarChartObservations.size(); i++){
                 labels.add(radarChartObservations.get(i).getStudentName());
                 datasets.getFirst().getData().add(radarChartObservations.get(i).getGradeAverage());
-                datasets.getFirst().getBackgroundColor().add(StringUtility.randomBackgroundColorString(i));
             }
             return new RadarData(
                     labels,
@@ -90,29 +89,6 @@ public class AnalyticsService {
             );
         }
         return new RadarData();
-    }
-
-    public List<LowestEngagementDTO> getTop3LowestEngagingTeam(Long classroomID){
-
-
-        Pageable pageable = PageRequest.of(0,3);
-
-        return meetingRepository.getLowestEngagingTeamMentor(
-                classroomID,
-                MeetingStatus.ATTENDED_FACULTY_CONDUCTED,
-                MeetingStatus.ATTENDED_QUEUEING_CONDUCTED,
-                pageable);
-    }
-
-    public List<StudentAtRiskForKickOut> retrieveTop3AtRiskStudents(Long classroomID){
-        if (queueingEntryService.countUniqueTeamsForClassroom(classroomID) == 0){
-            return Collections.emptyList();
-        }
-
-        return meetingRepository.getStudentsAtRiskForKickOut(
-                classroomID,
-                AttendanceStatus.PRESENT
-        );
     }
 
     public List<TopTeam> retrieveTopThreeTeams(Long classroomID){
@@ -136,8 +112,10 @@ public class AnalyticsService {
         List<DataEntry> datasets = new ArrayList<>();
         observations.stream()
                 .forEach(pieChartObservation -> {
-                    labels.add(pieChartObservation.getFacultyName());
-                    pieChartDataEntry.getData().add(pieChartObservation.getMeetingCount());
+                    if (pieChartObservation.getFacultyName() != null){
+                        labels.add(pieChartObservation.getFacultyName());
+                        pieChartDataEntry.getData().add(pieChartObservation.getMeetingCount());
+                    }
                 });
 
         for(int i = 0; i < labels.size(); i++){

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ public class QueueingManager {
     private Meeting meeting;
     @ManyToMany(mappedBy = "queueingManagers")
     private List<Classroom> cateredClassrooms;
+    private LocalDateTime lastActive;
 
     public QueueingManager() {
     }
@@ -81,6 +83,14 @@ public class QueueingManager {
 
     public Long getCateringLimit() {
         return cateringLimit;
+    }
+
+    public LocalDateTime getLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(LocalDateTime lastActive) {
+        this.lastActive = lastActive;
     }
 
     public Meeting getMeeting() {
@@ -152,6 +162,7 @@ public class QueueingManager {
         this.isActive = Boolean.FALSE;
         this.cateringLimit = null;
         this.timeEnds = null;
+        setLastActive(LocalDateTime.now());
         this.cateredClassrooms.clear();
     }
 

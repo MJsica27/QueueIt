@@ -49,7 +49,7 @@ public class MeetingDTO {
     }
 
     //DTO for meeting automation that runs every midnight
-    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, Long classroomId) {
+    public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, Long classroomId, String facultyName) {
         this.start = start;
         this.end = end;
         this.attendanceList = attendanceList;
@@ -57,6 +57,7 @@ public class MeetingDTO {
         this.teamID = teamID;
         this.teamName = teamName;
         this.classroomID = classroomId;
+        this.facultyName = facultyName;
     }
 
     public MeetingDTO(LocalDateTime start, LocalDateTime end, List<Attendance> attendanceList, Long mentorID, Long teamID, String teamName, String facultyName, Long classroomID) {
