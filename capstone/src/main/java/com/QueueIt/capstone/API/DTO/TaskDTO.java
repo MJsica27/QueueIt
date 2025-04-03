@@ -2,18 +2,18 @@ package com.QueueIt.capstone.API.DTO;
 
 public class TaskDTO {
     private String taskName;
-    private String taskDescription;
+    private String description;
 
-    public TaskDTO(String taskName, String taskDescription) {
+    public TaskDTO(String taskName, String description) {
         this.taskName = taskName;
-        this.taskDescription = taskDescription;
+        this.description = description;
     }
 
     public String getTaskName() {
         return taskName;
     }
 
-    public String getTaskDescription() {
-        return taskDescription;
+    public String getDescription() {
+        return description;
     }
 }

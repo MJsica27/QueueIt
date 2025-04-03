@@ -2,6 +2,7 @@ package com.QueueIt.capstone.API.Controllers;
 
 import com.QueueIt.capstone.API.DTO.MilestoneSetDTO;
 import com.QueueIt.capstone.API.Entities.Milestone;
+import com.QueueIt.capstone.API.Entities.MilestoneSet;
 import com.QueueIt.capstone.API.Middlewares.MilestoneSetAlreadyExistException;
 import com.QueueIt.capstone.API.Services.MilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,43 @@ public class MilestoneController {
     public ResponseEntity<Object> getMilestoneSet(@PathVariable Long teamID){
         try{
             return ResponseEntity.ok(milestoneService.getMilestoneSet(teamID));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/approveSet/{milestoneSetID}/{facultyID}")
+    public ResponseEntity<Object> approveMilestoneSet(@PathVariable Long milestoneSetID, @PathVariable Long facultyID){
+        try{
+            return ResponseEntity.ok(milestoneService.approveMilestoneSet(milestoneSetID,facultyID));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/unlockSet/{milestoneSetID}/{facultyID}")
+    public ResponseEntity<Object> unlockMilestoneSet(@PathVariable Long milestoneSetID, @PathVariable Long facultyID){
+        try{
+            return ResponseEntity.ok(milestoneService.unlockMilestoneSet(milestoneSetID,facultyID));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/markTaskComplete/{taskID}/{facultyID}")
+    public ResponseEntity<Object> markTaskAsComplete(@PathVariable Long taskID, @PathVariable Long facultyID){
+        try{
+            return ResponseEntity.ok(milestoneService.markTaskAsComplete(taskID, facultyID));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/markTaskIncomplete/{taskID}/{facultyID}")
+    public ResponseEntity<Object> markTaskAsIncomplete(@PathVariable Long taskID, @PathVariable Long facultyID){
+        try{
+            return ResponseEntity.ok(milestoneService.markTaskAsIncomplete(taskID, facultyID));
         }catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }

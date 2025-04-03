@@ -11,6 +11,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskID;
     private String taskName;
+    @Column(columnDefinition = "TEXT")
     private String description="";
     private boolean isCompleted = false;
     private LocalDateTime completionDate;
@@ -74,4 +75,6 @@ public class Task {
     public void setModule(Module module) {
         this.module = module;
     }
+
+
 }
