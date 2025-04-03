@@ -1,9 +1,6 @@
 package com.QueueIt.capstone.API.Controllers;
 
-import com.QueueIt.capstone.API.DTO.ConcludeMeetingDTO;
-import com.QueueIt.capstone.API.DTO.FacultyDTO;
-import com.QueueIt.capstone.API.DTO.GradeDTO;
-import com.QueueIt.capstone.API.DTO.QueueingEntryDTO;
+import com.QueueIt.capstone.API.DTO.*;
 import com.QueueIt.capstone.API.Entities.QueueingManager;
 import com.QueueIt.capstone.API.Middlewares.QueueingEntryNotFoundException;
 import com.QueueIt.capstone.API.Middlewares.QueueingManagerNotFoundException;
@@ -106,6 +103,15 @@ public class FacultyController {
     @GetMapping("/approveMilestone/{teamID}/{facultyID}")
     private ResponseEntity<Object> approveMilestone(@PathVariable Long teamID, @PathVariable Long facultyID){
         return null;
+    }
+
+    @PostMapping("/meetingsTable/{classroomID}")
+    private ResponseEntity<Object> classroomMeetingsTable(@PathVariable Long classroomID, @RequestBody DaterangeDTO daterangeDTO){
+        try{
+            return ResponseEntity.ok(analyticsService.getClassroomMeetings(classroomID, daterangeDTO));
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
 }

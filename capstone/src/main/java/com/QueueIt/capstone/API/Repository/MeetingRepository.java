@@ -228,7 +228,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
                     "    JOIN rubric r ON c.rubric_id = r.id\n" +
                     "    JOIN meeting m ON g.meeting_id = m.meetingID\n" +
                     "    JOIN queueing_entry qe ON m.queueing_entry_id = qe.queueing_entryid\n" +
-                    "    WHERE qe.classroomID = 6 \n" +
+                    "    WHERE qe.classroomID = :classroomID \n" +
                     "      AND m.meeting_status IN (\n" +
                     "          'ATTENDED_QUEUEING_CONDUCTED', \n" +
                     "          'ATTENDED_FACULTY_CONDUCTED', \n" +
@@ -241,20 +241,33 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     )
     List<Object[]> generateClassRecordNative(@Param("classroomID") Long classroomID);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Query(
+            value = "SELECT \n" +
+                    "    queueing_entry.team_name AS groupName, \n" +
+                    "    queueing_manager.faculty_name AS facultyName, \n" +
+                    "    COUNT(CASE \n" +
+                    "        WHEN meeting.meeting_status = 'ATTENDED_FACULTY_CONDUCTED' \n" +
+                    "          OR meeting.meeting_status = 'ATTENDED_QUEUEING_CONDUCTED' \n" +
+                    "          OR meeting.meeting_status = 'ATTENDED_SCHEDULE_CONDUCTED' \n" +
+                    "        THEN 1 END) AS numGradedMeetings, \n" +
+                    "    COUNT(CASE \n" +
+                    "        WHEN meeting.meeting_status = 'FOLLOWUP_MEETING' \n" +
+                    "        THEN 1 END) AS numUngradedMeetings, \n" +
+                    "    COUNT(CASE \n" +
+                    "        WHEN meeting.meeting_status = 'FAILED_TEAM_NO_SHOW' \n" +
+                    "          OR meeting.meeting_status = 'FAILED_FACULTY_NO_SHOW' \n" +
+                    "          OR meeting.meeting_status = 'FAILED_DEFAULTED' \n" +
+                    "          OR meeting.meeting_status = 'CANCELLED' \n" +
+                    "        THEN 1 END) AS numFailedMeetings\n" +
+                    "FROM meeting \n" +
+                    "JOIN queueing_entry ON meeting.queueing_entry_id = queueing_entry.queueing_entryid\n" +
+                    "JOIN queueing_manager ON queueing_entry.queueing_manager_id = queueing_manager.queueing_managerid\n" +
+                    "WHERE queueing_entry.classroomid = :classroomID AND meeting.start >= :start AND meeting.start <= :end\n" +
+                    "group by groupName\n" +
+                    "order by groupName\n",
+            nativeQuery = true
+    )
+    List<Object[]> classroomMeetingsTable(@Param("classroomID") Long classroomID,
+                                                           @Param("start") LocalDateTime start,
+                                                           @Param("end") LocalDateTime end);
 }

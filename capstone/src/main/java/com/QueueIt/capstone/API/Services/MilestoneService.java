@@ -296,4 +296,11 @@ public class MilestoneService {
         milestoneRepository.save(milestone);
         return milestoneSetRespository.save(milestoneSet);
     }
+
+    public Integer getMilestoneProgressPercentage(Long teamID) {
+        MilestoneSet milestoneSet = milestoneSetRespository.findByTeamID(teamID)
+                .orElseThrow(()->new RuntimeException("Not found"));
+
+        return Integer.valueOf(milestoneSet.getCompletionPercentage());
+    }
 }

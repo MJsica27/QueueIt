@@ -80,4 +80,14 @@ public class MilestoneController {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
+
+    @GetMapping("/getPercentage/{teamID}")
+    public ResponseEntity<Object> getMilestoneProgressPercentage(@PathVariable Long teamID){
+        try{
+            return ResponseEntity.ok(milestoneService.getMilestoneProgressPercentage(teamID));
+        }catch (Exception e){
+            return ResponseEntity.ok(0);
+        }
+    }
 }

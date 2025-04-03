@@ -103,7 +103,7 @@ public class AnalyticsService {
     }
 
     public PieChartData retrieveFacultyPerformanceInClassroom(Long classroomID){
-        List<PieChartObservation> observations = meetingRepository.meetingCountPerFaculty(classroomID, List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED));
+        List<PieChartObservation> observations = meetingRepository.meetingCountPerFaculty(classroomID, List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED, MeetingStatus.FOLLOWUP_MEETING));
         List<String> labels = new ArrayList<>();
         DataEntry pieChartDataEntry = new DataEntry(
                 new ArrayList<>(),
@@ -143,5 +143,28 @@ public class AnalyticsService {
         return new ScatterPlotDataset(
                 observations
         );
+    }
+
+    public List<classroomMeetingsTableDTO> getClassroomMeetings(Long classroomID, DaterangeDTO daterangeDTO) {
+        List<Object[]> result = meetingRepository.classroomMeetingsTable(
+                classroomID,
+                daterangeDTO.getStart(),
+                daterangeDTO.getEnd()
+        );
+
+        // Map the result to classroomMeetingsTableDTO
+        List<classroomMeetingsTableDTO> tableDate = new ArrayList<>();
+        for (Object[] row : result) {
+            String groupName = (String) row[0];
+            String facultyName = (String) row[1];
+            Long numGradedMeetings = (Long) row[2];
+            Long numUngradedMeetings = (Long) row[3];
+            Long numFailedMeetings = (Long) row[4];
+
+            classroomMeetingsTableDTO dto = new classroomMeetingsTableDTO(groupName, facultyName, numGradedMeetings, numUngradedMeetings, numFailedMeetings);
+            tableDate.add(dto);
+        }
+
+        return tableDate;
     }
 }
