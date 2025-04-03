@@ -198,7 +198,13 @@ public class MeetingService {
 
     public List<MeetingDTO> retrieveAppointmentsForFaculty(Long facultyID) {
         LocalDateTime now = LocalDateTime.now();
-        List<Meeting> meetings = meetingRepository.retrieveAppointmentsForFaculty(facultyID, List.of(MeetingStatus.SET_MANUALLY, MeetingStatus.SET_AUTOMATED));
+        List<Meeting> meetings = meetingRepository.retrieveAppointmentsForFaculty(facultyID,
+                List.of(MeetingStatus.SET_MANUALLY,
+                        MeetingStatus.SET_AUTOMATED,
+                        MeetingStatus.STARTED_AUTOMATED,
+                        MeetingStatus.STARTED_FACULTY_INITIATED,
+                        MeetingStatus.STARTED_MANUALLY,
+                        MeetingStatus.STARTED_TEAM_INITIATED));
         List<MeetingDTO> events = new ArrayList<>();
 
         meetings.stream()
