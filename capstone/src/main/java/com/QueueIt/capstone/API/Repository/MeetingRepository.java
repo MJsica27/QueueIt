@@ -263,7 +263,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
                     "JOIN queueing_entry ON meeting.queueing_entry_id = queueing_entry.queueing_entryid\n" +
                     "JOIN queueing_manager ON queueing_entry.queueing_manager_id = queueing_manager.queueing_managerid\n" +
                     "WHERE queueing_entry.classroomid = :classroomID AND meeting.start >= :start AND meeting.start <= :end\n" +
-                    "group by groupName\n" +
+                    "group by groupName, facultyName\n" +
                     "order by groupName\n",
             nativeQuery = true
     )

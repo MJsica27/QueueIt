@@ -50,7 +50,13 @@ public class AnalyticsService {
     }
 
     public HistogramData generateAttendanceHistogramData(Long teamID){
-        List<HistogramObservation> histogramObservationList = meetingRepository.getAttendanceHistogram(teamID, List.of(AttendanceStatus.PRESENT), List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED, MeetingStatus.ATTENDED_QUEUEING_CONDUCTED));
+        List<HistogramObservation> histogramObservationList = meetingRepository.getAttendanceHistogram(
+                teamID,
+                List.of(AttendanceStatus.PRESENT),
+                List.of(MeetingStatus.ATTENDED_FACULTY_CONDUCTED,
+                        MeetingStatus.ATTENDED_QUEUEING_CONDUCTED,
+                        MeetingStatus.FOLLOWUP_MEETING,
+                        MeetingStatus.ATTENDED_SCHEDULE_CONDUCTED));
         if (histogramObservationList.size() > 1){
             List<String> labels = new ArrayList<>();
             List<DataEntry> datasets = new ArrayList<>();
