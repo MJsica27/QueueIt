@@ -204,7 +204,9 @@ public class MeetingService {
                         MeetingStatus.STARTED_AUTOMATED,
                         MeetingStatus.STARTED_FACULTY_INITIATED,
                         MeetingStatus.STARTED_MANUALLY,
-                        MeetingStatus.STARTED_TEAM_INITIATED));
+                        MeetingStatus.STARTED_TEAM_INITIATED,
+                        MeetingStatus.ATTENDED_SCHEDULE_CONDUCTED,
+                        MeetingStatus.ATTENDED_FACULTY_CONDUCTED));
         List<MeetingDTO> events = new ArrayList<>();
 
         meetings.stream()

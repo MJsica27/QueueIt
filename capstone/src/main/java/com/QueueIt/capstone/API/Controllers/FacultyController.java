@@ -92,7 +92,7 @@ public class FacultyController {
 
 
     @GetMapping("/startAutomated/{meetingID}/{facultyID}")
-    private ResponseEntity<Object> startAutomatedMeeting(@PathVariable Long meetingID, Long facultyID){
+    private ResponseEntity<Object> startAutomatedMeeting(@PathVariable Long meetingID,@PathVariable Long facultyID){
         try{
             return ResponseEntity.ok(facultyService.startAutomatedMeeting(meetingID, facultyID));
         }catch (Exception e){
