@@ -48,9 +48,11 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             "JOIN m.queueingEntry qe " + // Join with QueueingEntry
             "JOIN qe.queueingManager qm " + // Join with QueueingManager through QueueingEntry
             "WHERE qm.facultyID = :facultyID " + // Use qm.facultyID to filter
-            "AND m.meetingStatus IN :status")
+            "AND m.meetingStatus IN :status " +
+            "AND m.start >= :todayMidnight")
     List<Meeting> retrieveAppointmentsForFaculty(@Param("facultyID") Long facultyID,
-                                                 @Param("status") List<MeetingStatus> status);
+                                                 @Param("status") List<MeetingStatus> status,
+                                                 @Param("todayMidnight") LocalDateTime todayMidnight);
 
 
     @Query("SELECT m FROM Meeting m " +
