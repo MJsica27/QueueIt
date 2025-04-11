@@ -125,7 +125,7 @@ public class AnalyticsService {
                 });
 
         for(int i = 0; i < labels.size(); i++){
-            pieChartDataEntry.getBackgroundColor().add(StringUtility.randomBackgroundColorString(i));
+            pieChartDataEntry.getBackgroundColor().add(StringUtility.randomBackgroundColorString(i%(labels.size()-1)));
         }
 
         datasets.add(pieChartDataEntry);

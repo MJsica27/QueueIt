@@ -209,36 +209,40 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
 
     @Query(
-            value = "SELECT \n" +
-                    "    meeting_total.student_name, \n" +
-                    "    AVG(meeting_total.grade_sum) AS final_avg, \n" +
-                    "    meeting_total.team_name\n" +
-                    "FROM (\n" +
-                    "    -- Compute total weighted sum per meeting per student\n" +
-                    "    SELECT \n" +
-                    "        g.student_name, \n" +
-                    "        qe.team_name, \n" +
-                    "        m.meetingID, \n" +
-                    "        SUM(\n" +
-                    "            CASE WHEN r.is_weighted = 1 \n" +
-                    "                THEN g.weighted_grade \n" +
-                    "                ELSE g.mark \n" +
-                    "            END\n" +
-                    "        ) AS grade_sum\n" +
-                    "    FROM grade g\n" +
-                    "    JOIN criterion c ON g.criterion_id = c.criterionID\n" +
-                    "    JOIN rubric r ON c.rubric_id = r.id\n" +
-                    "    JOIN meeting m ON g.meeting_id = m.meetingID\n" +
-                    "    JOIN queueing_entry qe ON m.queueing_entry_id = qe.queueing_entryid\n" +
-                    "    WHERE qe.classroomID = :classroomID \n" +
-                    "      AND m.meeting_status IN (\n" +
-                    "          'ATTENDED_QUEUEING_CONDUCTED', \n" +
-                    "          'ATTENDED_FACULTY_CONDUCTED', \n" +
-                    "          'ATTENDED_SCHEDULE_CONDUCTED'\n" +
-                    "      )\n" +
-                    "    GROUP BY g.student_name, m.meetingID, qe.team_name\n" +
-                    ") AS meeting_total\n" +
-                    "GROUP BY meeting_total.student_name, meeting_total.team_name;\n",
+            value = """
+                    SELECT\s
+                        meeting_total.student_name,\s
+                        meeting_total.grade_sum AS final_avg,\s
+                        meeting_total.team_name,
+                        meeting_total.mcount
+                    FROM (
+                        -- Compute total weighted sum per meeting per student
+                        SELECT\s
+                            g.student_name,\s
+                            qe.team_name,\s
+                            m.meetingID,\s
+                            AVG(
+                                CASE WHEN r.is_weighted = 1\s
+                                    THEN g.weighted_grade\s
+                                    ELSE g.mark\s
+                                END
+                            ) AS grade_sum,
+                        	COUNT(m.meetingid) as mcount
+                        FROM grade g
+                        JOIN criterion c ON g.criterion_id = c.criterionID
+                        JOIN rubric r ON c.rubric_id = r.id
+                        JOIN meeting m ON g.meeting_id = m.meetingID
+                        JOIN queueing_entry qe ON m.queueing_entry_id = qe.queueing_entryid
+                        WHERE qe.classroomID = 6
+                          AND m.meeting_status IN (
+                              'ATTENDED_QUEUEING_CONDUCTED',\s
+                              'ATTENDED_FACULTY_CONDUCTED',\s
+                              'ATTENDED_SCHEDULE_CONDUCTED'
+                          )
+                        GROUP BY g.student_name
+                    ) AS meeting_total
+                    GROUP BY meeting_total.student_name, meeting_total.team_name;
+                    """,
             nativeQuery = true
     )
     List<Object[]> generateClassRecordNative(@Param("classroomID") Long classroomID);
